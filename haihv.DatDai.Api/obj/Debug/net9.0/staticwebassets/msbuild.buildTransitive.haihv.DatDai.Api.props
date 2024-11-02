@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\haihv.DatDai.Api.props" />
-</Project>
