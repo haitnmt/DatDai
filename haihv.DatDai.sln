@@ -2,6 +2,16 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "haihv.DatDai.Api", "haihv.DatDai.Api\haihv.DatDai.Api.csproj", "{0E1445D4-2037-47F8-9121-03CB89D42823}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{92077BFA-922A-40B3-A530-30F37B090537}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "haihv.DatDai.Data.DanhMuc", "haihv.DatDai.Data.DanhMuc\haihv.DatDai.Data.DanhMuc.csproj", "{7729B074-99B8-4208-8DEE-F477AFFD71CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "haihv.DatDai.Data.DiaChinh", "haihv.DatDai.Data.DiaChinh\haihv.DatDai.Data.DiaChinh.csproj", "{80DE9BC3-D170-4525-B78E-96E785CBDD7A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{80B69E58-B0A8-48CF-BF2C-FDB9F7561467}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "haihv.DatDai.Services.SyncDhvc", "haihv.DatDai.Services.SyncDhvc\haihv.DatDai.Services.SyncDhvc.csproj", "{BFA6B7CA-9D7F-4DF3-9ED0-E3297D606AC9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +22,22 @@ Global
 		{0E1445D4-2037-47F8-9121-03CB89D42823}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E1445D4-2037-47F8-9121-03CB89D42823}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E1445D4-2037-47F8-9121-03CB89D42823}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7729B074-99B8-4208-8DEE-F477AFFD71CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7729B074-99B8-4208-8DEE-F477AFFD71CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7729B074-99B8-4208-8DEE-F477AFFD71CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7729B074-99B8-4208-8DEE-F477AFFD71CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80DE9BC3-D170-4525-B78E-96E785CBDD7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80DE9BC3-D170-4525-B78E-96E785CBDD7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80DE9BC3-D170-4525-B78E-96E785CBDD7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80DE9BC3-D170-4525-B78E-96E785CBDD7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFA6B7CA-9D7F-4DF3-9ED0-E3297D606AC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFA6B7CA-9D7F-4DF3-9ED0-E3297D606AC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFA6B7CA-9D7F-4DF3-9ED0-E3297D606AC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFA6B7CA-9D7F-4DF3-9ED0-E3297D606AC9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7729B074-99B8-4208-8DEE-F477AFFD71CA} = {92077BFA-922A-40B3-A530-30F37B090537}
+		{80DE9BC3-D170-4525-B78E-96E785CBDD7A} = {92077BFA-922A-40B3-A530-30F37B090537}
+		{BFA6B7CA-9D7F-4DF3-9ED0-E3297D606AC9} = {80B69E58-B0A8-48CF-BF2C-FDB9F7561467}
 	EndGlobalSection
 EndGlobal
