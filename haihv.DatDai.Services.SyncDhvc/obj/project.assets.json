@@ -754,6 +754,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Microsoft.EntityFrameworkCore": "9.0.0-rc.2.24474.1",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.0-rc.2",
           "Ulid": "1.3.4"
         },

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("haihv.DatDai.Data.DiaChinh")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2f452bcfceb0ccbe97aa1043339a70c4a53dd745")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f2bb7ec934d96af282c75962c60774e02f242e4f")]
 [assembly: System.Reflection.AssemblyProductAttribute("haihv.DatDai.Data.DiaChinh")]
 [assembly: System.Reflection.AssemblyTitleAttribute("haihv.DatDai.Data.DiaChinh")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
