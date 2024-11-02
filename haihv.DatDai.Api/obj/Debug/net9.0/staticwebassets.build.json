@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "6ZmHJcn5KEiY9JWfFTW3HhlJUVKFqfv2Frv0f77pFnY=",
+  "Source": "haihv.DatDai.Api",
+  "BasePath": "_content/haihv.DatDai.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

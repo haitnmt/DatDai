@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\haihv.DatDai.Api.props" />
+</Project>
