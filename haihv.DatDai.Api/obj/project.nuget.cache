@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "V+EH/2Ya58E=",
+  "success": true,
+  "projectFilePath": "/Users/haihoang/RiderProjects/DatDai/haihv.DatDai.Api/haihv.DatDai.Api.csproj",
+  "expectedPackageFiles": [
+    "/Users/haihoang/.nuget/packages/microsoft.aspnetcore.openapi/9.0.0-rc.2.24474.3/microsoft.aspnetcore.openapi.9.0.0-rc.2.24474.3.nupkg.sha512",
+    "/Users/haihoang/.nuget/packages/microsoft.openapi/1.6.17/microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
