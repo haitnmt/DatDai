@@ -15,11 +15,13 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\haihv.DatDai.Data.Base\haihv.DatDai.Data.Base.csproj" />
       <ProjectReference Include="..\haihv.DatDai.Data.DiaChinh\haihv.DatDai.Data.DiaChinh.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Migrations\" />
+      <Folder Include="Services\" />
     </ItemGroup>
 
 </Project>

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("haihv.DatDai.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f2bb7ec934d96af282c75962c60774e02f242e4f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+48ef9023e49b919c5531f51e8793e4979fa7cd65")]
 [assembly: System.Reflection.AssemblyProductAttribute("haihv.DatDai.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("haihv.DatDai.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

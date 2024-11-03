@@ -957,13 +957,27 @@
           }
         }
       },
+      "haihv.DatDai.Data.Base/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "9.0.0-rc.2.24474.1"
+        },
+        "compile": {
+          "bin/placeholder/haihv.DatDai.Data.Base.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/haihv.DatDai.Data.Base.dll": {}
+        }
+      },
       "haihv.DatDai.Data.DanhMuc/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "9.0.0-rc.2.24474.1",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.0-rc.2",
-          "Ulid": "1.3.4"
+          "Ulid": "1.3.4",
+          "haihv.DatDai.Data.Base": "1.0.0"
         },
         "compile": {
           "bin/placeholder/haihv.DatDai.Data.DanhMuc.dll": {}
@@ -2906,6 +2920,11 @@
         "ulid.nuspec"
       ]
     },
+    "haihv.DatDai.Data.Base/1.0.0": {
+      "type": "project",
+      "path": "../haihv.DatDai.Data.Base/haihv.DatDai.Data.Base.csproj",
+      "msbuildProject": "../haihv.DatDai.Data.Base/haihv.DatDai.Data.Base.csproj"
+    },
     "haihv.DatDai.Data.DanhMuc/1.0.0": {
       "type": "project",
       "path": "../haihv.DatDai.Data.DanhMuc/haihv.DatDai.Data.DanhMuc.csproj",
@@ -2921,6 +2940,7 @@
     "net9.0": [
       "Microsoft.AspNetCore.OpenApi >= 9.0.0-rc.2.24474.3",
       "Microsoft.EntityFrameworkCore.Design >= 9.0.0-rc.2.24474.1",
+      "haihv.DatDai.Data.Base >= 1.0.0",
       "haihv.DatDai.Data.DiaChinh >= 1.0.0"
     ]
   },
@@ -2950,6 +2970,9 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
+            "/Users/haihoang/RiderProjects/DatDai/haihv.DatDai.Data.Base/haihv.DatDai.Data.Base.csproj": {
+              "projectPath": "/Users/haihoang/RiderProjects/DatDai/haihv.DatDai.Data.Base/haihv.DatDai.Data.Base.csproj"
+            },
             "/Users/haihoang/RiderProjects/DatDai/haihv.DatDai.Data.DiaChinh/haihv.DatDai.Data.DiaChinh.csproj": {
               "projectPath": "/Users/haihoang/RiderProjects/DatDai/haihv.DatDai.Data.DiaChinh/haihv.DatDai.Data.DiaChinh.csproj"
             }
@@ -2965,8 +2988,7 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "all"
-      },
-      "SdkAnalysisLevel": "9.0.100"
+      }
     },
     "frameworks": {
       "net9.0": {

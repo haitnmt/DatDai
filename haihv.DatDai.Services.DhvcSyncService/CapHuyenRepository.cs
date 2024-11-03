@@ -1,13 +1,14 @@
 using System.Text;
 using System.Xml.Linq;
 using haihv.DatDai.Data.DanhMuc.Model;
+using haihv.DatDai.Data.DanhMuc.Services;
 
 namespace haihv.DatDai.Services.SyncDhvc;
 
-public class CapXaRepository(string? url)
+internal class CapHuyenRepository(DvhcService dvhcService)
 {
-    private readonly HttpClient _httpClient = new HttpClient();
-    private readonly string _url = url ?? "https://danhmuchanhchinh.gso.gov.vn/DMDVHC.asmx";
+    private readonly HttpClient _httpClient = new();
+    private const string Url = "https://danhmuchanhchinh.gso.gov.vn/DMDVHC.asmx";
 
     private const string SoapRequest = """
                                        <?xml version="1.0" encoding="utf-8"?>
@@ -16,31 +17,29 @@ public class CapXaRepository(string? url)
                                        xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
                                        xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
                                          <soap12:Body>
-                                           <DanhMucPhuongXa xmlns="http://tempuri.org/">
-                                             <DenNgay>string</DenNgay>
-                                           </DanhMucPhuongXa>
+                                           <DanhMucQuanHuyen xmlns="http://tempuri.org/">
+                                               <DenNgay>string</DenNgay>
+                                           </DanhMucQuanHuyen>
                                          </soap12:Body>
                                        </soap12:Envelope>
                                        """;
-
-    private static List<DvhcDto> ParseProvinceResponse(string responseXml)
+    
+    private static List<Dvhc> ParseProvinceResponse(string responseXml)
     {
-        var capXas = new List<DvhcDto>();
-            
+        var capHuyens = new List<Dvhc>();
+
         try
         {
             var doc = XDocument.Parse(responseXml);
 
             var tables = doc.Descendants("TABLE");
 
-            capXas.AddRange(tables.Select(table => new DvhcDto()
+            capHuyens.AddRange(tables.Select(table => new Dvhc()
             {
-                MaKyHieu = table.Element("MaPhuongXa")?.Value ?? string.Empty,
-                MaTinh = table.Element("MaTinh")?.Value, 
+                MaTinh = table.Element("MaTinh")?.Value,
                 MaHuyen = table.Element("MaQuanHuyen")?.Value,
-                MaXa = table.Element("MaPhuongXa")?.Value,
-                Cap = 3,
-                TenGiaTri = table.Element("TenPhuongXa")?.Value ?? string.Empty,
+                TenGiaTri = table.Element("TenQuanHuyen")?.Value ?? string.Empty,
+                Cap = 2,
                 LoaiHinh = table.Element("LoaiHinh")?.Value ?? string.Empty
             }));
         }
@@ -49,17 +48,17 @@ public class CapXaRepository(string? url)
             throw new Exception($"Lỗi trong quá trình giải mã đơn vị hành chính từ XML: {ex.Message}", ex);
         }
 
-        return capXas;
+        return capHuyens;
     }
-    
-    private async Task<List<DvhcDto>> GetAsync()
+
+    private async Task<List<Dvhc>> GetAsync()
     {
         try
         {
-            _httpClient.DefaultRequestHeaders.Add("SOAPAction", "http://tempuri.org/DanhMucPhuongXa");
+            _httpClient.DefaultRequestHeaders.Add("SOAPAction", "http://tempuri.org/DanhMucQuanHuyen");
             var content = new StringContent(SoapRequest, Encoding.UTF8, "application/soap+xml");
 
-            var response = await _httpClient.PostAsync(_url, content);
+            var response = await _httpClient.PostAsync(Url, content);
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
             return ParseProvinceResponse(responseString);
@@ -72,6 +71,6 @@ public class CapXaRepository(string? url)
 
     }
 
- //   public async Task CreateOrUpdateAsync() 
- //       => await new DvhcRepository(dataContextDiaChinh).CreateOrUpdateAsync(await GetAsync());
+ public async Task CreateOrUpdateAsync()
+      => await dvhcService.UpdateDvhcAsync(await GetAsync());
 }

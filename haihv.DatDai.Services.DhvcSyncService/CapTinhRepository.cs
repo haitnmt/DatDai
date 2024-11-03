@@ -1,13 +1,14 @@
 using System.Text;
 using System.Xml.Linq;
 using haihv.DatDai.Data.DanhMuc.Model;
+using haihv.DatDai.Data.DanhMuc.Services;
 
 namespace haihv.DatDai.Services.SyncDhvc;
 
-public class CapTinhRepository(string? url)
+internal class CapTinhRepository(DvhcService dvhcService)
 {
     private readonly HttpClient _httpClient = new();
-    private readonly string _url = url ?? "https://danhmuchanhchinh.gso.gov.vn/DMDVHC.asmx";
+    private const string Url = "https://danhmuchanhchinh.gso.gov.vn/DMDVHC.asmx";
 
     private const string SoapRequest = """
                                        <?xml version="1.0" encoding="utf-8"?>
@@ -22,17 +23,16 @@ public class CapTinhRepository(string? url)
                                              </soap12:Body>
                                            </soap12:Envelope>
                                        """;
-
-    private static List<DvhcDto> ParseProvinceResponse(string responseXml)
+    
+    private static List<Dvhc> ParseProvinceResponse(string responseXml)
     {
-        var provinces = new List<DvhcDto>();
+        var provinces = new List<Dvhc>();
         try
         {
             var doc = XDocument.Parse(responseXml);
             var tables = doc.Descendants("TABLE");
-            provinces.AddRange(tables.Select(table => new DvhcDto()
+            provinces.AddRange(tables.Select(table => new Dvhc()
             {
-                MaKyHieu = table.Element("MaTinh")?.Value ?? string.Empty,
                 MaTinh = table.Element("MaTinh")?.Value,
                 TenGiaTri = table.Element("TenTinh")?.Value ?? string.Empty,
                 Cap = 1,
@@ -47,13 +47,13 @@ public class CapTinhRepository(string? url)
         return provinces;
     }
 
-    private async Task<List<DvhcDto>> GetAsync()
+    private async Task<List<Dvhc>> GetAsync()
     {
         try
         {
             _httpClient.DefaultRequestHeaders.Add("SOAPAction", "http://tempuri.org/DanhMucTinh");
             var content = new StringContent(SoapRequest, Encoding.UTF8, "application/soap+xml");
-            var response = await _httpClient.PostAsync(_url, content);
+            var response = await _httpClient.PostAsync(Url, content);
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
             return ParseProvinceResponse(responseString);
@@ -65,6 +65,6 @@ public class CapTinhRepository(string? url)
         }
     }
 
-//    public async Task CreateOrUpdateAsync() =>
-//        await new DvhcRepository(dataContextDiaChinh).CreateOrUpdateAsync(await GetAsync());
+    public async Task CreateOrUpdateAsync() 
+        => await dvhcService.UpdateDvhcAsync(await GetAsync());
 }

@@ -1,22 +1,16 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using haihv.DatDai.Data.Base;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace haihv.DatDai.Data.DanhMuc.Model;
 
 /// <summary>
 /// Lớp đại diện cho thông tin về đơn vị hành chính trong cơ sở dữ liệu đất đai.
 /// </summary>
-public class DvhcDto : DanhMucDto
+public class Dvhc : BaseDto, IDanhMuc
 {
-    /// <summary>
-    /// Là mã đơn vị hành chính
-    /// </summary>
-    /// <remarks>
-    /// Là mã số đơn vị hành chính theo quy định của Thủ tướng Chính phủ
-    /// về việc ban hành bảng danh mục và mã số các đơn vị hành chính Việt Nam.
-    /// </remarks>
-    [JsonPropertyName("maDvhc")]
-    public override string MaKyHieu { get; set; } = string.Empty;
-    
     /// <summary>
     /// Là tên đơn vị hành chính.
     /// </summary>
@@ -25,7 +19,8 @@ public class DvhcDto : DanhMucDto
     /// về việc ban hành bảng danh mục và mã số các đơn vị hành chính Việt Nam.
     /// </remarks>
     [JsonPropertyName("tenDvhc")]
-    public override string TenGiaTri { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string TenGiaTri { get; set; } = string.Empty;
     
     /// <summary>
     /// Là mã đơn vị hành chính cấp xã:
@@ -36,8 +31,9 @@ public class DvhcDto : DanhMucDto
     /// về việc ban hành bảng danh mục và mã số các đơn vị hành chính Việt Nam.
     /// </remarks>
     [JsonPropertyName("maXa")]
-    public string? MaXa { get; init; }
-    
+    [MaxLength(5)]
+    public string? MaXa { get; set; }
+
     /// <summary>
     /// Là mã đơn vị hành chính cấp huyện:
     /// Quận, huyện, thị xã, thành phố trực thuộc tỉnh, thành phố trực thuộc thành phố thuộc trung ương.
@@ -47,8 +43,9 @@ public class DvhcDto : DanhMucDto
     /// về việc ban hành bảng danh mục và mã số các đơn vị hành chính Việt Nam.
     /// </remarks>
     [JsonPropertyName("maHuyen")]
-    public string? MaHuyen { get; init; } 
-    
+    [MaxLength(3)]
+    public string? MaHuyen { get; set; }
+        
     /// <summary>
     /// Là mã đơn vị hành chính cấp tỉnh:
     /// Tỉnh, thành phố trực thuộc trung ương.
@@ -58,7 +55,8 @@ public class DvhcDto : DanhMucDto
     /// về việc ban hành bảng danh mục và mã số các đơn vị hành chính Việt Nam.
     /// </remarks>
     [JsonPropertyName("maTinh")]
-    public string? MaTinh { get; init; }
+    [MaxLength(2)]
+    public string? MaTinh { get; set; }
     
     /// <summary>
     /// Là cấp của đơn vị hành chính.
@@ -69,7 +67,7 @@ public class DvhcDto : DanhMucDto
     /// về việc ban hành bảng danh mục và mã số các đơn vị hành chính Việt Nam.
     /// </remarks>
     [JsonPropertyName("cap")]
-    public int Cap { get; init; } = 0;
+    public int Cap { get; set; }
     
     /// <summary>
     /// Là loại hình của đơn vị hành chính.
@@ -79,7 +77,8 @@ public class DvhcDto : DanhMucDto
     /// về việc ban hành bảng danh mục và mã số các đơn vị hành chính Việt Nam.
     /// </remarks>
     [JsonPropertyName("loaiHinh")]
-    public string LoaiHinh { get; init; } = string.Empty;
+    [MaxLength(50)]
+    public string LoaiHinh { get; set; } = string.Empty;
     
     /// <summary>
     /// Ngày hiệu lục của đơn vị hành chính.
@@ -100,5 +99,43 @@ public class DvhcDto : DanhMucDto
     /// theo các Nghị quyết của Quốc hội về việc sắp xếp, thay đổi các đơn vị hành chính.
     /// </remarks>
     [JsonPropertyName("hieuLuc")]
-    public Boolean HieuLuc { get; set; } = true;
+    public bool HieuLuc { get; set; } = true;
+
+    [JsonPropertyName("maDvhc")] public string MaKyHieu => this.GetMaDvhc();
+}
+
+public class DvhcConfiguration : IEntityTypeConfiguration<Dvhc>
+{
+    public void Configure(EntityTypeBuilder<Dvhc> builder)
+    {
+        builder.HasKey(e => e.Id);
+        // Unique index for MaXa
+        builder.HasIndex(e => e.MaXa)
+            .IsUnique()
+            .HasDatabaseName("IX_Dvhc_MaXa");
+
+        // Composite index for administrative hierarchy
+        builder.HasIndex(e => new { e.MaTinh, e.MaHuyen, e.MaXa })
+            .HasDatabaseName("IX_Dvhc_Hierarchy");
+
+        // Index for name searches
+        builder.HasIndex(e => e.TenGiaTri)
+            .HasDatabaseName("IX_Dvhc_TenGiaTri");
+
+        // Index for active status filter
+        builder.HasIndex(e => e.HieuLuc)
+            .HasDatabaseName("IX_Dvhc_HieuLuc");
+    }
+}
+public static class DvhcExtensions
+{
+    public static string GetMaDvhc(this Dvhc dvhc)
+    {
+        return dvhc switch
+        {
+            { MaXa: not null } => dvhc.MaXa,
+            { MaHuyen: not null } => dvhc.MaHuyen,
+            _ => dvhc.MaTinh ?? string.Empty
+        };
+    }
 }
