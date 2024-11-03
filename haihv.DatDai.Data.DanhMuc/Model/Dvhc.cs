@@ -88,7 +88,7 @@ public class Dvhc : BaseDto, IDanhMuc
     /// theo các Nghị quyết của Quốc hội về việc sắp xếp, thay đổi các đơn vị hành chính.
     /// </remarks>
     [JsonPropertyName("ngayHieuLuc")]
-    public DateTime NgayHieuLuc { get; set; } = DateTime.Today;
+    public DateTimeOffset NgayHieuLuc { get; set; } = DateTimeOffset.UtcNow;
 
     /// <summary>
     /// Phiên bản có hiệu lực
@@ -104,7 +104,7 @@ public class Dvhc : BaseDto, IDanhMuc
     [JsonPropertyName("maDvhc")] public string MaKyHieu => this.GetMaDvhc();
 }
 
-public class DvhcConfiguration : IEntityTypeConfiguration<Dvhc>
+public class DvhcConfiguration :IEntityTypeConfiguration<Dvhc>
 {
     public void Configure(EntityTypeBuilder<Dvhc> builder)
     {

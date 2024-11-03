@@ -22,7 +22,7 @@ public abstract class BaseDto
     /// Thời gian tạo đối tượng.
     /// </summary>
     [JsonPropertyName("createdAt")]
-    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
     /// <summary>
     /// Thời gian cập nhật đối tượng.

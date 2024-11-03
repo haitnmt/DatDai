@@ -5,8 +5,9 @@ using haihv.DatDai.Data.DanhMuc.Services;
 
 namespace haihv.DatDai.Services.SyncDhvc;
 
-internal class CapTinhRepository(DvhcService dvhcService)
+internal class CapTinhRepository(DanhMucDbContext dbContext)
 {
+    private readonly DvhcService _dvhcService = new(dbContext);
     private readonly HttpClient _httpClient = new();
     private const string Url = "https://danhmuchanhchinh.gso.gov.vn/DMDVHC.asmx";
 
@@ -66,5 +67,5 @@ internal class CapTinhRepository(DvhcService dvhcService)
     }
 
     public async Task CreateOrUpdateAsync() 
-        => await dvhcService.UpdateDvhcAsync(await GetAsync());
+        => await _dvhcService.UpdateDvhcAsync(await GetAsync());
 }

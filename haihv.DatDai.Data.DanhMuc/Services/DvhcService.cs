@@ -34,7 +34,7 @@ public class DvhcService(DanhMucDbContext context)
             existingDvhc.LoaiHinh = updatedDvhc.LoaiHinh;
             existingDvhc.NgayHieuLuc = updatedDvhc.NgayHieuLuc;
             existingDvhc.HieuLuc = updatedDvhc.HieuLuc;
-            existingDvhc.UpdatedAt = DateTimeOffset.Now;
+            existingDvhc.UpdatedAt = DateTime.UtcNow;
         }
         else
         {
@@ -48,7 +48,7 @@ public class DvhcService(DanhMucDbContext context)
                 {
                     // Cập nhật lại thông tin cũ:
                     existingDvhc.HieuLuc = false;
-                    existingDvhc.UpdatedAt = DateTimeOffset.Now;
+                    existingDvhc.UpdatedAt = DateTime.UtcNow;
                 }
                 else
                 {
@@ -67,17 +67,13 @@ public class DvhcService(DanhMucDbContext context)
         while (index < dvhcs.Count)
         {
             var bulkDvhcs = dvhcs.Skip(index).Take(bulkSize).ToList();
-            // Get existing DVHCs based on MaTinh, MaHuyen, MaXa
-            var existingDvhcs = await context.Dvhc
-                .Where(x => bulkDvhcs.Any(b => 
-                    b.MaTinh == x.MaTinh && 
-                    b.MaHuyen == x.MaHuyen && 
-                    b.MaXa == x.MaXa))
-                .ToListAsync();
+            // Get existing DVHCs based on MaTinh, MaHuyen, MaXa Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+            //       ---> System.ArgumentException: Cannot write DateTime with Kind=Local to PostgreSQL type 'timestamp with time zone', only UTC is supported. Note that it's not possible to mix DateTimes with different Kinds in an array, range, or multirange. (Parameter 'value')
+
 
             foreach (var dvhc in bulkDvhcs)
             {
-                var existing = existingDvhcs.FirstOrDefault(x => 
+                var existing = await context.Dvhc.FirstOrDefaultAsync(x => 
                     x.MaTinh == dvhc.MaTinh && 
                     x.MaHuyen == dvhc.MaHuyen && 
                     x.MaXa == dvhc.MaXa);
@@ -86,7 +82,7 @@ public class DvhcService(DanhMucDbContext context)
                 {
                     if (existing.TenGiaTri == dvhc.TenGiaTri) continue;
                     existing.HieuLuc = false;
-                    existing.UpdatedAt = DateTimeOffset.Now;
+                    existing.UpdatedAt = DateTime.UtcNow;
                 }
 
                 context.Dvhc.Add(dvhc);

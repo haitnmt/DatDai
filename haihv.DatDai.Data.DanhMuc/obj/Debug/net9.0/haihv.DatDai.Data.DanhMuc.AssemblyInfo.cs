@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("haihv.DatDai.Data.DanhMuc")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+48ef9023e49b919c5531f51e8793e4979fa7cd65")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+13ee1a9e7a030563d6d7ff257c28ff4f4a391168")]
 [assembly: System.Reflection.AssemblyProductAttribute("haihv.DatDai.Data.DanhMuc")]
 [assembly: System.Reflection.AssemblyTitleAttribute("haihv.DatDai.Data.DanhMuc")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

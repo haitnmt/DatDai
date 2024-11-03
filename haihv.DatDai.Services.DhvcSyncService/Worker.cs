@@ -1,6 +1,9 @@
+using haihv.DatDai.Data.DanhMuc.Services;
+using Microsoft.EntityFrameworkCore;
+
 namespace haihv.DatDai.Services.SyncDhvc;
 
-public class Worker(ILogger<Worker> logger, IServiceProvider serviceProvider) : BackgroundService
+public class Worker(ILogger<Worker> logger, IConfiguration configuration) : BackgroundService
 {
     private const string Url = "https://danhmuchanhchinh.gso.gov.vn/DMDVHC.asmx";
     private readonly TimeSpan _syncInterval = TimeSpan.FromHours(24); // Configurable sync interval
@@ -34,17 +37,16 @@ public class Worker(ILogger<Worker> logger, IServiceProvider serviceProvider) : 
 
     private async Task SyncAdministrativeUnits()
     {
-        using var scope = serviceProvider.CreateScope();
-        var capTinhRepository = scope.ServiceProvider.GetRequiredService<CapTinhRepository>();
-        var capHuyenRepository = scope.ServiceProvider.GetRequiredService<CapHuyenRepository>();
-        var capXaRepository = scope.ServiceProvider.GetRequiredService<CapXaRepository>();
-        var tasks = new List<Task>
-        {
-            capTinhRepository.CreateOrUpdateAsync(),
-            capHuyenRepository.CreateOrUpdateAsync(),
-            capXaRepository.CreateOrUpdateAsync()
-        };
+        var optionsBuilder = new DbContextOptionsBuilder<DanhMucDbContext>();
+        optionsBuilder.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+        await using var dbContext = new DanhMucDbContext(optionsBuilder.Options);
+        var capTinhRepository = new CapTinhRepository(dbContext);
+        var capHuyenRepository = new CapHuyenRepository(dbContext);
+        var capXaRepository = new CapXaRepository(dbContext);
 
-        await Task.WhenAll(tasks);
+        // Xử lý tuần tự
+        await capTinhRepository.CreateOrUpdateAsync();
+        await capHuyenRepository.CreateOrUpdateAsync();
+        await capXaRepository.CreateOrUpdateAsync();
     }
 }
