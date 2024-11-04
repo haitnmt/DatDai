@@ -1,0 +1,1 @@
+SELECT * FROM "Dvhc" WHERE "MaXa" is not null AND "MaTinh" = '27' ORDER BY "MaHuyen", "MaXa", "Id" LIMIT 10;

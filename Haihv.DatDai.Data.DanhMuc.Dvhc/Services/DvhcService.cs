@@ -1,27 +1,26 @@
-using haihv.DatDai.Data.DanhMuc.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace haihv.DatDai.Data.DanhMuc.Services;
+namespace Haihv.DatDai.Data.DanhMuc.Dvhc.Services;
 
-public class DvhcService(DanhMucDbContext context)
+public class DvhcService(DvhcDbContext context)
 {
-    public async Task<List<Dvhc>> GetAllDvhcAsync()
+    public async Task<List<Model.Dvhc>> GetAllDvhcAsync()
     {
         return await context.Dvhc.ToListAsync();
     }
 
-    public async Task<Dvhc?> GetDvhcByIdAsync(Guid id)
+    public async Task<Model.Dvhc?> GetDvhcByIdAsync(Guid id)
     {
         return await context.Dvhc.FindAsync(id);
     }
 
-    public async Task<List<Dvhc>> GetDvhcByNameAsync(string name)
+    public async Task<List<Model.Dvhc>> GetDvhcByNameAsync(string name)
     {
         return await context.Dvhc
             .Where(d => d.TenGiaTri.Contains(name))
             .ToListAsync();
     }
-    public async Task UpdateDvhcAsync(Dvhc updatedDvhc)
+    public async Task UpdateDvhcAsync(Model.Dvhc updatedDvhc)
     {
         var existingDvhc = await context.Dvhc.FindAsync(updatedDvhc.Id);
         if (existingDvhc != null)
@@ -61,15 +60,15 @@ public class DvhcService(DanhMucDbContext context)
         await context.SaveChangesAsync();
     }
 
-    public async Task UpdateDvhcAsync(List<Dvhc> dvhcs, int bulkSize = 1000)
+    public async Task<(int Insert, int Update, int Skip)> UpdateDvhcAsync(List<Model.Dvhc> dvhcs, int bulkSize = 1000)
     {
         var index = 0;
+        var insert = 0;
+        var update = 0;
+        var skip = 0;
         while (index < dvhcs.Count)
         {
             var bulkDvhcs = dvhcs.Skip(index).Take(bulkSize).ToList();
-            // Get existing DVHCs based on MaTinh, MaHuyen, MaXa Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
-            //       ---> System.ArgumentException: Cannot write DateTime with Kind=Local to PostgreSQL type 'timestamp with time zone', only UTC is supported. Note that it's not possible to mix DateTimes with different Kinds in an array, range, or multirange. (Parameter 'value')
-
 
             foreach (var dvhc in bulkDvhcs)
             {
@@ -80,17 +79,23 @@ public class DvhcService(DanhMucDbContext context)
 
                 if (existing != null)
                 {
-                    if (existing.TenGiaTri == dvhc.TenGiaTri) continue;
+                    if (existing.TenGiaTri == dvhc.TenGiaTri)
+                    {
+                        skip++;
+                        continue;
+                    }
                     existing.HieuLuc = false;
-                    existing.UpdatedAt = DateTime.UtcNow;
+                    existing.UpdatedAt = DateTimeOffset.UtcNow;
+                    update++;
                 }
-
                 context.Dvhc.Add(dvhc);
+                insert++;
             }
 
             await context.SaveChangesAsync();
             index += bulkSize;
         }
+        return (insert, update, skip);
     }
 
 }

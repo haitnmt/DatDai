@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using haihv.DatDai.Data.Base;
+using Haihv.DatDai.Data.Base;
+using Haihv.DatDai.Data.DanhMuc.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace haihv.DatDai.Data.DanhMuc.Model;
+namespace Haihv.DatDai.Data.DanhMuc.Dvhc.Model;
 
 /// <summary>
 /// Lớp đại diện cho thông tin về đơn vị hành chính trong cơ sở dữ liệu đất đai.

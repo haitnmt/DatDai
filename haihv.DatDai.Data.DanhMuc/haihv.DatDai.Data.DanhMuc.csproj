@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\haihv.DatDai.Data.Base\haihv.DatDai.Data.Base.csproj" />
+      <ProjectReference Include="..\Haihv.DatDai.Data.Base\Haihv.DatDai.Data.Base.csproj" />
     </ItemGroup>
 
 </Project>

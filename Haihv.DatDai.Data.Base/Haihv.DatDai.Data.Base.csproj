@@ -4,6 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>haihv.DatDai.Data.Base</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,6 +15,8 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0-rc.2.24474.1" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0-rc.2.24473.5" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0-rc.2" />
     </ItemGroup>
 
 </Project>

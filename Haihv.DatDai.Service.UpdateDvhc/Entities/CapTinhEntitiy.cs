@@ -1,13 +1,14 @@
 using System.Text;
 using System.Xml.Linq;
-using haihv.DatDai.Data.DanhMuc.Model;
-using haihv.DatDai.Data.DanhMuc.Services;
+using Haihv.DatDai.Data.DanhMuc.Dvhc.Model;
+using Haihv.DatDai.Data.DanhMuc.Dvhc.Services;
+using Microsoft.EntityFrameworkCore;
 
-namespace haihv.DatDai.Services.SyncDhvc;
+namespace Haihv.DatDai.Service.UpdateDvhc.Entities;
 
-internal class CapTinhRepository(DanhMucDbContext dbContext)
+internal class CapTinhEntitiy(DbContextOptions<DvhcDbContext> options)
 {
-    private readonly DvhcService _dvhcService = new(dbContext);
+    private readonly DvhcService _dvhcService = new(new DvhcDbContext(options));
     private readonly HttpClient _httpClient = new();
     private const string Url = "https://danhmuchanhchinh.gso.gov.vn/DMDVHC.asmx";
 
@@ -66,6 +67,9 @@ internal class CapTinhRepository(DanhMucDbContext dbContext)
         }
     }
 
-    public async Task CreateOrUpdateAsync() 
-        => await _dvhcService.UpdateDvhcAsync(await GetAsync());
+    public async Task CreateOrUpdateAsync()
+    {
+        var (insert, update, skip) = await _dvhcService.UpdateDvhcAsync(await GetAsync());
+        Console.WriteLine($"{DateTime.Now:HH:mm:ss}: Đồng bộ dữ liệu đơn vị hành chính cấp tỉnh thành công [Thêm mới: {insert}, Cập nhật: {update}, Bỏ qua: {skip}]");
+    }
 }

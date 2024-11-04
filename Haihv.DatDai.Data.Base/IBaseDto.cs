@@ -1,4 +1,4 @@
-namespace haihv.DatDai.Data.Base;
+namespace Haihv.DatDai.Data.Base;
 
 public interface IBaseDto
 {

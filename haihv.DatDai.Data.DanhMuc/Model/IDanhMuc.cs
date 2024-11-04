@@ -1,6 +1,6 @@
-using haihv.DatDai.Data.Base;
+using Haihv.DatDai.Data.Base;
 
-namespace haihv.DatDai.Data.DanhMuc.Model;
+namespace Haihv.DatDai.Data.DanhMuc.Model;
 
 public interface IDanhMuc : IBaseDto
 {

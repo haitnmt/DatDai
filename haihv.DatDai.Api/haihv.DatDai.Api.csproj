@@ -4,6 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>haihv.DatDai.Api</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,13 +16,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\haihv.DatDai.Data.Base\haihv.DatDai.Data.Base.csproj" />
-      <ProjectReference Include="..\haihv.DatDai.Data.DiaChinh\haihv.DatDai.Data.DiaChinh.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Migrations\" />
-      <Folder Include="Services\" />
+      <ProjectReference Include="..\Haihv.DatDai.Data.Base\Haihv.DatDai.Data.Base.csproj" />
+      <ProjectReference Include="..\Haihv.DatDai.Data.DiaChinh\Haihv.DatDai.Data.DiaChinh.csproj" />
     </ItemGroup>
 
 </Project>

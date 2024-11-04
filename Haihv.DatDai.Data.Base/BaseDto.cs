@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace haihv.DatDai.Data.Base;
+namespace Haihv.DatDai.Data.Base;
 
 public abstract class BaseDto
 {

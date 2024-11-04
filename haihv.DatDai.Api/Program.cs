@@ -1,4 +1,4 @@
-using haihv.DatDai.Data.DanhMuc.Services;
+using Haihv.DatDai.Data.DanhMuc.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

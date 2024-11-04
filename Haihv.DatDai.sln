@@ -1,18 +1,24 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "haihv.DatDai.Api", "haihv.DatDai.Api\haihv.DatDai.Api.csproj", "{0E1445D4-2037-47F8-9121-03CB89D42823}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Api", "Haihv.DatDai.Api\Haihv.DatDai.Api.csproj", "{0E1445D4-2037-47F8-9121-03CB89D42823}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{92077BFA-922A-40B3-A530-30F37B090537}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "haihv.DatDai.Data.DanhMuc", "haihv.DatDai.Data.DanhMuc\haihv.DatDai.Data.DanhMuc.csproj", "{7729B074-99B8-4208-8DEE-F477AFFD71CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Data.DanhMuc", "Haihv.DatDai.Data.DanhMuc\Haihv.DatDai.Data.DanhMuc.csproj", "{7729B074-99B8-4208-8DEE-F477AFFD71CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "haihv.DatDai.Data.DiaChinh", "haihv.DatDai.Data.DiaChinh\haihv.DatDai.Data.DiaChinh.csproj", "{80DE9BC3-D170-4525-B78E-96E785CBDD7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Data.DiaChinh", "Haihv.DatDai.Data.DiaChinh\Haihv.DatDai.Data.DiaChinh.csproj", "{80DE9BC3-D170-4525-B78E-96E785CBDD7A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{80B69E58-B0A8-48CF-BF2C-FDB9F7561467}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "haihv.DatDai.Services.DhvcSyncService", "haihv.DatDai.Services.DhvcSyncService\haihv.DatDai.Services.DhvcSyncService.csproj", "{BFA6B7CA-9D7F-4DF3-9ED0-E3297D606AC9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Services.Initialion", "Haihv.DatDai.Services.Initialion\Haihv.DatDai.Services.Initialion.csproj", "{BFA6B7CA-9D7F-4DF3-9ED0-E3297D606AC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "haihv.DatDai.Data.Base", "haihv.DatDai.Data.Base\haihv.DatDai.Data.Base.csproj", "{2A0BFC3C-59F6-4A68-B4E9-0ADAFC8E3958}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Data.Base", "Haihv.DatDai.Data.Base\Haihv.DatDai.Data.Base.csproj", "{2A0BFC3C-59F6-4A68-B4E9-0ADAFC8E3958}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Service.UpdateDvhc", "Haihv.DatDai.Service.UpdateDvhc\Haihv.DatDai.Service.UpdateDvhc.csproj", "{AEEDA075-330D-4BEC-A43E-C5D77D4BA64D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DanhMuc", "DanhMuc", "{B06D1CBD-96C8-4033-9AA0-7F93973BA76A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Data.DanhMuc.Dvhc", "Haihv.DatDai.Data.DanhMuc.Dvhc\Haihv.DatDai.Data.DanhMuc.Dvhc.csproj", "{DB06AC16-88B7-41F7-93A2-F368D6F2DFB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,11 +46,22 @@ Global
 		{2A0BFC3C-59F6-4A68-B4E9-0ADAFC8E3958}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A0BFC3C-59F6-4A68-B4E9-0ADAFC8E3958}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A0BFC3C-59F6-4A68-B4E9-0ADAFC8E3958}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEEDA075-330D-4BEC-A43E-C5D77D4BA64D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEEDA075-330D-4BEC-A43E-C5D77D4BA64D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEEDA075-330D-4BEC-A43E-C5D77D4BA64D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEEDA075-330D-4BEC-A43E-C5D77D4BA64D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB06AC16-88B7-41F7-93A2-F368D6F2DFB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB06AC16-88B7-41F7-93A2-F368D6F2DFB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB06AC16-88B7-41F7-93A2-F368D6F2DFB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB06AC16-88B7-41F7-93A2-F368D6F2DFB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7729B074-99B8-4208-8DEE-F477AFFD71CA} = {92077BFA-922A-40B3-A530-30F37B090537}
 		{80DE9BC3-D170-4525-B78E-96E785CBDD7A} = {92077BFA-922A-40B3-A530-30F37B090537}
 		{BFA6B7CA-9D7F-4DF3-9ED0-E3297D606AC9} = {80B69E58-B0A8-48CF-BF2C-FDB9F7561467}
 		{2A0BFC3C-59F6-4A68-B4E9-0ADAFC8E3958} = {92077BFA-922A-40B3-A530-30F37B090537}
+		{AEEDA075-330D-4BEC-A43E-C5D77D4BA64D} = {80B69E58-B0A8-48CF-BF2C-FDB9F7561467}
+		{B06D1CBD-96C8-4033-9AA0-7F93973BA76A} = {92077BFA-922A-40B3-A530-30F37B090537}
+		{DB06AC16-88B7-41F7-93A2-F368D6F2DFB6} = {B06D1CBD-96C8-4033-9AA0-7F93973BA76A}
 	EndGlobalSection
 EndGlobal
