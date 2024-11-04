@@ -5,7 +5,6 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>dotnet-haihv.DatDai.Services.SyncDhvc-84b1075d-b82f-421a-b563-e19615b6d2f3</UserSecretsId>
-        <RootNamespace>haihv.DatDai.Services.SyncDhvc</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

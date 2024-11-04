@@ -20,4 +20,10 @@
       <ProjectReference Include="..\Haihv.DatDai.Data.Base\Haihv.DatDai.Data.Base.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Data\DanToc.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

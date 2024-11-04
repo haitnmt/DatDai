@@ -1,0 +1,600 @@
+[
+    {
+        "maDanToc": 1,
+        "tenDanToc": "Kinh",
+        "tenGoiKhac": [
+            "Việt"
+        ]
+    },
+    {
+        "maDanToc": 2,
+        "tenDanToc": "Tày",
+        "tenGoiKhac": [
+            "Thổ",
+            "Ngạn",
+            "Phén",
+            "Thù Lao",
+            "Pa Dí",
+            "Tày Khao"
+        ]
+    },
+    {
+        "maDanToc": 3,
+        "tenDanToc": "Thái",
+        "tenGoiKhac": [
+            "Tày Đăm",
+            "Tày Mười",
+            "Tày Thanh",
+            "Mán Thanh",
+            "Hàng Bông",
+            "Tày Mường",
+            "Pa Thay",
+            "Thổ Đà Bắc"
+        ]
+    },
+    {
+        "maDanToc": 4,
+        "tenDanToc": "Hoa",
+        "tenGoiKhac": [
+            "Hán",
+            "Triều Châu",
+            "Phúc Kiến",
+            "Quảng Đông",
+            "Hải Nam",
+            "Hạ",
+            "Xạ Phạng"
+        ]
+    },
+    {
+        "maDanToc": 5,
+        "tenDanToc": "Khơ-me",
+        "tenGoiKhac": [
+            "Cur",
+            "Cul",
+            "Cu",
+            "Thổ",
+            "Việt gốc Miên",
+            "Krôm"
+        ]
+    },
+    {
+        "maDanToc": 6,
+        "tenDanToc": "Mường",
+        "tenGoiKhac": [
+            "Mol",
+            "Mual",
+            "Mọi",
+            "Mọi Bi",
+            "Ao Tá",
+            "Ậu Tá"
+        ]
+    },
+    {
+        "maDanToc": 7,
+        "tenDanToc": "Nùng",
+        "tenGoiKhac": [
+            "Xuồng",
+            "Giang",
+            "Nùng An",
+            "Phàn Sinh",
+            "Nùng Cháo",
+            "Nùng Lòi",
+            "Quý Rim",
+            "Khèn Lài"
+        ]
+    },
+    {
+        "maDanToc": 8,
+        "tenDanToc": "HMông",
+        "tenGoiKhac": [
+            "Mèo",
+            "Hoa",
+            "Mèo Xanh",
+            "Mèo Đỏ",
+            "Mèo Đen",
+            "Ná Mẻo",
+            "Mán Trắng"
+        ]
+    },
+    {
+        "maDanToc": 9,
+        "tenDanToc": "Dao",
+        "tenGoiKhac": [
+            "Mán",
+            "Động",
+            "Trại",
+            "Xá",
+            "Dìu",
+            "Miên",
+            "Kiềm",
+            "Miền",
+            "Quần Trắng",
+            "Dao Đỏ",
+            "Quần Chẹt",
+            "Lô Giang",
+            "Dao Tiền",
+            "Thanh Y",
+            "Lan Tẻn",
+            "Đại Bản",
+            "Tiểu Bản",
+            "Cóc Ngáng",
+            "Cóc Mùn",
+            "Sơn Đầu"
+        ]
+    },
+    {
+        "maDanToc": 10,
+        "tenDanToc": "Gia-rai",
+        "tenGoiKhac": [
+            "Giơ-rai",
+            "Tơ-buăn",
+            "Chơ-rai",
+            "Hơ-bau",
+            "Hđrung",
+            "Chor"
+        ]
+    },
+    {
+        "maDanToc": 11,
+        "tenDanToc": "Ngái",
+        "tenGoiKhac": [
+            "Xín",
+            "Lê",
+            "Đản",
+            "Khách Gia"
+        ]
+    },
+    {
+        "maDanToc": 12,
+        "tenDanToc": "Ê-đê",
+        "tenGoiKhac": [
+            "Ra-đê",
+            "Đê",
+            "Kpạ",
+            "A-đham",
+            "Krung",
+            "Ktul",
+            "Đliê Ruê",
+            "Blô",
+            "Epan",
+            "Mđhur",
+            "Bih"
+        ]
+    },
+    {
+        "maDanToc": 13,
+        "tenDanToc": "Ba na",
+        "tenGoiKhac": [
+            "Giơ-lar.",
+            "Tơ-lô",
+            "Giơ-lâng",
+            "Y-lăng",
+            "Rơ-ngao",
+            "Krem",
+            "Roh",
+            "ConKđe",
+            "A-la Công",
+            "Kpăng Công",
+            "Bơ-nâm"
+        ]
+    },
+    {
+        "maDanToc": 14,
+        "tenDanToc": "Xơ-Đăng",
+        "tenGoiKhac": [
+            "Xơ-teng",
+            "Hđang",
+            "Tơ-đra",
+            "Mơ-nâm",
+            "Ha-lăng",
+            "Ca-dong",
+            "Kmrâng",
+            "ConLan",
+            "Bri-la",
+            "Tang"
+        ]
+    },
+    {
+        "maDanToc": 15,
+        "tenDanToc": "Sán Chay",
+        "tenGoiKhac": [
+            "Cao Lan",
+            "Sán Chỉ",
+            "Mán Cao Lan",
+            "Hờn Bạn",
+            "Sơn Tử"
+        ]
+    },
+    {
+        "maDanToc": 16,
+        "tenDanToc": "Cơ-ho",
+        "tenGoiKhac": [
+            "Xrê",
+            "Nốp",
+            "Tu-lốp",
+            "Cơ-don",
+            "Chil",
+            "Lat",
+            "Lach",
+            "Trinh"
+        ]
+    },
+    {
+        "maDanToc": 17,
+        "tenDanToc": "Chăm",
+        "tenGoiKhac": [
+            "Chàm",
+            "Chiêm Thành",
+            "Hroi"
+        ]
+    },
+    {
+        "maDanToc": 18,
+        "tenDanToc": "Sán Dìu",
+        "tenGoiKhac": [
+            "Sán Dẻo",
+            "Trại",
+            "Trại Đất",
+            "Mán",
+            "Quần Cộc"
+        ]
+    },
+    {
+        "maDanToc": 19,
+        "tenDanToc": "Hrê",
+        "tenGoiKhac": [
+            "Chăm Rê",
+            "Chom",
+            "Krẹ Luỹ"
+        ]
+    },
+    {
+        "maDanToc": 20,
+        "tenDanToc": "Mnông",
+        "tenGoiKhac": [
+            "Pnông",
+            "Nông",
+            "Pré",
+            "Bu-đâng",
+            "ĐiPri",
+            "Biat",
+            "Gar",
+            "Rơ-lam",
+            "Chil"
+        ]
+    },
+    {
+        "maDanToc": 21,
+        "tenDanToc": "Ra-glai",
+        "tenGoiKhac": [
+            "Ra-clây",
+            "Rai",
+            "Noang",
+            "La-oang"
+        ]
+    },
+    {
+        "maDanToc": 22,
+        "tenDanToc": "Xtiêng",
+        "tenGoiKhac": [
+            "Xa-điêng"
+        ]
+    },
+    {
+        "maDanToc": 23,
+        "tenDanToc": "Bru-Vân Kiều",
+        "tenGoiKhac": [
+            "Bru",
+            "Vân Kiều",
+            "Măng Coong",
+            "Tri Khùa"
+        ]
+    },
+    {
+        "maDanToc": 24,
+        "tenDanToc": "Thổ",
+        "tenGoiKhac": [
+            "Kẹo",
+            "Mọn",
+            "Cuối",
+            "Họ",
+            "Đan Lai",
+            "Ly Hà",
+            "Tày Pọng",
+            "Con Kha",
+            "Xá Lá Vàng"
+        ]
+    },
+    {
+        "maDanToc": 25,
+        "tenDanToc": "Giáy",
+        "tenGoiKhac": [
+            "Nhắng",
+            "Dẩng",
+            "Pầu Thìn Nu Nà",
+            "Cùi Chu",
+            "Xa"
+        ]
+    },
+    {
+        "maDanToc": 26,
+        "tenDanToc": "Cơ-tu",
+        "tenGoiKhac": [
+            "Ca-tu",
+            "Cao",
+            "Hạ",
+            "Phương",
+            "Ca-tang"
+        ]
+    },
+    {
+        "maDanToc": 27,
+        "tenDanToc": "Gié Triêng",
+        "tenGoiKhac": [
+            "Đgiéh",
+            "Tareb",
+            "Giang Rẫy Pin",
+            "Triêng",
+            "Treng",
+            "Ta-riêng",
+            "Ve",
+            "Veh",
+            "La-ve",
+            "Ca-tang"
+        ]
+    },
+    {
+        "maDanToc": 28,
+        "tenDanToc": "Mạ",
+        "tenGoiKhac": [
+            "Châu Mạ",
+            "Mạ Ngăn",
+            "Mạ Xóp",
+            "Mạ Tô",
+            "Mạ Krung"
+        ]
+    },
+    {
+        "maDanToc": 29,
+        "tenDanToc": "Khơ-mú",
+        "tenGoiKhac": [
+            "Xá Cẩu",
+            "Mứn Xen",
+            "Pu Thênh",
+            "Tềnh",
+            "Tày Hay"
+        ]
+    },
+    {
+        "maDanToc": 30,
+        "tenDanToc": "Co",
+        "tenGoiKhac": [
+            "Cor",
+            "Col",
+            "Cùa",
+            "Trầu"
+        ]
+    },
+    {
+        "maDanToc": 31,
+        "tenDanToc": "Tà-ôi",
+        "tenGoiKhac": [
+            "Tôi-ôi",
+            "Pa-co",
+            "Pa-hi",
+            "Ba-hi"
+        ]
+    },
+    {
+        "maDanToc": 32,
+        "tenDanToc": "Chơ-ro",
+        "tenGoiKhac": [
+            "Dơ-ro",
+            "Châu-ro"
+        ]
+    },
+    {
+        "maDanToc": 33,
+        "tenDanToc": "Kháng",
+        "tenGoiKhac": [
+            "Xá Khao",
+            "Xá Súa",
+            "Xá Dón",
+            "Xá Dẩng",
+            "Xá Hốc",
+            "Xá Ái",
+            "Xá Bung",
+            "Quảng Lâm"
+        ]
+    },
+    {
+        "maDanToc": 34,
+        "tenDanToc": "Xinh-mun",
+        "tenGoiKhac": [
+            "Puộc",
+            "Pụa"
+        ]
+    },
+    {
+        "maDanToc": 35,
+        "tenDanToc": "Hà Nhì",
+        "tenGoiKhac": [
+            "U Ni",
+            "Xá U Ni"
+        ]
+    },
+    {
+        "maDanToc": 36,
+        "tenDanToc": "Chu ru",
+        "tenGoiKhac": [
+            "Chơ-ru",
+            "Chu"
+        ]
+    },
+    {
+        "maDanToc": 37,
+        "tenDanToc": "Lào",
+        "tenGoiKhac": [
+            "Là Bốc",
+            "Lào Nọi"
+        ]
+    },
+    {
+        "maDanToc": 38,
+        "tenDanToc": "La Chí",
+        "tenGoiKhac": [
+            "Cù Tê",
+            "La Quả"
+        ]
+    },
+    {
+        "maDanToc": 39,
+        "tenDanToc": "La Ha",
+        "tenGoiKhac": [
+            "Xá Khao",
+            "Khlá Phlạo"
+        ]
+    },
+    {
+        "maDanToc": 40,
+        "tenDanToc": "Phù Lá",
+        "tenGoiKhac": [
+            "Bồ Khô Pạ",
+            "Mu Di Pạ Xá",
+            "Phó",
+            "Phổ",
+            "Va Xơ"
+        ]
+    },
+    {
+        "maDanToc": 41,
+        "tenDanToc": "La Hủ",
+        "tenGoiKhac": [
+            "Lao",
+            "Pu Đang",
+            "Khù Xung",
+            "Cò Xung",
+            "Khả Quy"
+        ]
+    },
+    {
+        "maDanToc": 42,
+        "tenDanToc": "Lự",
+        "tenGoiKhac": [
+            "Lừ",
+            "Nhuồn",
+            "Duôn"
+        ]
+    },
+    {
+        "maDanToc": 43,
+        "tenDanToc": "Lô Lô",
+        "tenGoiKhac": [
+            "Mun Di"
+        ]
+    },
+    {
+        "maDanToc": 44,
+        "tenDanToc": "Chứt",
+        "tenGoiKhac": [
+            "Sách",
+            "Máy",
+            "Rục",
+            "Mã-liêng",
+            "A-rem",
+            "Tu vang",
+            "Pa-leng",
+            "Xơ-Lang",
+            "Tơ-hung",
+            "Chà-củi",
+            "Tắc-củi",
+            "U-mo",
+            "Xá Lá Vàng"
+        ]
+    },
+    {
+        "maDanToc": 45,
+        "tenDanToc": "Mảng",
+        "tenGoiKhac": [
+            "Mảng Ư",
+            "Xá Lá Vàng"
+        ]
+    },
+    {
+        "maDanToc": 46,
+        "tenDanToc": "Pà Thẻn",
+        "tenGoiKhac": [
+            "Pà Hưng",
+            "Tống"
+        ]
+    },
+    {
+        "maDanToc": 47,
+        "tenDanToc": "Co Lao",
+        "tenGoiKhac": []
+    },
+    {
+        "maDanToc": 48,
+        "tenDanToc": "Cống",
+        "tenGoiKhac": [
+            "Xắm Khống",
+            "Mấng Nhé",
+            "Xá Xeng"
+        ]
+    },
+    {
+        "maDanToc": 49,
+        "tenDanToc": "Bố Y",
+        "tenGoiKhac": [
+            "Chủng Chá",
+            "Trọng Gia",
+            "Tu Di",
+            "Tu Din"
+        ]
+    },
+    {
+        "maDanToc": 50,
+        "tenDanToc": "Si La",
+        "tenGoiKhac": [
+            "Cù Dề Xừ",
+            "Khả pẻ"
+        ]
+    },
+    {
+        "maDanToc": 51,
+        "tenDanToc": "Pu Péo",
+        "tenGoiKhac": [
+            "Ka Pèo",
+            "Pen Ti Lô Lô"
+        ]
+    },
+    {
+        "maDanToc": 52,
+        "tenDanToc": "Brâu",
+        "tenGoiKhac": [
+            "Brao"
+        ]
+    },
+    {
+        "maDanToc": 53,
+        "tenDanToc": "Ơ Đu",
+        "tenGoiKhac": [
+            "Tày Hạt"
+        ]
+    },
+    {
+        "maDanToc": 54,
+        "tenDanToc": "Rơ măm",
+        "tenGoiKhac": []
+    },
+    {
+        "maDanToc": 55,
+        "tenDanToc": "Người nước ngoài",
+        "tenGoiKhac": []
+    },
+    {
+        "maDanToc": 56,
+        "tenDanToc": "Không rõ",
+        "tenGoiKhac": []
+    }
+]

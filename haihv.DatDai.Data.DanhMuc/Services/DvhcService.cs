@@ -1,26 +1,27 @@
+using Haihv.DatDai.Data.DanhMuc.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace Haihv.DatDai.Data.DanhMuc.Dvhc.Services;
+namespace Haihv.DatDai.Data.DanhMuc.Services;
 
-public class DvhcService(DvhcDbContext context)
+public class DvhcService(DanhMucDbContext context)
 {
-    public async Task<List<Model.Dvhc>> GetAllDvhcAsync()
+    public async Task<List<Dvhc>> GetAllDvhcAsync()
     {
         return await context.Dvhc.ToListAsync();
     }
 
-    public async Task<Model.Dvhc?> GetDvhcByIdAsync(Guid id)
+    public async Task<Dvhc?> GetDvhcByIdAsync(Guid id)
     {
         return await context.Dvhc.FindAsync(id);
     }
 
-    public async Task<List<Model.Dvhc>> GetDvhcByNameAsync(string name)
+    public async Task<List<Dvhc>> GetDvhcByNameAsync(string name)
     {
         return await context.Dvhc
             .Where(d => d.TenGiaTri.Contains(name))
             .ToListAsync();
     }
-    public async Task UpdateDvhcAsync(Model.Dvhc updatedDvhc)
+    public async Task UpdateDvhcAsync(Dvhc updatedDvhc)
     {
         var existingDvhc = await context.Dvhc.FindAsync(updatedDvhc.Id);
         if (existingDvhc != null)
@@ -60,7 +61,7 @@ public class DvhcService(DvhcDbContext context)
         await context.SaveChangesAsync();
     }
 
-    public async Task<(int Insert, int Update, int Skip)> UpdateDvhcAsync(List<Model.Dvhc> dvhcs, int bulkSize = 1000)
+    public async Task<(int Insert, int Update, int Skip)> UpdateDvhcAsync(List<Dvhc> dvhcs, int bulkSize = 1000)
     {
         var index = 0;
         var insert = 0;

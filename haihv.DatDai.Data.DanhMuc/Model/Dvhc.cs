@@ -1,11 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Haihv.DatDai.Data.Base;
-using Haihv.DatDai.Data.DanhMuc.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Haihv.DatDai.Data.DanhMuc.Dvhc.Model;
+namespace Haihv.DatDai.Data.DanhMuc.Model;
 
 /// <summary>
 /// Lớp đại diện cho thông tin về đơn vị hành chính trong cơ sở dữ liệu đất đai.
@@ -105,29 +104,6 @@ public class Dvhc : BaseDto, IDanhMuc
     [JsonPropertyName("maDvhc")] public string MaKyHieu => this.GetMaDvhc();
 }
 
-public class DvhcConfiguration :IEntityTypeConfiguration<Dvhc>
-{
-    public void Configure(EntityTypeBuilder<Dvhc> builder)
-    {
-        builder.HasKey(e => e.Id);
-        // Unique index for MaXa
-        builder.HasIndex(e => e.MaXa)
-            .IsUnique()
-            .HasDatabaseName("IX_Dvhc_MaXa");
-
-        // Composite index for administrative hierarchy
-        builder.HasIndex(e => new { e.MaTinh, e.MaHuyen, e.MaXa })
-            .HasDatabaseName("IX_Dvhc_Hierarchy");
-
-        // Index for name searches
-        builder.HasIndex(e => e.TenGiaTri)
-            .HasDatabaseName("IX_Dvhc_TenGiaTri");
-
-        // Index for active status filter
-        builder.HasIndex(e => e.HieuLuc)
-            .HasDatabaseName("IX_Dvhc_HieuLuc");
-    }
-}
 public static class DvhcExtensions
 {
     public static string GetMaDvhc(this Dvhc dvhc)

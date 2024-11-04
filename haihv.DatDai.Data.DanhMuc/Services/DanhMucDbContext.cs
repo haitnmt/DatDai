@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Data.DanhMuc.Services;
 
-public abstract class DanhMucDbContext(DbContextOptions options) : DbContext(options)
+public class DanhMucDbContext(DbContextOptions<DanhMucDbContext> options) : DbContext(options)
 {
+    public DbSet<Dvhc> Dvhc { get; init; }
+    public DbSet<DanToc> DanToc { get; init; }
 }

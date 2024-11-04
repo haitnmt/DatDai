@@ -1,14 +1,14 @@
 using System.Text;
 using System.Xml.Linq;
-using Haihv.DatDai.Data.DanhMuc.Dvhc.Model;
-using Haihv.DatDai.Data.DanhMuc.Dvhc.Services;
+using Haihv.DatDai.Data.DanhMuc.Model;
+using Haihv.DatDai.Data.DanhMuc.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Service.UpdateDvhc.Entities;
 
-internal class CapTinhEntitiy(DbContextOptions<DvhcDbContext> options)
+internal class CapTinhEntitiy(DbContextOptions<DanhMucDbContext> options)
 {
-    private readonly DvhcService _dvhcService = new(new DvhcDbContext(options));
+    private readonly DvhcService _dvhcService = new(new DanhMucDbContext(options));
     private readonly HttpClient _httpClient = new();
     private const string Url = "https://danhmuchanhchinh.gso.gov.vn/DMDVHC.asmx";
 

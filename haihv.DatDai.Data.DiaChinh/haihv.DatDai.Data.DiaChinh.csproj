@@ -4,7 +4,6 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>haihv.DatDai.Data.DiaChinh</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

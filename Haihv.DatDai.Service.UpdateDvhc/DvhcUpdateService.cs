@@ -1,12 +1,12 @@
 using System.Text;
-using Haihv.DatDai.Data.DanhMuc.Dvhc.Services;
+using Haihv.DatDai.Data.DanhMuc.Services;
 using Haihv.DatDai.Service.UpdateDvhc.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
 namespace Haihv.DatDai.Service.UpdateDvhc;
 
-public class DvhcUpdateService(DbContextOptions<DvhcDbContext> options) : BackgroundService
+public class DvhcUpdateService(DbContextOptions<DanhMucDbContext> options) : BackgroundService
 {
     private const int DayDelay = 1;
 
@@ -37,7 +37,7 @@ public class DvhcUpdateService(DbContextOptions<DvhcDbContext> options) : Backgr
             var random = new Random();
             nextSyncTime = nextSyncTime.AddSeconds(random.Next(0, 7200));
             var delay = nextSyncTime - now;
-            Console.WriteLine($"{DateTime.Now:HH:mm:ss}: giờ Lần đồng bộ dữ liệu đơn vị hành chính tiếp theo lúc: {nextSyncTime:dd/MM/yyyy HH:mm:ss}");
+            Console.WriteLine($"{DateTime.Now:HH:mm:ss}: Lần đồng bộ dữ liệu đơn vị hành chính tiếp theo lúc: {nextSyncTime:dd/MM/yyyy HH:mm:ss}");
             await Task.Delay(delay, stoppingToken);
         }
     }
