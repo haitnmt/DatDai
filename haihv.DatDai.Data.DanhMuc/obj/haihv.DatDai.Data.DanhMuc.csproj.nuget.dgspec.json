@@ -1,28 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "G:\\source\\haitnmt\\DatDai\\Haihv.DatDai.Data.DanhMuc\\Haihv.DatDai.Data.DanhMuc.csproj": {}
+    "/Users/haihoang/RiderProjects/DatDai/haihv.DatDai.Data.DanhMuc/haihv.DatDai.Data.DanhMuc.csproj": {}
   },
   "projects": {
-    "G:\\source\\haitnmt\\DatDai\\Haihv.DatDai.Data.Base\\Haihv.DatDai.Data.Base.csproj": {
+    "/Users/haihoang/RiderProjects/DatDai/haihv.DatDai.Data.Base/Haihv.DatDai.Data.Base.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\source\\haitnmt\\DatDai\\Haihv.DatDai.Data.Base\\Haihv.DatDai.Data.Base.csproj",
+        "projectUniqueName": "/Users/haihoang/RiderProjects/DatDai/haihv.DatDai.Data.Base/Haihv.DatDai.Data.Base.csproj",
         "projectName": "Haihv.DatDai.Data.Base",
-        "projectPath": "G:\\source\\haitnmt\\DatDai\\Haihv.DatDai.Data.Base\\Haihv.DatDai.Data.Base.csproj",
-        "packagesPath": "C:\\Users\\haiti\\.nuget\\packages\\",
-        "outputPath": "G:\\source\\haitnmt\\DatDai\\Haihv.DatDai.Data.Base\\obj\\",
+        "projectPath": "/Users/haihoang/RiderProjects/DatDai/haihv.DatDai.Data.Base/Haihv.DatDai.Data.Base.csproj",
+        "packagesPath": "/Users/haihoang/.nuget/packages/",
+        "outputPath": "/Users/haihoang/RiderProjects/DatDai/haihv.DatDai.Data.Base/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\haiti\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/haihoang/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -75,37 +73,35 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100-rc.2.24474.11/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.100-rc.2.24474.11/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "G:\\source\\haitnmt\\DatDai\\Haihv.DatDai.Data.DanhMuc\\Haihv.DatDai.Data.DanhMuc.csproj": {
+    "/Users/haihoang/RiderProjects/DatDai/haihv.DatDai.Data.DanhMuc/haihv.DatDai.Data.DanhMuc.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\source\\haitnmt\\DatDai\\Haihv.DatDai.Data.DanhMuc\\Haihv.DatDai.Data.DanhMuc.csproj",
+        "projectUniqueName": "/Users/haihoang/RiderProjects/DatDai/haihv.DatDai.Data.DanhMuc/haihv.DatDai.Data.DanhMuc.csproj",
         "projectName": "Haihv.DatDai.Data.DanhMuc",
-        "projectPath": "G:\\source\\haitnmt\\DatDai\\Haihv.DatDai.Data.DanhMuc\\Haihv.DatDai.Data.DanhMuc.csproj",
-        "packagesPath": "C:\\Users\\haiti\\.nuget\\packages\\",
-        "outputPath": "G:\\source\\haitnmt\\DatDai\\Haihv.DatDai.Data.DanhMuc\\obj\\",
+        "projectPath": "/Users/haihoang/RiderProjects/DatDai/haihv.DatDai.Data.DanhMuc/haihv.DatDai.Data.DanhMuc.csproj",
+        "packagesPath": "/Users/haihoang/.nuget/packages/",
+        "outputPath": "/Users/haihoang/RiderProjects/DatDai/haihv.DatDai.Data.DanhMuc/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\haiti\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/haihoang/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "G:\\source\\haitnmt\\DatDai\\Haihv.DatDai.Data.Base\\Haihv.DatDai.Data.Base.csproj": {
-                "projectPath": "G:\\source\\haitnmt\\DatDai\\Haihv.DatDai.Data.Base\\Haihv.DatDai.Data.Base.csproj"
+              "/Users/haihoang/RiderProjects/DatDai/haihv.DatDai.Data.Base/Haihv.DatDai.Data.Base.csproj": {
+                "projectPath": "/Users/haihoang/RiderProjects/DatDai/haihv.DatDai.Data.Base/Haihv.DatDai.Data.Base.csproj"
               }
             }
           }
@@ -160,7 +156,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100-rc.2.24474.11/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.100-rc.2.24474.11/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

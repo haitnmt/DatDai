@@ -41,10 +41,11 @@ public class DanTocSerice(DanhMucDbContext context)
         await context.SaveChangesAsync();
     }
 
-    public async Task<(int Insert, int Update)> UpdateDvhcAsync(List<DanToc> danTocs)
+    public async Task<(int Insert, int Update, int Skip)> UpdateDvhcAsync(List<DanToc> danTocs)
     {
         var insert = 0;
         var update = 0;
+        var skip = 0;
         foreach (var item in danTocs)
         {
             var existingDanToc = await context.DanToc
@@ -52,6 +53,11 @@ public class DanTocSerice(DanhMucDbContext context)
                 .FirstOrDefaultAsync();
             if (existingDanToc != null)
             {
+                if (existingDanToc.TenGiaTri == item.TenGiaTri && existingDanToc.TenGoiKhac.SequenceEqual(item.TenGoiKhac))
+                {
+                    skip++;
+                    continue;
+                }
                 existingDanToc.TenGiaTri = item.TenGiaTri;
                 existingDanToc.TenGoiKhac = item.TenGoiKhac;
                 existingDanToc.UpdatedAt = DateTimeOffset.UtcNow;
@@ -64,10 +70,10 @@ public class DanTocSerice(DanhMucDbContext context)
             }
         }
         await context.SaveChangesAsync();
-        return (insert, update);
+        return (insert, update, skip);
     }
 
-    public async Task<(int Insert, int Update)> UpdateDvhcAsync(string jsonFilePath)
+    public async Task<(int Insert, int Update, int Skip)> UpdateDvhcAsync(string jsonFilePath)
     {
         var jsonString = await File.ReadAllTextAsync(jsonFilePath);
         var jsonData = JsonSerializer.Deserialize<List<JsonModel>>(jsonString);
@@ -75,7 +81,7 @@ public class DanTocSerice(DanhMucDbContext context)
         {
             return await UpdateDvhcAsync(ConvertFromJsonModel(jsonData));
         }
-        return (0, 0);
+        return (0, 0, 0);
     }
 
     private static List<DanToc> ConvertFromJsonModel(List<JsonModel> jsonModels)
@@ -94,7 +100,7 @@ public class DanTocSerice(DanhMucDbContext context)
         [JsonPropertyName("tenDanToc")] public string TenDanToc { get; init; } = string.Empty;
         [JsonPropertyName("tenGoiKhac")] public string[] TenGoiKhac { get; init; } = [];
     }
-    public async Task<(int Insert, int Update)> UpdateDvhcAsync()
+    public async Task<(int Insert, int Update, int Skip)> UpdateDvhcAsync()
     {
         var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "DanToc.json");
         return await UpdateDvhcAsync(filePath);

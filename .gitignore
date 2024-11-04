@@ -56,3 +56,27 @@ appsettings.Production.json
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# cache
+*.cache/
+*.cache
+
+# rider
+.idea/
+*.sln.iml
+
+#nuget
+packages/
+*.nupkg
+*.paket.template
+*.paket.references
+*.paket.local
+*.paket.lock
+*.paket.deps
+*.paket.deps.local
+*.paket.load
+*.paket.references.local
+*.paket.template.local
+*.paket.sln
+*.paket.sln.local
+*.paket.restore

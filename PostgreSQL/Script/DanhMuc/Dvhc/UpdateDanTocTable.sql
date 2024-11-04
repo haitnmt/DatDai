@@ -57,9 +57,9 @@ DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'DanToc' AND column_name = 'CreatedAt')
        THEN
-            ALTER TABLE "DanToc" ADD COLUMN "CreatedAt" TIMESTAMP;
+            ALTER TABLE "DanToc" ADD COLUMN "CreatedAt" TIMESTAMPTZ;
         ELSE
-            ALTER TABLE "DanToc" ALTER COLUMN "CreatedAt" TYPE TIMESTAMP;
+            ALTER TABLE "DanToc" ALTER COLUMN "CreatedAt" TYPE TIMESTAMPTZ;
     END IF;
 END $$;
 
@@ -68,9 +68,9 @@ DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'DanToc' AND column_name = 'UpdatedAt')
        THEN
-            ALTER TABLE "DanToc" ADD COLUMN "UpdatedAt" TIMESTAMP;
+            ALTER TABLE "DanToc" ADD COLUMN "UpdatedAt" TIMESTAMPTZ;
         ELSE
-            ALTER TABLE "DanToc" ALTER COLUMN "UpdatedAt" TYPE TIMESTAMP;
+            ALTER TABLE "DanToc" ALTER COLUMN "UpdatedAt" TYPE TIMESTAMPTZ;
     END IF;
 END $$;
 

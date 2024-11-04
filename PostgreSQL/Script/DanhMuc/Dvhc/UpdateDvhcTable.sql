@@ -81,9 +81,9 @@ DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'Dvhc' AND column_name = 'NgayHieuLuc') 
        THEN
-            ALTER TABLE "Dvhc" ADD COLUMN "NgayHieuLuc" TIMESTAMP;
+            ALTER TABLE "Dvhc" ADD COLUMN "NgayHieuLuc" TIMESTAMPTZ;
         ELSE
-            ALTER TABLE "Dvhc" ALTER COLUMN "NgayHieuLuc" TYPE TIMESTAMP;
+            ALTER TABLE "Dvhc" ALTER COLUMN "NgayHieuLuc" TYPE TIMESTAMPTZ;
     END IF;
 END $$;
 
@@ -114,9 +114,9 @@ DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'Dvhc' AND column_name = 'CreatedAt') 
        THEN
-            ALTER TABLE "Dvhc" ADD COLUMN "CreatedAt" TIMESTAMP;
+            ALTER TABLE "Dvhc" ADD COLUMN "CreatedAt" TIMESTAMPTZ;
         ELSE
-            ALTER TABLE "Dvhc" ALTER COLUMN "CreatedAt" TYPE TIMESTAMP;
+            ALTER TABLE "Dvhc" ALTER COLUMN "CreatedAt" TYPE TIMESTAMPTZ;
     END IF;
 END $$;
 
@@ -125,9 +125,9 @@ DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'Dvhc' AND column_name = 'UpdatedAt') 
        THEN
-            ALTER TABLE "Dvhc" ADD COLUMN "UpdatedAt" TIMESTAMP;
+            ALTER TABLE "Dvhc" ADD COLUMN "UpdatedAt" TIMESTAMPTZ;
         ELSE
-            ALTER TABLE "Dvhc" ALTER COLUMN "UpdatedAt" TYPE TIMESTAMP;
+            ALTER TABLE "Dvhc" ALTER COLUMN "UpdatedAt" TYPE TIMESTAMPTZ;
     END IF;
 END $$;
 
