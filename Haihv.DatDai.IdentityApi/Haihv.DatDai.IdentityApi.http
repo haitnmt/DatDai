@@ -1,0 +1,6 @@
+@Haihv.DatDai.IdentityApi_HostAddress = http://localhost:5165
+
+GET {{Haihv.DatDai.IdentityApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -4,7 +4,7 @@
 DO $$
     BEGIN
         CREATE TABLE IF NOT EXISTS "Dvhc" (
-            Id UUID PRIMARY KEY
+            "Id" uuid PRIMARY KEY
         );
     END $$;
 
@@ -15,9 +15,9 @@ DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'Dvhc' AND column_name = 'MaXa') 
        THEN
-            ALTER TABLE "Dvhc" ADD COLUMN "MaXa" VARCHAR(5);
+            ALTER TABLE "Dvhc" ADD COLUMN "MaXa" INT;
         ELSE
-            ALTER TABLE "Dvhc" ALTER COLUMN "MaXa" TYPE VARCHAR(5);
+            ALTER TABLE "Dvhc" ALTER COLUMN "MaXa" TYPE INT;
     END IF;
 END $$;
 
@@ -26,9 +26,9 @@ DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'Dvhc' AND column_name = 'MaHuyen') 
        THEN
-            ALTER TABLE "Dvhc" ADD COLUMN "MaHuyen" VARCHAR(4);
+            ALTER TABLE "Dvhc" ADD COLUMN "MaHuyen" INT;
         ELSE
-            ALTER TABLE "Dvhc" ALTER COLUMN "MaHuyen" TYPE VARCHAR(4);
+            ALTER TABLE "Dvhc" ALTER COLUMN "MaHuyen" TYPE INT;
     END IF;
 END $$;
 
@@ -37,20 +37,20 @@ DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'Dvhc' AND column_name = 'MaTinh') 
        THEN
-            ALTER TABLE "Dvhc" ADD COLUMN "MaTinh" VARCHAR(2);
+            ALTER TABLE "Dvhc" ADD COLUMN "MaTinh" INT;
         ELSE
-            ALTER TABLE "Dvhc" ALTER COLUMN "MaTinh" TYPE VARCHAR(2);
+            ALTER TABLE "Dvhc" ALTER COLUMN "MaTinh" TYPE INT;
     END IF;
 END $$;
 
 -- Kiểm tra tồn tại và cập nhật cột "TenGiaTri"
 DO $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'Dvhc' AND column_name = 'TenGiaTri') 
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'Dvhc' AND column_name = 'TenDvhc') 
        THEN
-            ALTER TABLE "Dvhc" ADD COLUMN "TenGiaTri" VARCHAR(255);
+            ALTER TABLE "Dvhc" ADD COLUMN "TenDvhc" VARCHAR(150);
         ELSE
-            ALTER TABLE "Dvhc" ALTER COLUMN "TenGiaTri" TYPE VARCHAR(255);
+            ALTER TABLE "Dvhc" ALTER COLUMN "TenDvhc" TYPE VARCHAR(150);
     END IF;
 END $$;
 
@@ -151,7 +151,7 @@ BEGIN
     
     IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE tablename = 'Dvhc' AND indexname = 'IDX_Dvhc_Ten') 
        THEN
-            CREATE INDEX "IDX_Dvhc_Ten" ON "Dvhc" ("TenGiaTri");
+            CREATE INDEX "IDX_Dvhc_Ten" ON "Dvhc" ("TenDvhc");
     END IF;
     IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE tablename = 'Dvhc' AND indexname = 'IDX_Dvhc_HieuLuc') 
        THEN

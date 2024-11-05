@@ -3,52 +3,31 @@
 DO $$
     BEGIN
         CREATE TABLE IF NOT EXISTS "DanToc" (
-            "Id" UUID PRIMARY KEY
+            "Id" INT PRIMARY KEY
         );
     END $$;
 
 -- Cập nhật cấu trúc bảng DanToc
- -- Kiểm tra tồn tại và cập nhật cột "Ma"
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'DanToc' AND column_name = 'MaKyHieu')
-       THEN
-            ALTER TABLE "DanToc" ADD COLUMN "MaKyHieu" VARCHAR(2);
-        ELSE
-            ALTER TABLE "DanToc" ALTER COLUMN "MaKyHieu" TYPE VARCHAR(2);
-    END IF;
-END $$;
 
 -- Kiểm tra tồn tại và cập nhật cột "Ten"
 DO $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'DanToc' AND column_name = 'TenGiaTri')
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'DanToc' AND column_name = 'TenDanToc')
        THEN
-            ALTER TABLE "DanToc" ADD COLUMN "TenGiaTri" VARCHAR(50);
+            ALTER TABLE "DanToc" ADD COLUMN "TenDanToc" VARCHAR(50);
         ELSE
-            ALTER TABLE "DanToc" ALTER COLUMN "TenGiaTri" TYPE VARCHAR(50);
-    END IF;
-END $$;
-
--- Kiểm tra tồn tại và cập nhật cột "TenGoiKhac"
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'DanToc' AND column_name = 'TenGoiKhac')
-       THEN
-            ALTER TABLE "DanToc" ADD COLUMN "TenGoiKhac" VARCHAR(50)[];
-        ELSE
-            ALTER TABLE "DanToc" ALTER COLUMN "TenGoiKhac" TYPE VARCHAR(50)[] USING "TenGoiKhac"::VARCHAR(50)[];
+            ALTER TABLE "DanToc" ALTER COLUMN "TenDanToc" TYPE VARCHAR(50);
     END IF;
 END $$;
 
 -- Kiểm tra tồn tại và cập nhật cột "GhiChu"
 DO $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'DanToc' AND column_name = 'GhiChu')
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'DanToc' AND column_name = 'TenGoiKhac')
        THEN
-            ALTER TABLE "DanToc" ADD COLUMN "GhiChu" TEXT;
+            ALTER TABLE "DanToc" ADD COLUMN "TenGoiKhac" TEXT;
         ELSE
-            ALTER TABLE "DanToc" ALTER COLUMN "GhiChu" TYPE TEXT;
+            ALTER TABLE "DanToc" ALTER COLUMN "TenGoiKhac" TYPE TEXT;
     END IF;
 END $$;
 
@@ -77,7 +56,6 @@ END $$;
 -- Khởi tạo các Index
 DO $$
 BEGIN
-    CREATE INDEX IF NOT EXISTS "IDX_DanToc_MaKyHieu" ON "DanToc" ("MaKyHieu");
-    CREATE INDEX IF NOT EXISTS "IDX_DanToc_TenGiaTri" ON "DanToc" ("TenGiaTri");
+    CREATE INDEX IF NOT EXISTS "IDX_DanToc_TenDanToc" ON "DanToc" ("TenDanToc");
     CREATE INDEX IF NOT EXISTS "IDX_DanToc_TenGoiKhac" ON "DanToc" ("TenGoiKhac");
 END $$;
