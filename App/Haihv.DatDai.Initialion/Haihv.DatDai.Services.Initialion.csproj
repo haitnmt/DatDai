@@ -20,7 +20,5 @@
       <ProjectReference Include="..\..\Lib\Haihv.DatDai.Data\Haihv.DatDai.Lib.Data.DanhMuc\Haihv.DatDai.Lib.Data.DanhMuc.csproj" />
       <ProjectReference Include="..\..\Lib\Haihv.DatDai.Service\Haihv.DatDai.Lib.Service.QuocTichUpdate\Haihv.DatDai.Lib.Service.QuocTichUpdate.csproj" />
       <ProjectReference Include="..\..\Lib\Haihv.DatDai.Service\Haihv.DatDai.Service.DvhcUpdate\Haihv.DatDai.Service.DvhcUpdate.csproj" />
-      <ProjectReference Include="..\Haihv.DatDai.Service.UpdateDvhc\Haihv.DatDai.Service.UpdateDvhc.csproj" />
-      <ProjectReference Include="..\Haihv.DatDai.Lib.Service.UpdateQuocTich\Haihv.DatDai.Lib.Service.UpdateQuocTich.csproj" />
     </ItemGroup>
 </Project>
