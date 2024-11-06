@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>dotnet-haihv.DatDai.Services.SyncDhvc-84b1075d-b82f-421a-b563-e19615b6d2f3</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0-rc.2.24474.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0-rc.2.24473.5"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Lib\Haihv.DatDai.Data\Haihv.DatDai.Lib.Data.Base\Haihv.DatDai.Lib.Data.Base.csproj" />
+      <ProjectReference Include="..\..\Lib\Haihv.DatDai.Data\Haihv.DatDai.Lib.Data.DanhMuc\Haihv.DatDai.Lib.Data.DanhMuc.csproj" />
+      <ProjectReference Include="..\..\Lib\Haihv.DatDai.Service\Haihv.DatDai.Lib.Service.QuocTichUpdate\Haihv.DatDai.Lib.Service.QuocTichUpdate.csproj" />
+      <ProjectReference Include="..\..\Lib\Haihv.DatDai.Service\Haihv.DatDai.Service.DvhcUpdate\Haihv.DatDai.Service.DvhcUpdate.csproj" />
+      <ProjectReference Include="..\Haihv.DatDai.Service.UpdateDvhc\Haihv.DatDai.Service.UpdateDvhc.csproj" />
+      <ProjectReference Include="..\Haihv.DatDai.Lib.Service.UpdateQuocTich\Haihv.DatDai.Lib.Service.UpdateQuocTich.csproj" />
+    </ItemGroup>
+</Project>

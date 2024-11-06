@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0-rc.2.24474.3"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0-rc.2.24474.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Lib\Haihv.DatDai.Data\Haihv.DatDai.Lib.Data.DanhMuc\Haihv.DatDai.Lib.Data.DanhMuc.csproj" />
+      <ProjectReference Include="..\Haihv.DatDai.Data\Haihv.DatDai.Lib.Data.DanhMuc\Haihv.DatDai.Lib.Data.DanhMuc.csproj" />
+    </ItemGroup>
+
+</Project>
