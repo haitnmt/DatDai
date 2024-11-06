@@ -1,11 +1,9 @@
-using Haihv.DatDai.IdentityApi.Interface;
-
-namespace Haihv.DatDai.IdentityApi.Models;
+namespace Haihv.DatDai.Identity.InLdap.Models;
 
 /// <summary>
 /// Đại diện cho một nhóm LDAP.
 /// </summary>
-public class LdapGroup : IGroup
+public class LdapGroup : ILdap
 {
     /// <summary>
     /// GUID của đối tượng LDAP.
@@ -41,6 +39,4 @@ public class LdapGroup : IGroup
     /// Thời gian thay đổi nhóm lần cuối.
     /// </summary>
     public DateTimeOffset? WhenChanged { get; init; } = DateTimeOffset.UtcNow;
-
-    public string? GhiChu { get; set; }
 }

@@ -1,14 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using Haihv.DatDai.IdentityApi.Interface;
 
-namespace Haihv.DatDai.IdentityApi.Models;
+namespace Haihv.DatDai.Identity.InData.Models;
 
 /// <summary>
 /// Lớp đại diện cho người dùng.
 /// </summary>
-public class User : LdapUser, IUser
+public class User
 {
     /// <summary>
     /// GUID của người dùng.
@@ -16,7 +15,7 @@ public class User : LdapUser, IUser
     [JsonPropertyName("id")]
     [Column("Id", TypeName = "varchar(36)")]
     [MaxLength(36)]
-    public override Guid Id { get; init; } = Guid.CreateVersion7();
+    public Guid Id { get; init; } = Guid.CreateVersion7();
 
     /// <summary>
     /// Mật khẩu của người dùng đã được mã hóa bằng BCrypt.Net.

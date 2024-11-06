@@ -1,4 +1,4 @@
-namespace Haihv.DatDai.IdentityApi.Interface;
+namespace Haihv.DatDai.Identity.InLdap.Models;
 
 /// <summary>
 /// Giao diện đại diện cho một đối tượng LDAP.

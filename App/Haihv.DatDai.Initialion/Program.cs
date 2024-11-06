@@ -17,10 +17,13 @@ var optionsQt = new DbContextOptionsBuilder<QuocTichDbContext>()
 
 builder.Services.AddSingleton(_ => new DataBaseInitializer(connectionString));
 
+// Khởi tạo các dịch vụ cập nhật dữ liệu
 builder.Services.AddHostedService<DvhcUpdateService>( _ => new DvhcUpdateService(options));
 builder.Services.AddHostedService<DanTocUpdateService>( _ => new DanTocUpdateService(options));
 builder.Services.AddHostedService<QuocTichUpdateService>( _ => new QuocTichUpdateService(optionsQt));
 var host = builder.Build();
+
+// Khởi tạo cơ sở dữ liệu
 var dataBaseInitializer = host.Services.GetRequiredService<DataBaseInitializer>();
 await dataBaseInitializer.InitializeAsync();
 host.Run();

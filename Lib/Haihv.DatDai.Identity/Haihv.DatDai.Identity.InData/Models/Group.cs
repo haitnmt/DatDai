@@ -1,11 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using Haihv.DatDai.IdentityApi.Interface;
 
-namespace Haihv.DatDai.IdentityApi.Models;
+namespace Haihv.DatDai.Identity.InData.Models;
 
-public class Group : LdapGroup, IGroup
+public class Group
 {
     /// <summary>
     /// GUID của nhóm.
@@ -13,5 +12,5 @@ public class Group : LdapGroup, IGroup
     [JsonPropertyName("id")]
     [Column("Id", TypeName = "varchar(36)")]
     [MaxLength(36)]
-    public override Guid Id { get; init; } = Guid.CreateVersion7();
+    public Guid Id { get; init; } = Guid.CreateVersion7();
 }
