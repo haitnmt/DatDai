@@ -4,7 +4,7 @@ using Haihv.DatDai.Lib.Data.DanhMuc.Model;
 using Haihv.DatDai.Lib.Data.DanhMuc.Services;
 using Microsoft.EntityFrameworkCore;
 
-namespace Haihv.DatDai.Service.DvhcUpdate.Entities;
+namespace Haihv.DatDai.Lib.Service.DvhcUpdate.Entities;
 
 internal class CapXaEntitiy(DbContextOptions<DanhMucDbContext> options)
 {

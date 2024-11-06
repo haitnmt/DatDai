@@ -22,11 +22,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Lib.Data.DanhM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Lib.Data.DiaChinh", "Lib\Haihv.DatDai.Data\Haihv.DatDai.Lib.Data.DiaChinh\Haihv.DatDai.Lib.Data.DiaChinh.csproj", "{358F8F0E-D57E-4670-BBA5-687737730E7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Service.DvhcUpdate", "Lib\Haihv.DatDai.Service\Haihv.DatDai.Service.DvhcUpdate\Haihv.DatDai.Service.DvhcUpdate.csproj", "{F14FA647-BD96-41F8-903A-5A81AC85378C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Lib.Service.DvhcUpdate", "Lib\Haihv.DatDai.Service\Haihv.DatDai.Lib.Service.DvhcUpdate\Haihv.DatDai.Lib.Service.DvhcUpdate.csproj", "{F14FA647-BD96-41F8-903A-5A81AC85378C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Lib.Service.GoogleTranslate", "Lib\Haihv.DatDai.Service\Haihv.DatDai.Lib.Service.GoogleTranslate\Haihv.DatDai.Lib.Service.GoogleTranslate.csproj", "{4723D9AB-FF05-4EB0-9E5F-FF8A9561D513}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Lib.Service.QuocTichUpdate", "Lib\Haihv.DatDai.Service\Haihv.DatDai.Lib.Service.QuocTichUpdate\Haihv.DatDai.Lib.Service.QuocTichUpdate.csproj", "{4D08F91F-7DDD-4874-8ED6-448A7862A9EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Lib.Service.DbUp.PostgreSQL", "Lib\Haihv.DatDai.Service\Haihv.DatDai.Lib.Service.DbUp.PostgreSQL\Haihv.DatDai.Lib.Service.DbUp.PostgreSQL.csproj", "{6FFF4026-518A-4F3B-BE29-037DE643CDBF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Lib.Service.Logger.MongoDb", "Lib\Haihv.DatDai.Service\Haihv.DatDai.Lib.Service.Logger.MongoDb\Haihv.DatDai.Lib.Service.Logger.MongoDb.csproj", "{57CCC700-EE81-4DB0-8A6F-0F1AE4DD4F49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -70,6 +74,14 @@ Global
 		{4D08F91F-7DDD-4874-8ED6-448A7862A9EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D08F91F-7DDD-4874-8ED6-448A7862A9EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D08F91F-7DDD-4874-8ED6-448A7862A9EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FFF4026-518A-4F3B-BE29-037DE643CDBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FFF4026-518A-4F3B-BE29-037DE643CDBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FFF4026-518A-4F3B-BE29-037DE643CDBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FFF4026-518A-4F3B-BE29-037DE643CDBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57CCC700-EE81-4DB0-8A6F-0F1AE4DD4F49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57CCC700-EE81-4DB0-8A6F-0F1AE4DD4F49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57CCC700-EE81-4DB0-8A6F-0F1AE4DD4F49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57CCC700-EE81-4DB0-8A6F-0F1AE4DD4F49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{92077BFA-922A-40B3-A530-30F37B090537} = {0A119648-FF60-4C35-9369-B256985AA9AE}
@@ -84,5 +96,7 @@ Global
 		{F14FA647-BD96-41F8-903A-5A81AC85378C} = {80B69E58-B0A8-48CF-BF2C-FDB9F7561467}
 		{4723D9AB-FF05-4EB0-9E5F-FF8A9561D513} = {80B69E58-B0A8-48CF-BF2C-FDB9F7561467}
 		{4D08F91F-7DDD-4874-8ED6-448A7862A9EA} = {80B69E58-B0A8-48CF-BF2C-FDB9F7561467}
+		{6FFF4026-518A-4F3B-BE29-037DE643CDBF} = {80B69E58-B0A8-48CF-BF2C-FDB9F7561467}
+		{57CCC700-EE81-4DB0-8A6F-0F1AE4DD4F49} = {80B69E58-B0A8-48CF-BF2C-FDB9F7561467}
 	EndGlobalSection
 EndGlobal

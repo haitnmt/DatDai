@@ -1,11 +1,11 @@
 using System.Text;
 using Haihv.DatDai.Lib.Data.Base;
 using Haihv.DatDai.Lib.Data.DanhMuc.Services;
-using Haihv.DatDai.Service.DvhcUpdate.Entities;
+using Haihv.DatDai.Lib.Service.DvhcUpdate.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
-namespace Haihv.DatDai.Service.DvhcUpdate;
+namespace Haihv.DatDai.Lib.Service.DvhcUpdate;
 
 public class DvhcUpdateService(DbContextOptions<DanhMucDbContext> options) : BackgroundService
 {

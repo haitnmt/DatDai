@@ -16,7 +16,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Lib\Haihv.DatDai.Data\Haihv.DatDai.Lib.Data.DanhMuc\Haihv.DatDai.Lib.Data.DanhMuc.csproj" />
-      <ProjectReference Include="..\Haihv.DatDai.Data\Haihv.DatDai.Lib.Data.DanhMuc\Haihv.DatDai.Lib.Data.DanhMuc.csproj" />
     </ItemGroup>
 
 </Project>
