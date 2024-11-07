@@ -4,11 +4,12 @@ using Haihv.DatDai.Lib.Data.DanhMuc;
 using Haihv.DatDai.Lib.Service.DvhcUpdate.Entities;
 using Haihv.DatDai.Lib.Service.Logger.MongoDb;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
 
 namespace Haihv.DatDai.Lib.Service.DvhcUpdate;
 
-public class DvhcUpdateService(DbContextOptions<DanhMucDbContext> options, IMongoDbContext mongoDbContext) : BackgroundService
+public class DvhcUpdateService(DbContextOptions<DanhMucDbContext> options, IMongoDbContext mongoDbContext, IMemoryCache memoryCache) : BackgroundService
 {
     private const int DayDelay = 1;
 
@@ -36,9 +37,9 @@ public class DvhcUpdateService(DbContextOptions<DanhMucDbContext> options, IMong
 
     private async Task SyncAdministrativeUnits()
     {
-        var capTinhRepository = new CapTinhEntitiy(options, mongoDbContext);
-        var capHuyenRepository = new CapHuyenEntitiy(options, mongoDbContext);
-        var capXaRepository = new CapXaEntitiy(options, mongoDbContext);
+        var capTinhRepository = new CapTinhEntitiy(options, mongoDbContext, memoryCache);
+        var capHuyenRepository = new CapHuyenEntitiy(options, mongoDbContext, memoryCache);
+        var capXaRepository = new CapXaEntitiy(options, mongoDbContext, memoryCache);
         // Xử lý đồng thời 3 cấp hành chính
         var tasks = new List<Task>
         {

@@ -5,12 +5,13 @@ using Haihv.DatDai.Lib.Data.DanhMuc.Entries;
 using Haihv.DatDai.Lib.Data.DanhMuc.Services;
 using Haihv.DatDai.Lib.Service.Logger.MongoDb;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Haihv.DatDai.Lib.Service.DvhcUpdate.Entities;
 
-internal class CapXaEntitiy(DbContextOptions<DanhMucDbContext> options, IMongoDbContext mongoDbContext)
+internal class CapXaEntitiy(DbContextOptions<DanhMucDbContext> options, IMongoDbContext mongoDbContext, IMemoryCache memoryCache)
 {
-    private readonly DvhcService _dvhcService = new(new DanhMucDbContext(options, mongoDbContext));
+    private readonly DvhcService _dvhcService = new(new DanhMucDbContext(options, mongoDbContext, memoryCache));
     private readonly HttpClient _httpClient = new();
     private const string Url = "https://danhmuchanhchinh.gso.gov.vn/DMDVHC.asmx";
 
