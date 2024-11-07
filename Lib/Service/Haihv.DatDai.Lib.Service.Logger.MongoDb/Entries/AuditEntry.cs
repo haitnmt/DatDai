@@ -1,3 +1,9 @@
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json.Serialization;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace Haihv.DatDai.Lib.Service.Logger.MongoDb.Entries;
 
 /// <summary>
@@ -10,7 +16,32 @@ namespace Haihv.DatDai.Lib.Service.Logger.MongoDb.Entries;
 public class AuditEntry : BaseEntry
 {
     /// <summary>
-    /// Tên bảng trong cơ sở dữ liệu.
+    /// Tên của bản ghi.
     /// </summary>
-    public string TableName { get; set; } = string.Empty;
+    [BsonRepresentation(BsonType.String)]
+    [BsonIgnoreIfDefault]
+    [BsonElement("hash")]
+    [JsonPropertyName("hash")]
+    public string Hash => Metadata.GetHash();
+    /// <summary>
+    /// Tên của bản ghi.
+    /// </summary>
+    [BsonRepresentation(BsonType.String)]
+    [BsonIgnoreIfDefault]
+    [BsonElement("entryName")]
+    [JsonPropertyName("entryName")]
+    public string EntryName { get; set; } = string.Empty;
+}
+public static class AuditEntryExtensions
+{
+    public static string GetHash(this string? input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return string.Empty;
+        }
+        var inputBytes = Encoding.UTF8.GetBytes(input);
+        var hashBytes = SHA256.HashData(inputBytes);
+        return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+    }
 }

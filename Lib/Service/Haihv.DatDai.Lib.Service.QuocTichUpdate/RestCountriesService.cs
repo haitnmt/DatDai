@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Haihv.DatDai.Lib.Service.Logger.MongoDb;
 using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Lib.Service.QuocTichUpdate;
@@ -6,9 +7,9 @@ namespace Haihv.DatDai.Lib.Service.QuocTichUpdate;
 /// <summary>
 /// Dịch vụ để lấy và cập nhật thông tin quốc tịch từ REST Countries API.
 /// </summary>
-public class RestCountriesService(DbContextOptions<QuocTichDbContext> options)
+public class RestCountriesService(DbContextOptions<QuocTichDbContext> options, IMongoDbContext mongoDbContext)
 {
-    private readonly QuocTichDbContext _dbcontext = new (options);
+    private readonly QuocTichDbContext _dbcontext = new (options, mongoDbContext);
     private readonly HttpClient _httpClient = new();
     private const string Url = "https://restcountries.com/v3.1/independent?status=true&fields=ccn3,cca3,name";
     

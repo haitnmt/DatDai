@@ -16,7 +16,7 @@ public abstract class BaseEntry : IBaseEntry
     [BsonRepresentation(BsonType.ObjectId)]
     [BsonElement("_id")]
     [JsonPropertyName("id")]
-    public ObjectId Id { get; set; }
+    public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
 
     /// <summary>
     /// Thông tin metadata.

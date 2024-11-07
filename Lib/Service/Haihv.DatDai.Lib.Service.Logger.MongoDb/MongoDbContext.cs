@@ -8,12 +8,14 @@ namespace Haihv.DatDai.Lib.Service.Logger.MongoDb;
 /// </summary>
 /// <param name="connectionString">Chuỗi kết nối đến MongoDB.</param>
 /// <param name="databaseName">Tên cơ sở dữ liệu MongoDB.</param>
-public class MongoDbContext(string connectionString, string databaseName) : IMongoDbContext
+public class MongoDbContext(MongoDbConnectionInfo mongoDbConnectionInfo) : IMongoDbContext
 {
+    private readonly string _connectionString = mongoDbConnectionInfo.ConnectionString;
+    private readonly string _databaseName = mongoDbConnectionInfo.DatabaseName;
     /// <summary>
     /// Truy cập vào cơ sở dữ liệu MongoDB.
     /// </summary>
-    public IMongoDatabase Database => Constructor(connectionString, databaseName);
+    public IMongoDatabase Database => Constructor(_connectionString, _databaseName);
 
     /// <summary>
     /// Truy cập vào bộ sưu tập AuditEntries.
@@ -62,4 +64,10 @@ public class MongoDbContext(string connectionString, string databaseName) : IMon
         // Lấy tham chiếu cơ sở dữ liệu
         return mongoClient.GetDatabase(databaseName);
     }
+}
+
+public class MongoDbConnectionInfo(string connectionString, string databaseName)
+{
+    public string ConnectionString => connectionString;
+    public string DatabaseName => databaseName;
 }

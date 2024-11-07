@@ -1,20 +1,31 @@
 using Haihv.DatDai.Lib.Data.DanhMuc.Entries;
+using Haihv.DatDai.Lib.Data.DanhMuc.Interface;
 using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Lib.Data.DanhMuc.Services;
 
-public class DvhcService(DanhMucDbContext context)
+public class DvhcService(DanhMucDbContext context) : IDvhcService
 {
-    public async Task<List<Dvhc>> GetAllDvhcAsync()
+    public async Task<bool> DeleteByIdAsync(Guid id)
     {
-        return await context.Dvhc.ToListAsync();
+      var result = await context.Dvhc
+          .Where(x => x.Id == id && !x.IsDeleted)
+          .ExecuteUpdateAsync(x => 
+              x.SetProperty(p =>p.IsDeleted, true)
+              .SetProperty(p => p.DeletedAtUtc, DateTimeOffset.UtcNow));
+      return result > 0;
     }
 
-    public async Task<Dvhc?> GetDvhcByIdAsync(Guid id)
+    public async Task<Dvhc?> GetByIdAsync(Guid id)
     {
         return await context.Dvhc.FindAsync(id);
     }
 
+    public async Task<IEnumerable<Dvhc>> GetAllAsync()
+    {
+        return await context.Dvhc.ToListAsync();
+    }
+    
     public async Task<List<Dvhc>> GetDvhcByNameAsync(string name)
     {
         return await context.Dvhc
@@ -98,5 +109,4 @@ public class DvhcService(DanhMucDbContext context)
         }
         return (insert, update, skip);
     }
-
 }

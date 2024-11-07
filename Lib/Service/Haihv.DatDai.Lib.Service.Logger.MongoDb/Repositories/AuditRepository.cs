@@ -23,7 +23,10 @@ public class AuditRepository(IMongoDbContext mongoDbContext) : IBaseRepository<A
         {
             ReturnDocument = ReturnDocument.After
         };
-        var filter = Builders<AuditEntry>.Filter.Eq(x => x.Id, entry.Id);
+        var filter = Builders<AuditEntry>.Filter.Or(Builders<AuditEntry>.Filter.Eq(x => x.Id, entry.Id),
+            Builders<AuditEntry>.Filter.And(
+                Builders<AuditEntry>.Filter.Ne(x => x.Hash, string.Empty),
+                Builders<AuditEntry>.Filter.Eq(x => x.Hash, entry.Hash)));
         var update = Builders<AuditEntry>.Update
             .Set(x => x.Metadata, entry.Metadata)
             .Set(x => x.StartTimeUtc, entry.StartTimeUtc)
@@ -37,29 +40,32 @@ public class AuditRepository(IMongoDbContext mongoDbContext) : IBaseRepository<A
         await _collection.DeleteOneAsync(x => x.Id == id);
     }
     
-    public async Task<IEnumerable<AuditEntry>> CreateOrUpdateAsync(IEnumerable<AuditEntry> entries, int bulkSize = 100)
+    public async Task<IEnumerable<AuditEntry>> CreateOrUpdateAsync(IEnumerable<AuditEntry> entries, int bulkSize = 100, CancellationToken cancellationToken = default)
     {
         var result = new List<AuditEntry>();
         var bulk = new List<WriteModel<AuditEntry>>();
         foreach (var entry in entries)
         {
-            var existingEntry = await GetByIdAsync(entry.Id);
+            var existingEntry = await GetByIdAsync(entry.Id) ??
+                                await _collection.Find(x => x.Hash == entry.Hash)
+                                    .FirstOrDefaultAsync(cancellationToken: cancellationToken);
             if (existingEntry == null)
             {
                 bulk.Add(new InsertOneModel<AuditEntry>(entry));
             }
             else
             {
+                entry.StartTimeUtc = existingEntry.StartTimeUtc;
                 bulk.Add(new ReplaceOneModel<AuditEntry>(Builders<AuditEntry>.Filter.Eq(x => x.Id, entry.Id), entry));
             }
             result.Add(entry);
             if (bulk.Count < bulkSize) continue;
-            await _collection.BulkWriteAsync(bulk);
+            await _collection.BulkWriteAsync(bulk, cancellationToken: cancellationToken);
             bulk.Clear();
         }
         if (bulk.Count > 0)
         {
-            await _collection.BulkWriteAsync(bulk);
+            await _collection.BulkWriteAsync(bulk, cancellationToken: cancellationToken);
         }
         return result;
     }

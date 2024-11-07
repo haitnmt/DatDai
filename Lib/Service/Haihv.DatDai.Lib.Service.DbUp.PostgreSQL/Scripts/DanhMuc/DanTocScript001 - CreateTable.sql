@@ -7,7 +7,9 @@ CREATE TABLE "DanToc" (
                         "TenDanToc" VARCHAR(50),
                         "TenGoiKhac" TEXT,
                         "CreatedAt" TIMESTAMPTZ,
-                        "UpdatedAt" TIMESTAMPTZ
+                        "UpdatedAt" TIMESTAMPTZ,
+                        "IsDeleted" BOOLEAN DEFAULT FALSE,
+                        "DeletedAtUtc" TIMESTAMPTZ
 );
 
 -- Description: Create index for table DanToc

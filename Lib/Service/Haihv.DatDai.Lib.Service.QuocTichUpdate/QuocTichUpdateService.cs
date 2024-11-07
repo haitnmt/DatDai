@@ -1,11 +1,12 @@
 using System.Text;
 using Haihv.DatDai.Lib.Data.Base;
+using Haihv.DatDai.Lib.Service.Logger.MongoDb;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
 namespace Haihv.DatDai.Lib.Service.QuocTichUpdate;
 
-public class QuocTichUpdateService(DbContextOptions<QuocTichDbContext> options)  : BackgroundService
+public class QuocTichUpdateService(DbContextOptions<QuocTichDbContext> options, IMongoDbContext mongoDbContext)  : BackgroundService
 {
     private const int DayDelay = 30;
 
@@ -32,7 +33,7 @@ public class QuocTichUpdateService(DbContextOptions<QuocTichDbContext> options) 
     private async Task SyncAdministrativeUnits()
     {
         Console.WriteLine($"{DateTime.Now:HH:mm:ss}: Bắt đầu cập nhật dữ liệu quốc tịch");
-        var service = new RestCountriesService(options);
+        var service = new RestCountriesService(options, mongoDbContext);
         var (insert, update, skip) = await service.UpdateAsync();
         Console.WriteLine($"{DateTime.Now:HH:mm:ss}: Cập nhật dữ liệu quốc tịch thành công [Thêm mới: {insert}, Cập nhật: {update}, Bỏ qua: {skip}]");
     }

@@ -12,7 +12,9 @@ CREATE TABLE "QuocTich" (
                           "TenQuocTeDayDu" VARCHAR(150),
                           "GhiChu" TEXT,
                           "CreatedAt" TIMESTAMPTZ,
-                          "UpdatedAt" TIMESTAMPTZ
+                          "UpdatedAt" TIMESTAMPTZ,
+                          "IsDeleted" BOOLEAN DEFAULT FALSE,
+                          "DeletedAtUtc" TIMESTAMPTZ
 );
 
 -- Description: Create index for table QuocTich

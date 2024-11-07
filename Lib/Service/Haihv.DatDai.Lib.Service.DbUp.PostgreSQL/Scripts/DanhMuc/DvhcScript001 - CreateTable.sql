@@ -14,7 +14,9 @@ CREATE TABLE "Dvhc" (
                       "HieuLuc" BOOLEAN,
                       "GhiChu" TEXT,
                       "CreatedAt" TIMESTAMPTZ,
-                      "UpdatedAt" TIMESTAMPTZ
+                      "UpdatedAt" TIMESTAMPTZ,
+                      "IsDeleted" BOOLEAN DEFAULT FALSE,
+                      "DeletedAtUtc" TIMESTAMPTZ
 );
 
 

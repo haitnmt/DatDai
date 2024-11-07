@@ -40,7 +40,7 @@ public class LogUserRepository(IMongoDbContext mongoDbContext) : IBaseRepository
         await _collection.DeleteOneAsync(x => x.Id == id);
     }
 
-    public async Task<IEnumerable<LogUserEntry>> CreateOrUpdateAsync(IEnumerable<LogUserEntry> entries, int bulkSize = 100)
+    public async Task<IEnumerable<LogUserEntry>> CreateOrUpdateAsync(IEnumerable<LogUserEntry> entries, int bulkSize = 100, CancellationToken cancellationToken = default)
     {
         var result = new List<LogUserEntry>();
         var bulk = new List<WriteModel<LogUserEntry>>();
@@ -57,12 +57,12 @@ public class LogUserRepository(IMongoDbContext mongoDbContext) : IBaseRepository
             }
             result.Add(entry);
             if (bulk.Count < bulkSize) continue;
-            await _collection.BulkWriteAsync(bulk);
+            await _collection.BulkWriteAsync(bulk, cancellationToken: cancellationToken);
             bulk.Clear();
         }
         if (bulk.Count > 0)
         {
-            await _collection.BulkWriteAsync(bulk);
+            await _collection.BulkWriteAsync(bulk, cancellationToken: cancellationToken);
         }
         return result;
     }

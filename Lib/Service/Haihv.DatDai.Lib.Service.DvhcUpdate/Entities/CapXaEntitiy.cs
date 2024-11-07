@@ -1,14 +1,16 @@
 using System.Text;
 using System.Xml.Linq;
+using Haihv.DatDai.Lib.Data.DanhMuc;
 using Haihv.DatDai.Lib.Data.DanhMuc.Entries;
 using Haihv.DatDai.Lib.Data.DanhMuc.Services;
+using Haihv.DatDai.Lib.Service.Logger.MongoDb;
 using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Lib.Service.DvhcUpdate.Entities;
 
-internal class CapXaEntitiy(DbContextOptions<DanhMucDbContext> options)
+internal class CapXaEntitiy(DbContextOptions<DanhMucDbContext> options, IMongoDbContext mongoDbContext)
 {
-    private readonly DvhcService _dvhcService = new(new DanhMucDbContext(options));
+    private readonly DvhcService _dvhcService = new(new DanhMucDbContext(options, mongoDbContext));
     private readonly HttpClient _httpClient = new();
     private const string Url = "https://danhmuchanhchinh.gso.gov.vn/DMDVHC.asmx";
 
