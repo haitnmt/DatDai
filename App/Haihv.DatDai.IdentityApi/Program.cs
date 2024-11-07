@@ -1,6 +1,5 @@
-using Haihv.DatDai.Identity.InData;
+using Haihv.DatDai.Data.Identity;
 using Haihv.DatDai.Identity.InLdap;
-using Haihv.DatDai.IdentityApi;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

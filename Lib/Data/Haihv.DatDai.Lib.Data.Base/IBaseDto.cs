@@ -1,6 +1,6 @@
 namespace Haihv.DatDai.Lib.Data.Base;
 
-public interface IBaseDto
+public interface IBaseDto : ISoftDeletable
 {
     /// <summary>
     /// Ghi chú cho đối tượng.

@@ -1,8 +1,7 @@
-using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json.Serialization;
 using Haihv.DatDai.Lib.Data.Base;
 
-namespace Haihv.DatDai.Lib.Data.DanhMuc.Model;
+namespace Haihv.DatDai.Lib.Data.DanhMuc.Entries;
 
 /// <summary>
 /// Lớp đại diện cho danh mục đối tượng sử dụng đất

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using Haihv.DatDai.Lib.Data.Base;
 
-namespace Haihv.DatDai.Lib.Data.DanhMuc.Model;
+namespace Haihv.DatDai.Lib.Data.DanhMuc.Entries;
 
 /// <summary>
 /// Lớp đại diện cho thông tin về đơn vị hành chính trong cơ sở dữ liệu đất đai.

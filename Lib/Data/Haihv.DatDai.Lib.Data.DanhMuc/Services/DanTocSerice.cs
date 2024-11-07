@@ -1,6 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Haihv.DatDai.Lib.Data.DanhMuc.Model;
+using Haihv.DatDai.Lib.Data.DanhMuc.Entries;
 using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Lib.Data.DanhMuc.Services;

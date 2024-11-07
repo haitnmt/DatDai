@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Identity.InLda
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Lib.Service.QuocTichUpdate", "Lib\Service\Haihv.DatDai.Lib.Service.QuocTichUpdate\Haihv.DatDai.Lib.Service.QuocTichUpdate.csproj", "{1CBEA93E-271C-421D-BFEE-ED55308D3070}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Data.Identity", "Lib\Data\Haihv.DatDai.Data.Identity\Haihv.DatDai.Data.Identity.csproj", "{4423EDFF-B4F4-4E48-AF6C-D8F44EA74BFD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,6 +98,10 @@ Global
 		{1CBEA93E-271C-421D-BFEE-ED55308D3070}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CBEA93E-271C-421D-BFEE-ED55308D3070}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CBEA93E-271C-421D-BFEE-ED55308D3070}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4423EDFF-B4F4-4E48-AF6C-D8F44EA74BFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4423EDFF-B4F4-4E48-AF6C-D8F44EA74BFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4423EDFF-B4F4-4E48-AF6C-D8F44EA74BFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4423EDFF-B4F4-4E48-AF6C-D8F44EA74BFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{92077BFA-922A-40B3-A530-30F37B090537} = {0A119648-FF60-4C35-9369-B256985AA9AE}
@@ -115,5 +121,6 @@ Global
 		{151959AA-567B-4EFE-90B1-64B3B0F85F9B} = {4509A14B-1A61-43B6-ACB1-F3323710A88B}
 		{7CEA9277-7752-42A9-8B55-A259961DC154} = {4509A14B-1A61-43B6-ACB1-F3323710A88B}
 		{1CBEA93E-271C-421D-BFEE-ED55308D3070} = {80B69E58-B0A8-48CF-BF2C-FDB9F7561467}
+		{4423EDFF-B4F4-4E48-AF6C-D8F44EA74BFD} = {92077BFA-922A-40B3-A530-30F37B090537}
 	EndGlobalSection
 EndGlobal
