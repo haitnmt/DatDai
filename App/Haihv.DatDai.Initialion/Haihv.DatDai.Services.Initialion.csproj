@@ -16,10 +16,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Lib\Haihv.DatDai.Data\Haihv.DatDai.Lib.Data.Base\Haihv.DatDai.Lib.Data.Base.csproj" />
-      <ProjectReference Include="..\..\Lib\Haihv.DatDai.Data\Haihv.DatDai.Lib.Data.DanhMuc\Haihv.DatDai.Lib.Data.DanhMuc.csproj" />
-      <ProjectReference Include="..\..\Lib\Haihv.DatDai.Service\Haihv.DatDai.Lib.Service.DbUp.PostgreSQL\Haihv.DatDai.Lib.Service.DbUp.PostgreSQL.csproj" />
-      <ProjectReference Include="..\..\Lib\Haihv.DatDai.Service\Haihv.DatDai.Lib.Service.QuocTichUpdate\Haihv.DatDai.Lib.Service.QuocTichUpdate.csproj" />
-      <ProjectReference Include="..\..\Lib\Haihv.DatDai.Service\Haihv.DatDai.Lib.Service.DvhcUpdate\Haihv.DatDai.Lib.Service.DvhcUpdate.csproj" />
+      <ProjectReference Include="..\..\Lib\Service\Haihv.DatDai.Lib.Service.DbUp.PostgreSQL\Haihv.DatDai.Lib.Service.DbUp.PostgreSQL.csproj" />
+      <ProjectReference Include="..\..\Lib\Service\Haihv.DatDai.Lib.Service.DvhcUpdate\Haihv.DatDai.Lib.Service.DvhcUpdate.csproj" />
+      <ProjectReference Include="..\..\Lib\Service\Haihv.DatDai.Lib.Service.GoogleTranslate\Haihv.DatDai.Lib.Service.GoogleTranslate.csproj" />
+      <ProjectReference Include="..\..\Lib\Service\Haihv.DatDai.Lib.Service.Logger.MongoDb\Haihv.DatDai.Lib.Service.Logger.MongoDb.csproj" />
+      <ProjectReference Include="..\..\Lib\Service\Haihv.DatDai.Lib.Service.QuocTichUpdate\Haihv.DatDai.Lib.Service.QuocTichUpdate.csproj" />
     </ItemGroup>
 </Project>

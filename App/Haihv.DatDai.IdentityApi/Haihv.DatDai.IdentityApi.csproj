@@ -19,8 +19,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Lib\Haihv.DatDai.Identity\Haihv.DatDai.Identity.InData\Haihv.DatDai.Identity.InData.csproj" />
-      <ProjectReference Include="..\..\Lib\Haihv.DatDai.Identity\Haihv.DatDai.Identity.InLdap\Haihv.DatDai.Identity.InLdap.csproj" />
+      <ProjectReference Include="..\..\Lib\Identity\Haihv.DatDai.Identity.InData\Haihv.DatDai.Identity.InData.csproj" />
+      <ProjectReference Include="..\..\Lib\Identity\Haihv.DatDai.Identity.InLdap\Haihv.DatDai.Identity.InLdap.csproj" />
     </ItemGroup>
 
 </Project>
