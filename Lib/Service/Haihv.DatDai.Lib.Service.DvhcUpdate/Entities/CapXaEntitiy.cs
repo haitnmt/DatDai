@@ -76,9 +76,12 @@ internal class CapXaEntitiy(DbContextOptions<DanhMucDbContext> options, IMongoDb
 
     }
 
- public async Task CreateOrUpdateAsync() 
- {
-     var (insert, update, skip) =  await _dvhcService.UpdateDvhcAsync(await GetAsync());
-     Console.WriteLine($"{DateTime.Now:HH:mm:ss}: Đồng bộ dữ liệu đơn vị hành chính cấp xã thành công [Thêm mới: {insert}, Cập nhật: {update}, Bỏ qua: {skip}]");
- }
+     public async Task<string> CreateOrUpdateAsync() 
+     {
+         var (insert, update, skip) =  await _dvhcService.UpdateDvhcAsync(await GetAsync());
+         var message =
+             $"Đồng bộ dữ liệu đơn vị hành chính cấp xã thành công [Thêm mới: {insert}, Cập nhật: {update}, Bỏ qua: {skip}]";
+         Console.WriteLine($"{DateTime.Now:HH:mm:ss}: {message}");
+         return message;
+     }
 }

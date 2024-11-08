@@ -9,7 +9,10 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Haihv.DatDai.Lib.Service.DvhcUpdate.Entities;
 
-internal class CapHuyenEntitiy(DbContextOptions<DanhMucDbContext> options, IMongoDbContext mongoDbContext,IMemoryCache memoryCache)
+internal class CapHuyenEntitiy(
+    DbContextOptions<DanhMucDbContext> options,
+    IMongoDbContext mongoDbContext,
+    IMemoryCache memoryCache)
 {
     private readonly DvhcService _dvhcService = new(new DanhMucDbContext(options, mongoDbContext, memoryCache));
     private readonly HttpClient _httpClient = new();
@@ -28,7 +31,7 @@ internal class CapHuyenEntitiy(DbContextOptions<DanhMucDbContext> options, IMong
                                          </soap12:Body>
                                        </soap12:Envelope>
                                        """;
-    
+
     private static List<Dvhc> ParseProvinceResponse(string responseXml)
     {
         var capHuyens = new List<Dvhc>();
@@ -41,8 +44,10 @@ internal class CapHuyenEntitiy(DbContextOptions<DanhMucDbContext> options, IMong
 
             capHuyens.AddRange(tables.Select(table => new Dvhc()
             {
-                MaTinh = int.Parse(table.Element("MaTinh")?.Value?? "0"),
-                MaHuyen = table.Element("MaQuanHuyen")?.Value != null ? int.Parse(table.Element("MaQuanHuyen")?.Value!) : null,
+                MaTinh = int.Parse(table.Element("MaTinh")?.Value ?? "0"),
+                MaHuyen = table.Element("MaQuanHuyen")?.Value != null
+                    ? int.Parse(table.Element("MaQuanHuyen")?.Value!)
+                    : null,
                 TenGiaTri = table.Element("TenQuanHuyen")?.Value ?? string.Empty,
                 Cap = 2,
                 LoaiHinh = table.Element("LoaiHinh")?.Value ?? string.Empty
@@ -73,12 +78,14 @@ internal class CapHuyenEntitiy(DbContextOptions<DanhMucDbContext> options, IMong
             Console.WriteLine(e);
             throw new Exception($"Lỗi trong quá trình lấy thông đơn vị hành chính tin từ API: {e.Message}", e);
         }
-
     }
 
- public async Task CreateOrUpdateAsync()
- {
-     var (insert, update, skip) = await _dvhcService.UpdateDvhcAsync(await GetAsync());
-     Console.WriteLine($"{DateTime.Now:HH:mm:ss}: Đồng bộ dữ liệu đơn vị hành chính cấp huyện thành công [Thêm mới: {insert}, Cập nhật: {update}, Bỏ qua: {skip}]");
- }
+    public async Task<string> CreateOrUpdateAsync()
+    {
+        var (insert, update, skip) = await _dvhcService.UpdateDvhcAsync(await GetAsync());
+        var message =
+            $"Đồng bộ dữ liệu đơn vị hành chính cấp huyện thành công [Thêm mới: {insert}, Cập nhật: {update}, Bỏ qua: {skip}]";
+        Console.WriteLine($"{DateTime.Now:HH:mm:ss}: {message}");
+        return message;
+    }
 }

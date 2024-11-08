@@ -10,5 +10,5 @@ public interface IBaseRepository<T>
     IQueryable<T> GetQueryable();
     Task<T> UpdateAsync(T entry);
     Task DeleteAsync(ObjectId id);
-    Task<IEnumerable<T>> CreateOrUpdateAsync(IEnumerable<T> entries, int bulkSize = 100, CancellationToken cancellationToken = default);
+    Task<IEnumerable<T>> UpdateAsync(IEnumerable<T> entries, int bulkSize = 100, CancellationToken cancellationToken = default);
 }

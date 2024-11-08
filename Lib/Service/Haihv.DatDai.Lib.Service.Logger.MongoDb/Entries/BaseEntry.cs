@@ -26,7 +26,7 @@ public abstract class BaseEntry : IBaseEntry
     [BsonIgnoreIfNull]
     [BsonElement("metadata")]
     [JsonPropertyName("metadata")]
-    public string? Metadata { get; set; } = string.Empty;
+    public string? Metadata { get; set; }
 
     /// <summary>
     /// Thời gian bắt đầu (UTC).

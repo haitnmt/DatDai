@@ -70,9 +70,11 @@ internal class CapTinhEntitiy(DbContextOptions<DanhMucDbContext> options, IMongo
         }
     }
 
-    public async Task CreateOrUpdateAsync()
+    public async Task<string> CreateOrUpdateAsync()
     {
         var (insert, update, skip) = await _dvhcService.UpdateDvhcAsync(await GetAsync());
-        Console.WriteLine($"{DateTime.Now:HH:mm:ss}: Đồng bộ dữ liệu đơn vị hành chính cấp tỉnh thành công [Thêm mới: {insert}, Cập nhật: {update}, Bỏ qua: {skip}]");
+        var message = $"Đồng bộ dữ liệu đơn vị hành chính cấp tỉnh thành công [Thêm mới: {insert}, Cập nhật: {update}, Bỏ qua: {skip}]";
+        Console.WriteLine($"{DateTime.Now:HH:mm:ss}: {message}");
+        return message;
     }
 }

@@ -20,14 +20,6 @@ public class AuditEntry : BaseEntry
     /// </summary>
     [BsonRepresentation(BsonType.String)]
     [BsonIgnoreIfDefault]
-    [BsonElement("hash")]
-    [JsonPropertyName("hash")]
-    public string Hash => Metadata.GetHash();
-    /// <summary>
-    /// Tên của bản ghi.
-    /// </summary>
-    [BsonRepresentation(BsonType.String)]
-    [BsonIgnoreIfDefault]
     [BsonElement("entryName")]
     [JsonPropertyName("entryName")]
     public string EntryName { get; set; } = string.Empty;

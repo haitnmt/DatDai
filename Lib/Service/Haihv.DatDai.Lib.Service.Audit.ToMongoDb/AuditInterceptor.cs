@@ -11,7 +11,6 @@ public class AuditInterceptor(IMongoDbContext mongoDbContext, IMemoryCache memor
 {
     private readonly IMemoryCache _memoryCache = memoryCache;
     private readonly AuditRepository _auditRepository = new(mongoDbContext);
-
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
         if (eventData.Context is null)
@@ -28,7 +27,7 @@ public class AuditInterceptor(IMongoDbContext mongoDbContext, IMemoryCache memor
             EntityState.Deleted)
             .Select(x => new AuditEntry
             {
-                EntryName = x.Context.GetType().ToString(),
+                EntryName = x.Entity.GetType().Name,
                 StartTimeUtc = startTime,
                 Metadata = x.DebugView.LongView,
             }).ToList();
@@ -36,7 +35,11 @@ public class AuditInterceptor(IMongoDbContext mongoDbContext, IMemoryCache memor
         {
             return await base.SavingChangesAsync(eventData, result, cancellationToken);
         }
-        _memoryCache.Set(eventData.Context.GetHashCode(), auditEntries);
+        var cacheEntryOptions = new MemoryCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10) // Set expiration time to 10 minutes
+        };
+        _memoryCache.Set(eventData.Context.GetHashCode(), auditEntries, cacheEntryOptions);
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
@@ -46,7 +49,8 @@ public class AuditInterceptor(IMongoDbContext mongoDbContext, IMemoryCache memor
             return await base.SavedChangesAsync(eventData, result, cancellationToken);
         
         var endTime = DateTime.UtcNow;
-        var auditEntries = _memoryCache.Get<List<AuditEntry>>(eventData.Context.GetHashCode());
+        var id = eventData.Context.GetHashCode();
+        var auditEntries = _memoryCache.Get<List<AuditEntry>>(id);
         if (auditEntries is null)
         {
             return await base.SavedChangesAsync(eventData, result, cancellationToken);
@@ -57,7 +61,8 @@ public class AuditInterceptor(IMongoDbContext mongoDbContext, IMemoryCache memor
             auditEntry.Success = true;
         }
         if (auditEntries.Count <= 0) return await base.SavedChangesAsync(eventData, result, cancellationToken);
-        await _auditRepository.CreateOrUpdateAsync(auditEntries,cancellationToken: cancellationToken);
+        await _auditRepository.UpdateAsync(auditEntries,cancellationToken: cancellationToken);
+        _memoryCache.Remove(id);
         return await base.SavedChangesAsync(eventData, result, cancellationToken);
     }
 
@@ -65,9 +70,9 @@ public class AuditInterceptor(IMongoDbContext mongoDbContext, IMemoryCache memor
     {
         if (eventData.Context is null)
             return;
-
+        var id = eventData.Context.GetHashCode();
         var endTime = DateTime.UtcNow;
-        var auditEntries = _memoryCache.Get<List<AuditEntry>>(eventData.Context.GetHashCode());
+        var auditEntries = _memoryCache.Get<List<AuditEntry>>(id);
         if (auditEntries is null)
         {
             return;
@@ -80,6 +85,7 @@ public class AuditInterceptor(IMongoDbContext mongoDbContext, IMemoryCache memor
         }
         // Save the audit entries to the database
         if (auditEntries.Count <= 0) return;
-        await _auditRepository.CreateOrUpdateAsync(auditEntries);
+        await _auditRepository.UpdateAsync(auditEntries);
+        _memoryCache.Remove(id);
     }
 }

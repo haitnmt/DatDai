@@ -21,6 +21,7 @@ public class LogSystemrRepository(IMongoDbContext mongoDbContext) : IBaseReposit
     {
         var findOptions = new FindOneAndUpdateOptions<LogSystemEntry>
         {
+            IsUpsert = true,
             ReturnDocument = ReturnDocument.After
         };
         var filter = Builders<LogSystemEntry>.Filter.Eq(x => x.Id, entry.Id);
@@ -41,7 +42,7 @@ public class LogSystemrRepository(IMongoDbContext mongoDbContext) : IBaseReposit
         await _collection.DeleteOneAsync(x => x.Id == id);
     }
 
-    public async Task<IEnumerable<LogSystemEntry>> CreateOrUpdateAsync(IEnumerable<LogSystemEntry> entries,
+    public async Task<IEnumerable<LogSystemEntry>> UpdateAsync(IEnumerable<LogSystemEntry> entries,
         int bulkSize = 100,
         CancellationToken cancellationToken = default)
     {
