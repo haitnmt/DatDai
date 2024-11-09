@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Haihv.DatDai.Lib.Data.Base;
 using Haihv.DatDai.Lib.Service.Logger.MongoDb;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -8,9 +9,13 @@ namespace Haihv.DatDai.Lib.Service.QuocTichUpdate;
 /// <summary>
 /// Dịch vụ để lấy và cập nhật thông tin quốc tịch từ REST Countries API.
 /// </summary>
-public class RestCountriesService(DbContextOptions<QuocTichDbContext> options, IMongoDbContext mongoDbContext, IMemoryCache memoryCache)
+public class RestCountriesService(
+    INpgsqlDataConnectionService npgsqlDataConnectionService,
+    IMongoDbContext mongoDbContext)
 {
-    private readonly QuocTichDbContext _dbcontext = new (options, mongoDbContext, memoryCache);
+    private readonly QuocTichDbContext _dbcontext = new (npgsqlDataConnectionService, mongoDbContext);
+
+    private readonly ReadQuocTichDbContext _readContext = new (npgsqlDataConnectionService, mongoDbContext);
     private readonly HttpClient _httpClient = new();
     private const string Url = "https://restcountries.com/v3.1/independent?status=true&fields=ccn3,cca3,name";
     
@@ -61,7 +66,7 @@ public class RestCountriesService(DbContextOptions<QuocTichDbContext> options, I
                 var tenQuocTeDayDu = info.Name?.NativeName?.ContainsKey(keyEng) == true ? info.Name.NativeName[keyEng].Official : info.Name?.Official;
                 // Kiểm tra xem quốc gia đã tồn tại trong cơ sở dữ liệu chưa
                 int.TryParse(info.Ccn3 ?? "0", out var ccn3);
-                var existings = await _dbcontext.QuocTich
+                var existings = await _readContext.QuocTich
                     .Where(x =>
                     x.Ccn3 == ccn3 ||
                     x.Cca3 == info.Cca3)

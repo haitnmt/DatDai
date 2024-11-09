@@ -1,28 +1,25 @@
 using System.Text;
 using Haihv.DatDai.Lib.Data.Base;
-using Haihv.DatDai.Lib.Data.DanhMuc;
 using Haihv.DatDai.Lib.Data.DanhMuc.Services;
 using Haihv.DatDai.Lib.Service.Logger.MongoDb;
 using Haihv.DatDai.Lib.Service.Logger.MongoDb.Entries;
 using Haihv.DatDai.Lib.Service.Logger.MongoDb.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Haihv.DatDai.Services.Initialion.Entities;
 
 /// <summary>
 /// Dịch vụ cập nhật dữ liệu dân tộc.
 /// </summary>
-/// <param name="options">Tùy chọn DbContext cho DanhMucDbContext.</param>
+/// <param name="dataConnectionService">Dịch vụ kết nối PostgreSQL.</param>
 /// <param name="mongoDbContext">Ngữ cảnh MongoDB.</param>
-/// <param name="memoryCache">Bộ nhớ đệm.</param>
 public class DanTocUpdateService(
-    DbContextOptions<DanhMucDbContext> options,
-    IMongoDbContext mongoDbContext,
-    IMemoryCache memoryCache) : BackgroundService
+    INpgsqlDataConnectionService dataConnectionService,
+    IMongoDbContext mongoDbContext)
+    : BackgroundService
 {
     private const int DayDelay = 30;
     private readonly LogSystemrRepository _logSystemrRepository = new(mongoDbContext);
+    private readonly DanTocSerice _danTocSerice = new(dataConnectionService, mongoDbContext);
 
     /// <summary>
     /// Thực thi dịch vụ cập nhật dữ liệu dân tộc.
@@ -86,8 +83,7 @@ public class DanTocUpdateService(
     private async Task<string> SyncData()
     {
         Console.WriteLine($"{DateTime.Now:HH:mm:ss}: Bắt đầu khởi tạo dữ liệu dân tộc");
-        var service = new DanTocSerice(new DanhMucDbContext(options, mongoDbContext, memoryCache));
-        var (insert, update, skip) = await service.UpdateDvhcAsync();
+        var (insert, update, skip) = await _danTocSerice.UpdateDvhcAsync();
         var message = $"Khởi tạo dữ liệu dân tộc thành công [Thêm mới: {insert}, Cập nhật: {update}, Bỏ qua: {skip}]";
         Console.WriteLine($"{DateTime.Now:HH:mm:ss}: {message}");
         return message;

@@ -3,8 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Lib.Data.DanhMuc.Services;
 
-public class QuocTichService(DanhMucDbContext context)
+public class QuocTichService(DanhMucDbContext danhMucDbContext, ReadDanhMucDbContext? readDanhMucDbContext = default)
 {
+    private readonly DanhMucDbContext _readContext = readDanhMucDbContext ?? danhMucDbContext;
     public async Task<(int Insert, int Update, int Skip)> UpdateAsync(List<QuocTich> quocTiches, int bulkSize = 20)
     {
         var index = 0;
@@ -17,7 +18,7 @@ public class QuocTichService(DanhMucDbContext context)
 
             foreach (var quocTich in bulkDvhcs)
             {
-                var existings = await context.QuocTich.Where(x =>
+                var existings = await _readContext.QuocTich.Where(x =>
                     x.Id == quocTich.Id ||
                     x.Ccn3 == quocTich.Ccn3 ||
                     x.Cca3 == quocTich.Cca3).ToListAsync();
@@ -41,11 +42,11 @@ public class QuocTichService(DanhMucDbContext context)
                         update++;
                     }
                 }
-                context.QuocTich.Add(quocTich);
+                danhMucDbContext.QuocTich.Add(quocTich);
                 insert++;
             }
 
-            await context.SaveChangesAsync();
+            await danhMucDbContext.SaveChangesAsync();
             index += bulkSize;
         }
         return (insert, update, skip);

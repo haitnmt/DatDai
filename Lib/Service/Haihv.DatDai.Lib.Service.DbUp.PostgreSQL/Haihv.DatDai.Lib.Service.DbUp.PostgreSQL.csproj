@@ -32,6 +32,8 @@
       <None Remove="Scripts\DanhMuc\QuocTichscript001 - Create Table.sql" />
       <EmbeddedResource Include="Scripts\DanhMuc\QuocTichscript001 - Create Table.sql" />
       <None Remove="Scripts\DanhMuc\QuocTichscript002 - CreateIndex.sql" />
+      <None Remove="Scripts\_checkDataScript001 - CreateTable.sql" />
+      <EmbeddedResource Include="Scripts\_checkDataScript001 - CreateTable.sql" />
     </ItemGroup>
 
 </Project>

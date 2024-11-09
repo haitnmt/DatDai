@@ -1,29 +1,45 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Haihv.DatDai.Lib.Data.Base;
 using Haihv.DatDai.Lib.Data.DanhMuc.Entries;
+using Haihv.DatDai.Lib.Service.Logger.MongoDb;
 using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Lib.Data.DanhMuc.Services;
 
-public class DanTocSerice(DanhMucDbContext context)
+public class DanTocSerice
 {
+    private readonly DanhMucDbContext _danhMucDbContext;
+    private readonly DanhMucDbContext _readContext;
+
+    public DanTocSerice(DanhMucDbContext danhMucDbContext, ReadDanhMucDbContext? readDanhMucDbContext = default)
+    {
+        _danhMucDbContext = danhMucDbContext;
+        _readContext = readDanhMucDbContext ?? danhMucDbContext;
+    }
+    
+    public DanTocSerice(INpgsqlDataConnectionService npgsqlDataConnectionService, IMongoDbContext mongoDbContext)
+    {
+        _danhMucDbContext = new DanhMucDbContext(npgsqlDataConnectionService, mongoDbContext);
+        _readContext = new ReadDanhMucDbContext(npgsqlDataConnectionService, mongoDbContext);
+    }
     public  async Task<List<DanToc>> GetAllDanTocAsync()
     {
-        return await context.DanToc.ToListAsync();
+        return await _readContext.DanToc.ToListAsync();
     }
     public async Task<DanToc?> GetDanTocByIdAsync(Guid id)
     {
-        return await context.DanToc.FindAsync(id);
+        return await _readContext.DanToc.FindAsync(id);
     }
     public async Task<DanToc?> GetDanTocByNameAsync(string name)
     {
-        return await context.DanToc
+        return await _readContext.DanToc
             .Where(d => d.TenGiaTri == name)
             .FirstOrDefaultAsync();
     }
     public async Task UpdateDanTocAsync(DanToc updatedDanToc)
     {
-        var existingDanToc = await context.DanToc.FindAsync(updatedDanToc.Id);
+        var existingDanToc = await _readContext.DanToc.FindAsync(updatedDanToc.Id);
         if (existingDanToc != null)
         {
             existingDanToc.TenGiaTri = updatedDanToc.TenGiaTri;
@@ -32,10 +48,10 @@ public class DanTocSerice(DanhMucDbContext context)
         }
         else
         {
-            context.DanToc.Add(updatedDanToc);
+            _danhMucDbContext.DanToc.Add(updatedDanToc);
         }
 
-        await context.SaveChangesAsync();
+        await _danhMucDbContext.SaveChangesAsync();
     }
 
     public async Task<(int Insert, int Update, int Skip)> UpdateDvhcAsync(List<DanToc> danTocs)
@@ -45,7 +61,7 @@ public class DanTocSerice(DanhMucDbContext context)
         var skip = 0;
         foreach (var item in danTocs)
         {
-            var existingDanToc = await context.DanToc.FindAsync(item.Id);
+            var existingDanToc = await _readContext.DanToc.FindAsync(item.Id);
             if (existingDanToc != null)
             {
                 if (existingDanToc.TenGiaTri == item.TenGiaTri && existingDanToc.GhiChu == item.GhiChu)
@@ -60,11 +76,11 @@ public class DanTocSerice(DanhMucDbContext context)
             }
             else
             {
-                context.DanToc.Add(item);
+                _danhMucDbContext.DanToc.Add(item);
                 insert++;
             }
         }
-        await context.SaveChangesAsync();
+        await _danhMucDbContext.SaveChangesAsync();
         return (insert, update, skip);
     }
 

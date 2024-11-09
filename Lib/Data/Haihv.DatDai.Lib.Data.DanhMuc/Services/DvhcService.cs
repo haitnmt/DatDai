@@ -1,14 +1,14 @@
 using Haihv.DatDai.Lib.Data.DanhMuc.Entries;
-using Haihv.DatDai.Lib.Data.DanhMuc.Interface;
 using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Lib.Data.DanhMuc.Services;
 
-public class DvhcService(DanhMucDbContext context) : IDvhcService
+public class DvhcService(DanhMucDbContext danhMucDbContext, ReadDanhMucDbContext? readDanhMucDbContext = default)
 {
+    private readonly DanhMucDbContext _readContext = readDanhMucDbContext ?? danhMucDbContext;
     public async Task<bool> DeleteByIdAsync(Guid id)
     {
-      var result = await context.Dvhc
+      var result = await danhMucDbContext.Dvhc
           .Where(x => x.Id == id && !x.IsDeleted)
           .ExecuteUpdateAsync(x => 
               x.SetProperty(p =>p.IsDeleted, true)
@@ -18,23 +18,23 @@ public class DvhcService(DanhMucDbContext context) : IDvhcService
 
     public async Task<Dvhc?> GetByIdAsync(Guid id)
     {
-        return await context.Dvhc.FindAsync(id);
+        return await _readContext.Dvhc.FindAsync(id);
     }
 
     public async Task<IEnumerable<Dvhc>> GetAllAsync()
     {
-        return await context.Dvhc.ToListAsync();
+        return await _readContext.Dvhc.ToListAsync();
     }
     
     public async Task<List<Dvhc>> GetDvhcByNameAsync(string name)
     {
-        return await context.Dvhc
+        return await _readContext.Dvhc
             .Where(d => d.TenGiaTri.Contains(name))
             .ToListAsync();
     }
     public async Task UpdateDvhcAsync(Dvhc updatedDvhc)
     {
-        var existingDvhc = await context.Dvhc.FindAsync(updatedDvhc.Id);
+        var existingDvhc = await _readContext.Dvhc.FindAsync(updatedDvhc.Id);
         if (existingDvhc != null)
         {
             existingDvhc.TenGiaTri = updatedDvhc.TenGiaTri;
@@ -49,7 +49,7 @@ public class DvhcService(DanhMucDbContext context) : IDvhcService
         }
         else
         {
-            existingDvhc = await context.Dvhc
+            existingDvhc = await _readContext.Dvhc
                 .Where(x => x.MaTinh == updatedDvhc.MaTinh && 
                                  x.MaHuyen == updatedDvhc.MaHuyen && 
                                  x.MaXa == updatedDvhc.MaXa).FirstOrDefaultAsync();
@@ -67,9 +67,9 @@ public class DvhcService(DanhMucDbContext context) : IDvhcService
                 }
             }
             // Thêm mới:
-            context.Dvhc.Add(updatedDvhc);
+            danhMucDbContext.Dvhc.Add(updatedDvhc);
         }
-        await context.SaveChangesAsync();
+        await danhMucDbContext.SaveChangesAsync();
     }
 
     public async Task<(int Insert, int Update, int Skip)> UpdateDvhcAsync(List<Dvhc> dvhcs, int bulkSize = 1000)
@@ -84,7 +84,7 @@ public class DvhcService(DanhMucDbContext context) : IDvhcService
 
             foreach (var dvhc in bulkDvhcs)
             {
-                var existing = await context.Dvhc.FirstOrDefaultAsync(x => 
+                var existing = await _readContext.Dvhc.FirstOrDefaultAsync(x => 
                     x.MaTinh == dvhc.MaTinh && 
                     x.MaHuyen == dvhc.MaHuyen && 
                     x.MaXa == dvhc.MaXa);
@@ -100,11 +100,11 @@ public class DvhcService(DanhMucDbContext context) : IDvhcService
                     existing.UpdatedAt = DateTimeOffset.UtcNow;
                     update++;
                 }
-                context.Dvhc.Add(dvhc);
+                danhMucDbContext.Dvhc.Add(dvhc);
                 insert++;
             }
 
-            await context.SaveChangesAsync();
+            await danhMucDbContext.SaveChangesAsync();
             index += bulkSize;
         }
         return (insert, update, skip);

@@ -1,17 +1,21 @@
 using System.Text;
 using System.Xml.Linq;
+using Haihv.DatDai.Lib.Data.Base;
 using Haihv.DatDai.Lib.Data.DanhMuc;
 using Haihv.DatDai.Lib.Data.DanhMuc.Entries;
 using Haihv.DatDai.Lib.Data.DanhMuc.Services;
 using Haihv.DatDai.Lib.Service.Logger.MongoDb;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Haihv.DatDai.Lib.Service.DvhcUpdate.Entities;
 
-internal class CapTinhEntitiy(DbContextOptions<DanhMucDbContext> options, IMongoDbContext mongoDbContext, IMemoryCache memoryCache)
+internal class CapTinhEntitiy(
+    INpgsqlDataConnectionService npgsqlDataConnectionService,
+    IMongoDbContext mongoDbContext)
 {
-    private readonly DvhcService _dvhcService = new(new DanhMucDbContext(options, mongoDbContext, memoryCache));
+    private readonly DvhcService _dvhcService = new(new DanhMucDbContext(npgsqlDataConnectionService,
+            mongoDbContext),
+        new ReadDanhMucDbContext(npgsqlDataConnectionService,
+            mongoDbContext));
     private readonly HttpClient _httpClient = new();
     private const string Url = "https://danhmuchanhchinh.gso.gov.vn/DMDVHC.asmx";
 
@@ -54,19 +58,27 @@ internal class CapTinhEntitiy(DbContextOptions<DanhMucDbContext> options, IMongo
 
     private async Task<List<Dvhc>> GetAsync()
     {
-        try
+        var restryCount = 0;
+        while (true)
         {
-            _httpClient.DefaultRequestHeaders.Add("SOAPAction", "http://tempuri.org/DanhMucTinh");
-            var content = new StringContent(SoapRequest, Encoding.UTF8, "application/soap+xml");
-            var response = await _httpClient.PostAsync(Url, content);
-            response.EnsureSuccessStatusCode();
-            var responseString = await response.Content.ReadAsStringAsync();
-            return ParseProvinceResponse(responseString);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw new Exception($"Lỗi trong quá trình lấy thông đơn vị hành chính tin từ API: {e.Message}", e);
+            try
+            {
+                _httpClient.DefaultRequestHeaders.Add("SOAPAction", "http://tempuri.org/DanhMucTinh");
+                var content = new StringContent(SoapRequest, Encoding.UTF8, "application/soap+xml");
+                var response = await _httpClient.PostAsync(Url, content);
+                response.EnsureSuccessStatusCode();
+                var responseString = await response.Content.ReadAsStringAsync();
+                return ParseProvinceResponse(responseString);
+            }
+            catch (Exception e)
+            {
+                restryCount++;
+                Console.WriteLine($"Lỗi trong quá trình lấy thông đơn vị hành chính tin từ API: {e.Message}", e);
+                var delay = TimeSpan.FromSeconds(30 * restryCount);
+                delay = delay > TimeSpan.FromHours(12) ? TimeSpan.FromHours(12) : delay;
+                Console.WriteLine("Thử lại sau {0} giây...", delay);
+                await Task.Delay(delay);
+            }
         }
     }
 

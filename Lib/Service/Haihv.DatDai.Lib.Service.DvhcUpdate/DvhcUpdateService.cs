@@ -1,12 +1,9 @@
 using System.Text;
 using Haihv.DatDai.Lib.Data.Base;
-using Haihv.DatDai.Lib.Data.DanhMuc;
 using Haihv.DatDai.Lib.Service.DvhcUpdate.Entities;
 using Haihv.DatDai.Lib.Service.Logger.MongoDb;
 using Haihv.DatDai.Lib.Service.Logger.MongoDb.Entries;
 using Haihv.DatDai.Lib.Service.Logger.MongoDb.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
 
 namespace Haihv.DatDai.Lib.Service.DvhcUpdate;
@@ -14,17 +11,29 @@ namespace Haihv.DatDai.Lib.Service.DvhcUpdate;
 /// <summary>
 /// Dịch vụ cập nhật dữ liệu đơn vị hành chính.
 /// </summary>
-/// <param name="options">Tùy chọn cấu hình cho DbContext.</param>
-/// <param name="mongoDbContext">Ngữ cảnh MongoDB.</param>
-/// <param name="memoryCache">Bộ nhớ đệm.</param>
-public class DvhcUpdateService(
-    DbContextOptions<DanhMucDbContext> options,
-    IMongoDbContext mongoDbContext,
-    IMemoryCache memoryCache) : BackgroundService
+public class DvhcUpdateService : BackgroundService
 {
+    private readonly INpgsqlDataConnectionService _npgsqlDataConnectionService;
     private const int DayDelay = 1;
-    private readonly LogSystemrRepository _logSystemrRepository = new(mongoDbContext);
+    private readonly LogSystemrRepository _logSystemrRepository;
+    private readonly IMongoDbContext _mongoDbContext;
 
+    public DvhcUpdateService(
+        INpgsqlDataConnectionService npgsqlDataConnectionService,
+        IMongoDbContext mongoDbContext)
+    {
+        _npgsqlDataConnectionService = npgsqlDataConnectionService;
+        _mongoDbContext = mongoDbContext;
+        _logSystemrRepository = new LogSystemrRepository(mongoDbContext);
+    }
+    
+    public DvhcUpdateService(string redisConnectionInfo, int redisDatabase, IMongoDbContext mongoDbContext)
+    {
+        _npgsqlDataConnectionService = new NpgsqlDataConnectionService(redisConnectionInfo, redisDatabase);
+        _mongoDbContext = mongoDbContext;
+        _logSystemrRepository = new LogSystemrRepository(mongoDbContext);
+    }
+    
     /// <summary>
     /// Thực thi dịch vụ cập nhật dữ liệu đơn vị hành chính.
     /// </summary>
@@ -90,9 +99,9 @@ public class DvhcUpdateService(
     /// </returns>
     private async Task<string> SyncData()
     {
-        var capTinhRepository = new CapTinhEntitiy(options, mongoDbContext, memoryCache);
-        var capHuyenRepository = new CapHuyenEntitiy(options, mongoDbContext, memoryCache);
-        var capXaRepository = new CapXaEntitiy(options, mongoDbContext, memoryCache);
+        var capTinhRepository = new CapTinhEntitiy(_npgsqlDataConnectionService, _mongoDbContext);
+        var capHuyenRepository = new CapHuyenEntitiy(_npgsqlDataConnectionService, _mongoDbContext);
+        var capXaRepository = new CapXaEntitiy(_npgsqlDataConnectionService, _mongoDbContext);
         // Xử lý đồng thời 3 cấp hành chính
         var tasks = new List<Task<string>>
         {

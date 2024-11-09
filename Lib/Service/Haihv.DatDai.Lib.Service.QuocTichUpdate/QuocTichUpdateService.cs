@@ -3,8 +3,6 @@ using Haihv.DatDai.Lib.Data.Base;
 using Haihv.DatDai.Lib.Service.Logger.MongoDb;
 using Haihv.DatDai.Lib.Service.Logger.MongoDb.Entries;
 using Haihv.DatDai.Lib.Service.Logger.MongoDb.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
 
 namespace Haihv.DatDai.Lib.Service.QuocTichUpdate;
@@ -13,13 +11,11 @@ namespace Haihv.DatDai.Lib.Service.QuocTichUpdate;
 /// <summary>
 /// Dịch vụ cập nhật dữ liệu quốc tịch.
 /// </summary>
-/// <param name="options">Tùy chọn cho DbContext của QuocTich.</param>
+/// <param name="npgsqlDataConnectionService">Dịch vụ kết nối PostgreSQL.</param>
 /// <param name="mongoDbContext">Ngữ cảnh MongoDB.</param>
-/// <param name="memoryCache">Bộ nhớ đệm.</param>
 public class QuocTichUpdateService(
-    DbContextOptions<QuocTichDbContext> options,
-    IMongoDbContext mongoDbContext,
-    IMemoryCache memoryCache) : BackgroundService
+    INpgsqlDataConnectionService npgsqlDataConnectionService,
+    IMongoDbContext mongoDbContext): BackgroundService
 {
     private const int DayDelay = 30;
     private readonly LogSystemrRepository _logSystemrRepository = new(mongoDbContext);
@@ -87,7 +83,7 @@ public class QuocTichUpdateService(
     private async Task<string> SyncData()
     {
         Console.WriteLine($"{DateTime.Now:HH:mm:ss}: Bắt đầu cập nhật dữ liệu quốc tịch");
-        var service = new RestCountriesService(options, mongoDbContext, memoryCache);
+        var service = new RestCountriesService(npgsqlDataConnectionService, mongoDbContext);
         var (insert, update, skip) = await service.UpdateAsync();
         var message = $"Cập nhật dữ liệu quốc tịch thành công [Thêm mới: {insert}, Cập nhật: {update}, Bỏ qua: {skip}]";
         Console.WriteLine($"{DateTime.Now:HH:mm:ss}: {message}");
