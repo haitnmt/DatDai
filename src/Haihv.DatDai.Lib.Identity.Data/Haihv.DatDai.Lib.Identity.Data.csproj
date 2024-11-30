@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="10.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Haihv.DatDai.Lib.Data.Base\Haihv.DatDai.Lib.Data.Base.csproj" />
+      <ProjectReference Include="..\Haihv.DatDai.Lib.Identity.Ldap\Haihv.DatDai.Lib.Identity.Ldap.csproj" />
+    </ItemGroup>
+
+</Project>

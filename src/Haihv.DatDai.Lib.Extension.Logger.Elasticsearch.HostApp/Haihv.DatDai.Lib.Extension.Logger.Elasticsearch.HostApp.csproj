@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.Logger.Elasticsearch.WebApp\Haihv.DatDai.Lib.Extension.Logger.Elasticsearch.WebApp.csproj" />
+      <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.Logger.Elasticsearch\Haihv.DatDai.Lib.Extension.Logger.Elasticsearch.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Serilog.Extensions" Version="8.0.3" />
+    </ItemGroup>
+
+</Project>

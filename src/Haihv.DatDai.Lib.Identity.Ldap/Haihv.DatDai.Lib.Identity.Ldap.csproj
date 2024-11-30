@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <PackageId>Haihv.DatDai.Lib.Identity.Ldap</PackageId>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="LanguageExt.Core" Version="4.4.9" />
+      <PackageReference Include="System.DirectoryServices.Protocols" Version="9.0.0" />
+    </ItemGroup>
+
+</Project>

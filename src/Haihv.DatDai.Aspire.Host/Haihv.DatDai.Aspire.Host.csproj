@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>1f338a14-1385-40f6-bae1-9f58ea284c85</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.Redis" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Haihv.DatDa.App.Api.Identity\Haihv.DatDa.App.Api.Identity.csproj" />
+    <ProjectReference Include="..\Haihv.DatDai.App.Api.DiaChinh\Haihv.DatDai.App.Api.DiaChinh.csproj" />
+    <ProjectReference Include="..\Haihv.DatDai.App.Background.Initiation\Haihv.DatDai.App.Background.Initiation.csproj" />
+    <ProjectReference Include="..\Haihv.DatDai.App.Web\Haihv.DatDai.App.Web\Haihv.DatDai.App.Web.csproj" />
+  </ItemGroup>
+
+</Project>

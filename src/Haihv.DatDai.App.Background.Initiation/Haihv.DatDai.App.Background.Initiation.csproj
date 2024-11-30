@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>dotnet-haihv.DatDai.Services.SyncDhvc-84b1075d-b82f-421a-b563-e19615b6d2f3</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Elastic.Serilog.Sinks" Version="8.12.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Haihv.DatDai.Aspire.ServiceDefault\Haihv.DatDai.Aspire.ServiceDefault.csproj" />
+      <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.Configuration\Haihv.DatDai.Lib.Extension.Configuration.csproj" />
+      <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.Logger.Elasticsearch.HostApp\Haihv.DatDai.Lib.Extension.Logger.Elasticsearch.HostApp.csproj" />
+      <ProjectReference Include="..\Haihv.DatDai.Lib.Service.DbUp.PostgreSQL\Haihv.DatDai.Lib.Service.DbUp.PostgreSQL.csproj" />
+      <ProjectReference Include="..\Haihv.DatDai.Lib.Service.DvhcUpdate\Haihv.DatDai.Lib.Service.DvhcUpdate.csproj" />
+      <ProjectReference Include="..\Haihv.DatDai.Lib.Service.QuocTichUpdate\Haihv.DatDai.Lib.Service.QuocTichUpdate.csproj" />
+    </ItemGroup>
+</Project>

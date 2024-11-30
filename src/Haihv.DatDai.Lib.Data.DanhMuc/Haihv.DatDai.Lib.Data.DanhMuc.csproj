@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Ulid" Version="1.3.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Haihv.DatDai.Lib.Data.Base\Haihv.DatDai.Lib.Data.Base.csproj" />
+      <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.Configuration\Haihv.DatDai.Lib.Extension.Configuration.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Data\DanToc.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+</Project>

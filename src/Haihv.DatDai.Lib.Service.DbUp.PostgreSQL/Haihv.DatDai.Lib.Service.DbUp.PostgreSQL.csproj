@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="dbup-postgresql" Version="5.0.40" />
+      <PackageReference Include="Npgsql" Version="9.0.1" />
+      <PackageReference Include="Serilog" Version="4.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Scripts\DanhMuc\Dvhc\UpdateDanTocTable.sql" />
+      <None Remove="Scripts\DanhMuc\Dvhc\UpdateDvhcTable.sql" />
+      <None Remove="Scripts\DanhMuc\Dvhc\UpdateQuocTichTable.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Scripts\DanhMuc\DanhMucScript001 - QuocTichTable.sql" />
+      <None Remove="Scripts\DanhMuc\DanhMucScript002 - DvhcTable.sql" />
+      <None Remove="Scripts\DanhMuc\DanhMucScript003 - DanTocTable.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Scripts\DanhMuc\DanTocScript001 - CreateTable.sql" />
+      <EmbeddedResource Include="Scripts\DanhMuc\DanTocScript001 - CreateTable.sql" />
+      <None Remove="Scripts\DanhMuc\DanTocScript002 - CreateIndex.sql" />
+      <None Remove="Scripts\DanhMuc\DvhcScript001 - CreateTable.sql" />
+      <EmbeddedResource Include="Scripts\DanhMuc\DvhcScript001 - CreateTable.sql" />
+      <None Remove="Scripts\DanhMuc\DvhcScript002 - CreateIndex.sql" />
+      <None Remove="Scripts\DanhMuc\QuocTichscript001 - Create Table.sql" />
+      <EmbeddedResource Include="Scripts\DanhMuc\QuocTichscript001 - Create Table.sql" />
+      <None Remove="Scripts\DanhMuc\QuocTichscript002 - CreateIndex.sql" />
+      <None Remove="Scripts\_checkDataScript001 - CreateTable.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+        <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\9.0.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.Configuration\Haihv.DatDai.Lib.Extension.Configuration.csproj" />
+    </ItemGroup>
+
+</Project>
