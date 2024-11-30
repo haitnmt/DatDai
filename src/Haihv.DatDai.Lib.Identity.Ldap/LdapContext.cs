@@ -1,5 +1,6 @@
 ﻿using System.DirectoryServices.Protocols;
 using System.Net;
+using System.Text.Json;
 
 namespace Haihv.DatDai.Lib.Identity.Ldap;
 
@@ -9,7 +10,7 @@ public class LdapContext(LdapConnectionInfo ldapConnectionInfo) : ILdapContext
 
     public LdapConnection Connection
         => CreateConnection();
-
+    
     private LdapConnection CreateConnection()
     {
         LdapDirectoryIdentifier ldapDirectoryIdentifier = new(LdapConnectionInfo.Host, LdapConnectionInfo.Port, true, false);
@@ -37,4 +38,25 @@ public class LdapConnectionInfo
     public string Domain { get; init; } = "example";
     public string DomainFullname { get; init; } = "example.com";
     public string Organizational { get; init; } = "ou=Users";
+}
+
+public class LogLdapInfo
+{
+    public string Host { get; init; } = "localhost";
+    public int Port { get; init; } = 389;
+    public string Domain { get; init; } = "example.com";
+}
+
+public static class LdapContextExtensions
+{
+    public static string ToLogInfo(this ILdapContext ldapContext)
+    {
+        var logLdapConnectionInfo = ldapContext.LdapConnectionInfo;
+        return JsonSerializer.Serialize(new LogLdapInfo
+        {
+            Host = logLdapConnectionInfo.Host,
+            Port = logLdapConnectionInfo.Port,
+            Domain = logLdapConnectionInfo.DomainFullname
+        });
+    }
 }

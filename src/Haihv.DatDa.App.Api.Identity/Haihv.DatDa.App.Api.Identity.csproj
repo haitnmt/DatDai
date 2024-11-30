@@ -16,6 +16,7 @@
       <ProjectReference Include="..\Haihv.DatDai.Aspire.ServiceDefault\Haihv.DatDai.Aspire.ServiceDefault.csproj" />
       <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.Logger.Elasticsearch.WebApp\Haihv.DatDai.Lib.Extension.Logger.Elasticsearch.WebApp.csproj" />
       <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.Login.Ldap\Haihv.DatDai.Lib.Extension.Login.Ldap.csproj" />
+      <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.String\Haihv.DatDai.Lib.Extension.String.csproj" />
       <ProjectReference Include="..\Haihv.DatDai.Lib.Identity.Data\Haihv.DatDai.Lib.Identity.Data.csproj" />
     </ItemGroup>
 

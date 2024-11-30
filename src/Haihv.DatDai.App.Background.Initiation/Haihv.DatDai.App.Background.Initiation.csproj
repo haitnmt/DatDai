@@ -19,4 +19,9 @@
       <ProjectReference Include="..\Haihv.DatDai.Lib.Service.DvhcUpdate\Haihv.DatDai.Lib.Service.DvhcUpdate.csproj" />
       <ProjectReference Include="..\Haihv.DatDai.Lib.Service.QuocTichUpdate\Haihv.DatDai.Lib.Service.QuocTichUpdate.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="appsettings.Development.json" />
+      <None Include="appsettings.Development.json" />
+    </ItemGroup>
 </Project>

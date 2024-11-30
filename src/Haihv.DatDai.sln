@@ -81,6 +81,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.App.Api.DiaChi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Request", "Request", "{62CA8C4C-6956-4C54-AE97-9048FD9EC1B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Lib.Extension.String", "Haihv.DatDai.Lib.Extension.String\Haihv.DatDai.Lib.Extension.String.csproj", "{89B1FD90-1282-4CCC-84F7-25312C53CCB1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -179,6 +181,10 @@ Global
 		{B74CDE34-FE9C-4FEA-AC07-163A30E5E454}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B74CDE34-FE9C-4FEA-AC07-163A30E5E454}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B74CDE34-FE9C-4FEA-AC07-163A30E5E454}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89B1FD90-1282-4CCC-84F7-25312C53CCB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89B1FD90-1282-4CCC-84F7-25312C53CCB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89B1FD90-1282-4CCC-84F7-25312C53CCB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89B1FD90-1282-4CCC-84F7-25312C53CCB1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -220,5 +226,6 @@ Global
 		{B5531B6D-D23F-48E1-A7E5-D3721C47C487} = {FF82D1AD-F03C-4A08-B67C-8D760DFED3B1}
 		{62CA8C4C-6956-4C54-AE97-9048FD9EC1B1} = {B5531B6D-D23F-48E1-A7E5-D3721C47C487}
 		{96C8A873-ABD8-40D1-9EA6-CC06A7CD70F4} = {62CA8C4C-6956-4C54-AE97-9048FD9EC1B1}
+		{89B1FD90-1282-4CCC-84F7-25312C53CCB1} = {B7820259-D148-4674-A483-CA0F976EC670}
 	EndGlobalSection
 EndGlobal

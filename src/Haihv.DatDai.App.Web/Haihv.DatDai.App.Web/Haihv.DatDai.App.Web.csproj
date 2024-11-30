@@ -12,4 +12,9 @@
         <ProjectReference Include="..\Haihv.DatDai.App.Web.Client\Haihv.DatDai.App.Web.Client.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Remove="appsettings.Development.json" />
+      <None Include="appsettings.Development.json" />
+    </ItemGroup>
+
 </Project>
