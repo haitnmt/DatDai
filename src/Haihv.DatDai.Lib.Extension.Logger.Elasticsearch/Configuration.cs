@@ -26,9 +26,9 @@ public static class Configuration
         string? uriKey = null, string? tokenKey = null, string? usernameKey = null, string? passwordKey = null)
     {
         uriKey ??= "Elasticsearch:Uris";
-        tokenKey ??= "Elasticsearch:encoded";
-        usernameKey ??= "Elasticsearch:username";
-        passwordKey ??= "Elasticsearch:password";
+        tokenKey ??= "Elasticsearch:TokenKey";
+        usernameKey ??= "Elasticsearch:Username";
+        passwordKey ??= "Elasticsearch:Password";
         var configuration = builder.Configuration;
         var uris = (from stringUri in configuration.GetSection(uriKey).GetChildren()
             where !string.IsNullOrWhiteSpace(stringUri.Value)

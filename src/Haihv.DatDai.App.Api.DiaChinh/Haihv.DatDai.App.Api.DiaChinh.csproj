@@ -21,4 +21,8 @@
       <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.Logger.Elasticsearch.WebApp\Haihv.DatDai.Lib.Extension.Logger.Elasticsearch.WebApp.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Include="appsettings.Development.json" />
+    </ItemGroup>
+
 </Project>

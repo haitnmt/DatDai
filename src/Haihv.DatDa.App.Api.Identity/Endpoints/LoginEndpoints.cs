@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.DirectoryServices.Protocols;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Haihv.DatDa.App.Api.Identity.Entities;
 using Haihv.DatDai.Lib.Extension.Login.Ldap;
 using Haihv.DatDai.Lib.Extension.String;
@@ -71,22 +72,41 @@ public static class LoginEndpoints
     }
     private class LogInfo   
     {
+        [JsonPropertyName("clientIp")]
         public string ClientIp { get; set; } = string.Empty;
+        [JsonPropertyName("username")]
         public string Username { get; set; } = string.Empty;
+        [JsonPropertyName("userAgent")]
         public string UserAgent { get; set; } = string.Empty;
-
-        public string HashBody { get; set; } = string.Empty;
-        
-        public string QueryString { get; set; } = string.Empty;
+        [JsonPropertyName("url")]
+        public string Url { get; set; } = string.Empty;
+        [JsonPropertyName("hashBody")]
+        public string? HashBody { get; set; } = string.Empty;
+        [JsonPropertyName("queryString")]
+        public string? QueryString { get; set; } = string.Empty;
     }
-    private static string GetLogInfo(this HttpContext httpContext, string username)
+    private static string GetLogInfo(this HttpContext httpContext, string? username = null)
     {
         return JsonSerializer.Serialize(new LogInfo
         {
             ClientIp = httpContext.Connection.LocalIpAddress?.ToString() ?? string.Empty,
-            Username = username,
+            Username = username ?? httpContext.User.Identity?.Name ?? string.Empty,
             UserAgent = httpContext.Request.Headers.UserAgent.ToString(),
+            Url = httpContext.Request.Path.Value ?? string.Empty,
             HashBody = httpContext.Request.Body.ToString().ComputeHash() ?? string.Empty,
+            QueryString = httpContext.Request.QueryString.Value ?? string.Empty
+        });
+    }
+    private static string GetLogInfo<T>(this HttpContext httpContext, string? username = null, T? body = default)
+    {
+        var bodyString = body?.ComputeHash() ?? httpContext.Request.Body.ToString();
+        return JsonSerializer.Serialize(new LogInfo
+        {
+            ClientIp = httpContext.Connection.LocalIpAddress?.ToString() ?? string.Empty,
+            Username = username ?? httpContext.User.Identity?.Name ?? string.Empty,
+            UserAgent = httpContext.Request.Headers.UserAgent.ToString(),
+            Url = httpContext.Request.Path.Value ?? string.Empty,
+            HashBody = body?.ComputeHash() ?? httpContext.Request.Body.ToString() ?? string.Empty,
             QueryString = httpContext.Request.QueryString.Value ?? string.Empty
         });
     }
