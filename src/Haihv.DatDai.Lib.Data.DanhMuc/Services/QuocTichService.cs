@@ -1,7 +1,7 @@
-using Elastic.Clients.Elasticsearch;
+using Audit.Core;
 using Haihv.DatDai.Lib.Data.DanhMuc.Entries;
 using Haihv.DatDai.Lib.Data.DanhMuc.Interfaces;
-using Haihv.DatDai.Lib.Extension.Configuration;
+using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Lib.Data.DanhMuc.Services;
@@ -13,9 +13,9 @@ public class QuocTichService(DanhMucDbContext danhMucDbContext, DanhMucDbContext
     }
 
     public QuocTichService(PostgreSqlConnection postgreSqlConnection,
-        ElasticsearchClientSettings elasticsearchClientSettings) : this(
-        new DanhMucDbContext(postgreSqlConnection.PrimaryConnectionString, elasticsearchClientSettings),
-        new DanhMucDbContext(postgreSqlConnection.ReplicaConnectionString, elasticsearchClientSettings))
+        AuditDataProvider? auditDataProvider) : this(
+        new DanhMucDbContext(postgreSqlConnection.PrimaryConnectionString, auditDataProvider),
+        new DanhMucDbContext(postgreSqlConnection.ReplicaConnectionString, auditDataProvider))
     {
     }
     public async Task<(int Insert, int Update, int Skip)> UpdateAsync(List<QuocTich> quocTiches, int bulkSize = 20)

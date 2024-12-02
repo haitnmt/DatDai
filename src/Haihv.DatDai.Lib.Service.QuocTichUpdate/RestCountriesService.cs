@@ -1,6 +1,6 @@
 using System.Text.Json;
-using Elastic.Clients.Elasticsearch;
-using Haihv.DatDai.Lib.Extension.Configuration;
+using Audit.Core;
+using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Lib.Service.QuocTichUpdate;
@@ -8,10 +8,10 @@ namespace Haihv.DatDai.Lib.Service.QuocTichUpdate;
 /// <summary>
 /// Dịch vụ để lấy và cập nhật thông tin quốc tịch từ REST Countries API.
 /// </summary>
-public class RestCountriesService(PostgreSqlConnection postgreSqlConnection, ElasticsearchClientSettings elasticsearchClientSettings)
+public class RestCountriesService(PostgreSqlConnection postgreSqlConnection, AuditDataProvider? auditDataProvider)
 {
-    private readonly QuocTichDbContext _quocTichDbContext = new(postgreSqlConnection.PrimaryConnectionString, elasticsearchClientSettings);
-    private readonly QuocTichDbContext _quocTichDbContextReadOnly = new(postgreSqlConnection.ReplicaConnectionString, elasticsearchClientSettings);
+    private readonly QuocTichDbContext _quocTichDbContext = new(postgreSqlConnection.PrimaryConnectionString, auditDataProvider);
+    private readonly QuocTichDbContext _quocTichDbContextReadOnly = new(postgreSqlConnection.ReplicaConnectionString, auditDataProvider);
     private readonly HttpClient _httpClient = new();
     private const string Url = "https://restcountries.com/v3.1/independent?status=true&fields=ccn3,cca3,name";
     

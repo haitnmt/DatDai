@@ -4,7 +4,7 @@ using DbUp;
 using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
 using Serilog;
 
-namespace Haihv.DatDai.Lib.Service.DbUp.PostgreSQL;
+namespace Haihv.DatDai.Lib.Identity.DbUp.PostgreSQL;
 
 public class DataBaseInitializer(PostgreSqlConnection postgreSqlConnection, ILogger logger)
 {

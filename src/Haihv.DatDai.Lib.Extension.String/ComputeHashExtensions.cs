@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Haihv.DatDai.Lib.Extension.String;
 
-public static class ExtensionComputeHash
+public static class ComputeHashExtensions
 {
     private static string ComputeHash(this string input)
     {

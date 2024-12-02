@@ -51,12 +51,19 @@ public static class LdapContextExtensions
 {
     public static string ToLogInfo(this ILdapContext ldapContext)
     {
-        var logLdapConnectionInfo = ldapContext.LdapConnectionInfo;
+        var ldapConnectionInfo = ldapContext.LdapConnectionInfo;
         return JsonSerializer.Serialize(new LogLdapInfo
         {
-            Host = logLdapConnectionInfo.Host,
-            Port = logLdapConnectionInfo.Port,
-            Domain = logLdapConnectionInfo.DomainFullname
+            Host = ldapConnectionInfo.Host,
+            Port = ldapConnectionInfo.Port,
+            Domain = ldapConnectionInfo.DomainFullname
         });
+    }
+    
+    public static string GetUserPrincipalName(this ILdapContext ldapContext, string userName)
+    {
+        var ldapConnectionInfo = ldapContext.LdapConnectionInfo;
+        userName = new string(userName.Where(c => char.IsLetterOrDigit(c) || c == '\\').ToArray());
+        return $"{(userName.Replace($"{ldapConnectionInfo.Domain}\\", "")).Trim()}@{ldapConnectionInfo.DomainFullname}";
     }
 }

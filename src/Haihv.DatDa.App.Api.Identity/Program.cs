@@ -2,10 +2,14 @@ using System.Text;
 using Haihv.DatDai.Aspire.ServiceDefault;
 using Haihv.DatDa.App.Api.Identity.Endpoints;
 using Haihv.DatDa.App.Api.Identity.Entities;
+using Haihv.DatDai.Lib.Extension.Audit.MongoDb;
+using Haihv.DatDai.Lib.Extension.Configuration.Elasticsearch;
+using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
 using Haihv.DatDai.Lib.Extension.Logger.Elasticsearch.WebApp;
-using Haihv.DatDai.Lib.Identity.Data;
+using Haihv.DatDai.Lib.Identity.Data.Services;
+using Haihv.DatDai.Lib.Identity.DbUp.PostgreSQL;
 using Haihv.DatDai.Lib.Identity.Ldap;
-using Microsoft.EntityFrameworkCore;
+using Haihv.DatDai.Lib.Identity.Ldap.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 Console.OutputEncoding = Encoding.UTF8;
@@ -14,6 +18,18 @@ Console.OutputEncoding = Encoding.UTF8;
 builder.AddServiceDefaults();
 
 builder.AddLogToElasticsearch();
+
+// Khởi tạo kết nối PostgreSQL
+builder.AddPostgreSqlConnection();
+
+// Đăng ký dịch vụ cập nhật cấu trúc cơ sở dữ liệu
+builder.Services.AddSingleton<DataBaseInitializer>();
+
+// Khởi tạo kết nối Elasticsearch
+builder.AddElasticsearchClient();
+
+// Khỏi tạo Audit to MongoDB
+builder.UseAuditDatToMongoDb();
 
 builder.Services.AddOpenApi();
 
@@ -34,14 +50,18 @@ var ldapConnectionInfo = new LdapConnectionInfo()
 };
 
 builder.Services.AddSingleton<ILdapContext>(new LdapContext(ldapConnectionInfo));
+builder.Services.AddSingleton<IUserLdapService,UserLdapService>();
+
+builder.Services.AddSingleton<IUserService, UserService>();
+
+builder.Services.AddSingleton<IAuthenticateLdapService, AuthenticateLdapService>();
 
 builder.Services.AddSingleton<TokenProvider>();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
-// Add service for IdentityDbContext
-builder.Services.AddDbContext<IdentityDbContext>(options => { options.UseNpgsql(connectionString); });
-
 var app = builder.Build();
+// Thực hiện cập nhật cấu trúc cơ sở dữ liệu
+var dataBaseInitializer = app.Services.GetRequiredService<DataBaseInitializer>();
+await dataBaseInitializer.InitializeAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

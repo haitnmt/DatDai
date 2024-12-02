@@ -3,12 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using Audit.EntityFramework;
 using Haihv.DatDai.Lib.Data.Base;
+using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Lib.Identity.Data.Entries;
 
 /// <summary>
 /// Lớp đại diện cho người dùng.
 /// </summary>
+[PrimaryKey("Id")]
 public class User : SoftDeletable
 {
     /// <summary>
@@ -50,21 +52,21 @@ public class User : SoftDeletable
     /// </summary>
     [Column("Description", TypeName = "varchar(250)")]
     [MaxLength(250)]
-    public string? Description { get; init; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// Phòng ban của người dùng.
     /// </summary>
     [Column("Department", TypeName = "varchar(150)")]
     [MaxLength(150)]
-    public string? Department { get; init; }
+    public string? Department { get; set; }
 
     /// <summary>
     /// Tổ chức của người dùng.
     /// </summary>
     [Column("Organization", TypeName = "varchar(150)")]
     [MaxLength(150)]
-    public string? Organization { get; init; }
+    public string? Organization { get; set; }
 
     /// <summary>
     /// URL miền của người dùng.
@@ -77,19 +79,19 @@ public class User : SoftDeletable
     /// Trạng thái khóa của người dùng.
     /// </summary>
     [Column("IsLocked", TypeName = "boolean")]
-    public bool IsLocked { get; init; }
+    public bool IsLocked { get; set; }
 
     /// <summary>
     /// Trạng thái yêu cầu thay đổi mật khẩu của người dùng.
     /// </summary>
     [Column("IsPwdMustChange", TypeName = "boolean")]
-    public bool IsPwdMustChange { get; init; }
+    public bool IsPwdMustChange { get; set; }
 
     /// <summary>
     /// Thời gian mật khẩu được đặt lần cuối.
     /// </summary>
     [Column("PwdLastSet", TypeName = "timestamp with time zone")]
-    public DateTimeOffset PwdLastSet { get; init; }
+    public DateTimeOffset PwdLastSet { get; set; }
 
     /// <summary>
     /// Mật khẩu của người dùng đã được mã hóa bằng BCrypt.Net.
@@ -127,11 +129,11 @@ public class User : SoftDeletable
     /// Thời gian người dùng được tạo.
     /// </summary>
     [Column("WhenCreated", TypeName = "timestamp with time zone")]
-    public DateTimeOffset WhenCreated { get; init; } = DateTimeOffset.MinValue;
+    public DateTimeOffset WhenCreated { get; set; } = DateTimeOffset.MinValue;
 
     /// <summary>
     /// Thời gian người dùng được thay đổi lần cuối.
     /// </summary>
     [Column("WhenChanged", TypeName = "timestamp with time zone")]
-    public DateTimeOffset? WhenChanged { get; init; }
+    public DateTimeOffset? WhenChanged { get; set; }
 }

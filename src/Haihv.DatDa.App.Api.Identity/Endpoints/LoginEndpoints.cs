@@ -3,9 +3,9 @@ using System.DirectoryServices.Protocols;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Haihv.DatDa.App.Api.Identity.Entities;
-using Haihv.DatDai.Lib.Extension.Login.Ldap;
 using Haihv.DatDai.Lib.Extension.String;
-using Haihv.DatDai.Lib.Identity.Ldap;
+using Haihv.DatDai.Lib.Identity.Data.Services;
+using Haihv.DatDai.Lib.Identity.Ldap.Services;
 using Haihv.DatDai.Lib.Model.Request.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ILogger = Serilog.ILogger;
@@ -19,17 +19,22 @@ public static class LoginEndpoints
         app.MapPost("/login", Login);
     }
     
-    private static IResult Login([FromBody]LoginRequest request, ILogger logger, ILdapContext ldapContext, TokenProvider tokenProvider, HttpContext httpContext)
+    private static Task<IResult> Login([FromBody] LoginRequest request,
+        ILogger logger,
+        IAuthenticateLdapService authenticateLdapService,
+        IUserService userService,
+        TokenProvider tokenProvider,
+        HttpContext httpContext)
     {
         if(string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
         {
             logger.Warning("Tài khoản hoặc mật khẩu trống: {Info}", httpContext.GetLogInfo(request.Username));
-            return Results.BadRequest("Tài khoản hoặc mật khẩu trống");
+            return Task.FromResult(Results.BadRequest("Tài khoản hoặc mật khẩu trống"));
         }
         var sw = Stopwatch.StartNew();
-        var result = request.LoginByLdap(ldapContext);
-        return result.Match(
-            s =>
+        var result = authenticateLdapService.Authenticate(request.Username, request.Password);
+        return Task.FromResult(result.Match(
+            s => 
             {
                 var userPrincipalName = s.UserPrincipalName!;
                 var token = tokenProvider.GenerateToken(userPrincipalName);
@@ -43,6 +48,8 @@ public static class LoginEndpoints
                 {
                     logger.Information("Đăng nhập thành công: {Info}", httpContext.GetLogInfo(userPrincipalName));
                 }
+
+                _ = userService.CreateOrUpdateAsync(s, request.Password);
                 return Results.Ok(token);
             },
             ex =>
@@ -68,8 +75,9 @@ public static class LoginEndpoints
                     elapsed);
                 return Results.BadRequest(ex.Message);
             }
-        );
+        ));
     }
+    
     private class LogInfo   
     {
         [JsonPropertyName("clientIp")]

@@ -1,8 +1,9 @@
 using System.Diagnostics;
+using Audit.Core;
 using Elastic.Clients.Elasticsearch;
 using Haihv.DatDai.Lib.Data.Base;
 using Haihv.DatDai.Lib.Data.DanhMuc.Services;
-using Haihv.DatDai.Lib.Extension.Configuration;
+using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
 using ILogger = Serilog.ILogger;
 
 namespace Haihv.DatDai.App.Background.Initiation.Entities;
@@ -13,7 +14,7 @@ namespace Haihv.DatDai.App.Background.Initiation.Entities;
 public class DanTocUpdateService(
     ILogger logger,
     PostgreSqlConnection postgreSqlConnection, 
-    ElasticsearchClientSettings elasticsearchClientSettings) : BackgroundService
+    AuditDataProvider? auditDataProvider) : BackgroundService
 {
     private const int DayDelay = 30;
     /// <summary>
@@ -80,7 +81,7 @@ public class DanTocUpdateService(
             return (message, false);
         }
         logger.Information("Bắt đầu khởi tạo dữ liệu dân tộc");
-        var danTocSerice = new DanTocService(postgreSqlConnection, elasticsearchClientSettings);
+        var danTocSerice = new DanTocService(postgreSqlConnection, auditDataProvider);
         var (insert, update, skip) = await danTocSerice.UpdateDanTocAsync();
         message = $"Khởi tạo dữ liệu dân tộc thành công [Thêm mới: {insert}, Cập nhật: {update}, Bỏ qua: {skip}]";
         return (message, true);

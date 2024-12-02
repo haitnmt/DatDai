@@ -58,5 +58,6 @@ public class UserLdap : BaseLdap
     /// <summary>
     /// Thời gian mật khẩu được đặt lần cuối.
     /// </summary>
-    public DateTime PwdLastSet { get; init; }
+    public DateTimeOffset PwdLastSet { get; init; }
+    
 }

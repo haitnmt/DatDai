@@ -1,10 +1,10 @@
 using System.Diagnostics;
 using System.Text;
-using Elastic.Clients.Elasticsearch;
+using Audit.Core;
 using Haihv.DatDai.Lib.Data.Base;
 using Haihv.DatDai.Lib.Data.DanhMuc.Entries;
 using Haihv.DatDai.Lib.Data.DanhMuc.Services;
-using Haihv.DatDai.Lib.Extension.Configuration;
+using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
 using Haihv.DatDai.Lib.Service.DvhcUpdate.Entities;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -14,10 +14,13 @@ namespace Haihv.DatDai.Lib.Service.DvhcUpdate;
 /// <summary>
 /// Dịch vụ cập nhật dữ liệu đơn vị hành chính.
 /// </summary>
-public class DvhcUpdateService(ILogger logger, PostgreSqlConnection postgreSqlConnection, ElasticsearchClientSettings elasticsearchClientSettings) : BackgroundService
+public class DvhcUpdateService(
+    ILogger logger,
+    PostgreSqlConnection postgreSqlConnection,
+    AuditDataProvider? auditDataProvider) : BackgroundService
 {
-
     private const int DayDelay = 1;
+
     /// <summary>
     /// Thực thi dịch vụ cập nhật dữ liệu đơn vị hành chính.
     /// </summary>
@@ -50,7 +53,8 @@ public class DvhcUpdateService(ILogger logger, PostgreSqlConnection postgreSqlCo
             {
                 sw.Stop();
                 success = false;
-                logger.Error(ex,$"Đồng bộ dữ liệu đơn vị hành chính thất bại [{ex.Message}][{sw.Elapsed.TotalSeconds}s]");
+                logger.Error(ex,
+                    $"Đồng bộ dữ liệu đơn vị hành chính thất bại [{ex.Message}][{sw.Elapsed.TotalSeconds}s]");
             }
 
             var delay = TimeSpan.FromMinutes(5);
@@ -58,7 +62,8 @@ public class DvhcUpdateService(ILogger logger, PostgreSqlConnection postgreSqlCo
             {
                 (delay, var nextSyncTime) = Settings.GetDelayTime(day: DayDelay);
                 logger.Information(
-                    $"Lần đồng bộ dữ liệu đơn vị hành chính tiếp theo lúc: {nextSyncTime:dd/MM/yyyy HH:mm:ss}");            }
+                    $"Lần đồng bộ dữ liệu đơn vị hành chính tiếp theo lúc: {nextSyncTime:dd/MM/yyyy HH:mm:ss}");
+            }
             else
             {
                 logger.Warning(
@@ -77,7 +82,6 @@ public class DvhcUpdateService(ILogger logger, PostgreSqlConnection postgreSqlCo
     /// </returns>
     private async Task<(string message, bool sucsses)> SyncData()
     {
-       
         List<Task<List<Dvhc>>> tasks =
         [
             CapTinhEntity.GetAsync(),
@@ -88,6 +92,7 @@ public class DvhcUpdateService(ILogger logger, PostgreSqlConnection postgreSqlCo
         var dvhcs = tasks.SelectMany(x => x.Result).ToList();
         return await CreateOrUpdateAsync(dvhcs);
     }
+
     private async Task<(string message, bool sucsses)> CreateOrUpdateAsync(List<Dvhc> dvhcs)
     {
         string message;
@@ -95,11 +100,13 @@ public class DvhcUpdateService(ILogger logger, PostgreSqlConnection postgreSqlCo
         {
             message = "Connection string is null or empty";
             logger.Error(message);
-            return  (message, false);
+            return (message, false);
         }
-        var dvhcService = new DvhcService(postgreSqlConnection, elasticsearchClientSettings);
+
+        var dvhcService = new DvhcService(postgreSqlConnection, auditDataProvider);
         var (insert, update, skip) = await dvhcService.UpdateDvhcAsync(dvhcs);
-        message = $"Đồng bộ dữ liệu đơn vị hành chính thành công [Thêm mới: {insert}, Cập nhật: {update}, Bỏ qua: {skip}]";
-        return  (message, true);
+        message =
+            $"Đồng bộ dữ liệu đơn vị hành chính thành công [Thêm mới: {insert}, Cập nhật: {update}, Bỏ qua: {skip}]";
+        return (message, true);
     }
 }

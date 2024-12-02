@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using System.Text;
-using Elastic.Clients.Elasticsearch;
+using Audit.Core;
 using Haihv.DatDai.Lib.Data.Base;
-using Haihv.DatDai.Lib.Extension.Configuration;
+using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
@@ -14,7 +14,7 @@ namespace Haihv.DatDai.Lib.Service.QuocTichUpdate;
 public class QuocTichUpdateService(
     ILogger logger,
     PostgreSqlConnection postgreSqlConnection,
-    ElasticsearchClientSettings elasticsearchClientSettings) : BackgroundService
+    AuditDataProvider? auditDataProvider) : BackgroundService
 {
     private const int DayDelay = 30;
 
@@ -79,7 +79,7 @@ public class QuocTichUpdateService(
     private async Task<string> SyncData()
     {
         logger.Information("Bắt đầu cập nhật dữ liệu quốc tịch");
-        var service = new RestCountriesService(postgreSqlConnection, elasticsearchClientSettings);
+        var service = new RestCountriesService(postgreSqlConnection, auditDataProvider);
         var (insert, update, skip) = await service.UpdateAsync();
         var message = $"Cập nhật dữ liệu quốc tịch thành công [Thêm mới: {insert}, Cập nhật: {update}, Bỏ qua: {skip}]";
         return message;

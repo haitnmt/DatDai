@@ -19,7 +19,8 @@ public enum AttributeTypeLdap
     AccountExpires,
     LockoutTime,
     UserAccountControl,
+    WhenCreated,
     WhenChanged,
     AllMember,
-    AllMemberOf
+    AllMemberOf,
 }

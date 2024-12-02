@@ -21,6 +21,7 @@ public abstract class AttributeLdap(AttributeTypeLdap attributeType)
     private const string AccountExpires = "accountExpires";
     private const string LockoutTime = "lockoutTime";
     private const string UserAccountControl = "userAccountControl";
+    private const string WhenCreated = "whenCreated";
     private const string WhenChanged = "whenChanged";
     private const string AllMember = "member:1.2.840.113556.1.4.1941:";
     private const string AllMemberOf = "memberOf:1.2.840.113556.1.4.1941:";
@@ -47,6 +48,7 @@ public abstract class AttributeLdap(AttributeTypeLdap attributeType)
             AttributeTypeLdap.AccountExpires => AccountExpires,
             AttributeTypeLdap.LockoutTime => LockoutTime,
             AttributeTypeLdap.UserAccountControl => UserAccountControl,
+            AttributeTypeLdap.WhenCreated => WhenCreated,
             AttributeTypeLdap.WhenChanged => WhenChanged,
             AttributeTypeLdap.AllMember => AllMember,
             AttributeTypeLdap.AllMemberOf => AllMemberOf,

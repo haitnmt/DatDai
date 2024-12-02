@@ -1,7 +1,7 @@
-using Elastic.Clients.Elasticsearch;
+using Audit.Core;
 using Haihv.DatDai.Lib.Data.DanhMuc.Entries;
 using Haihv.DatDai.Lib.Data.DanhMuc.Interfaces;
-using Haihv.DatDai.Lib.Extension.Configuration;
+using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Lib.Data.DanhMuc.Services;
@@ -14,9 +14,9 @@ public class DvhcService(DanhMucDbContext danhMucDbContext, DanhMucDbContext dan
     }
 
     public DvhcService(PostgreSqlConnection postgreSqlConnection,
-        ElasticsearchClientSettings elasticsearchClientSettings) : this(
-        new DanhMucDbContext(postgreSqlConnection.PrimaryConnectionString, elasticsearchClientSettings),
-        new DanhMucDbContext(postgreSqlConnection.ReplicaConnectionString, elasticsearchClientSettings))
+        AuditDataProvider? auditDataProvider) : this(
+        new DanhMucDbContext(postgreSqlConnection.PrimaryConnectionString, auditDataProvider),
+        new DanhMucDbContext(postgreSqlConnection.ReplicaConnectionString, auditDataProvider))
     {
     }
 

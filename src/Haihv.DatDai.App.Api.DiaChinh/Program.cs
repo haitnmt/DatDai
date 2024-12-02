@@ -1,7 +1,9 @@
 using System.Text;
 using Haihv.DatDai.App.Api.DiaChinh;
 using Haihv.DatDai.Aspire.ServiceDefault;
-using Haihv.DatDai.Lib.Extension.Configuration;
+using Haihv.DatDai.Lib.Extension.Audit.MongoDb;
+using Haihv.DatDai.Lib.Extension.Configuration.Elasticsearch;
+using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
 using Haihv.DatDai.Lib.Extension.Logger.Elasticsearch.WebApp;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -12,6 +14,15 @@ Console.OutputEncoding = Encoding.UTF8;
 builder.AddServiceDefaults();
 
 builder.AddLogToElasticsearch();
+
+// Khởi tạo kết nối PostgreSQL
+builder.AddPostgreSqlConnection();
+
+// Khởi tạo kết nối Elasticsearch
+builder.AddElasticsearchClient();
+
+// Khỏi tạo Audit to MongoDB
+builder.UseAuditDatToMongoDb();
 
 // Add service Authentication and Authorization for Identity Server
 builder.Services.AddAuthorization();

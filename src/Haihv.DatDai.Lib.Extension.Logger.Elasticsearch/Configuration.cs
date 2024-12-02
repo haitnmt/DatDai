@@ -16,20 +16,20 @@ public static class Configuration
     /// Tạo cấu hình logger cho Elasticsearch.
     /// </summary>
     /// <param name="builder">Đối tượng HostApplicationBuilder.</param>
+    /// <param name="sectionName"> Tên của section chứa cấu hình Elasticsearch trong file appsettings.json.</param>
     /// <param name="uriKey">Khóa cấu hình cho URI của Elasticsearch.</param>
     /// <param name="tokenKey">Khóa cấu hình cho token API của Elasticsearch.</param>
     /// <param name="usernameKey">Khóa cấu hình cho tên người dùng của Elasticsearch.</param>
     /// <param name="passwordKey">Khóa cấu hình cho mật khẩu của Elasticsearch.</param>
     /// <returns>Cấu hình logger.</returns>
-    public static LoggerConfiguration CreateLoggerConfiguration(
-        this IHostApplicationBuilder builder,
-        string? uriKey = null, string? tokenKey = null, string? usernameKey = null, string? passwordKey = null)
+    public static LoggerConfiguration CreateLoggerConfiguration(this IHostApplicationBuilder builder, 
+        string sectionName = "Elasticsearch", string uriKey = "Uris", 
+        string? tokenKey = null, string? usernameKey = null, string? passwordKey = null)
     {
-        uriKey ??= "Elasticsearch:Uris";
-        tokenKey ??= "Elasticsearch:TokenKey";
-        usernameKey ??= "Elasticsearch:Username";
-        passwordKey ??= "Elasticsearch:Password";
-        var configuration = builder.Configuration;
+        tokenKey ??= "Token";
+        usernameKey ??= "Username";
+        passwordKey ??= "Password";
+        var configuration = builder.Configuration.GetSection(sectionName);
         var uris = (from stringUri in configuration.GetSection(uriKey).GetChildren()
             where !string.IsNullOrWhiteSpace(stringUri.Value)
             select new Uri(stringUri.Value!)).ToList();

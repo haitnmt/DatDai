@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Haihv.DatDai.Lib.Data.Base;
+using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Lib.Identity.Data.Entries;
 
+[PrimaryKey("Id")]
 public class Group : SoftDeletable
 {
     /// <summary>
@@ -25,12 +27,21 @@ public class Group : SoftDeletable
     public HashSet<Guid> MemberOf { get; set; } = [];
 
     /// <summary>
+    /// Những vẫn đề cần chú ý về nhóm.
+    /// </summary>
+    [Column("GhiChu", TypeName = "varchar(250)")]
+    [MaxLength(250)]
+    public string? GhiChu { get; set; }
+    
+    /// <summary>
     /// Thời gian tạo nhóm.
     /// </summary>
+    [Column("WhenCreated", TypeName = "timestamp with time zone")]
     public DateTimeOffset WhenCreated { get; set; } = DateTimeOffset.MinValue;
 
     /// <summary>
     /// Thời gian thay đổi nhóm lần cuối.
     /// </summary>
+    [Column("WhenChanged", TypeName = "timestamp with time zone")]
     public DateTimeOffset? WhenChanged { get; set; } = DateTimeOffset.UtcNow;
 }
