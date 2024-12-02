@@ -1,3 +1,4 @@
+using Haihv.DatDai.Lib.Extension.String;
 using Haihv.DatDai.Lib.Identity.Data.Entries;
 using Haihv.DatDai.Lib.Identity.Ldap.Entries;
 
@@ -39,5 +40,11 @@ public static class UserExtensions
             WhenCreated = userLdap.WhenCreated,
             WhenChanged = userLdap.WhenChanged
         };
+    }
+    public static string? HashUser(this User user)
+    {
+        var infoString =
+            $"{user.Id}_{user.UserName}_{user.Email}_{user.DisplayName}_{user.JobTitle}_{user.Description}_{user.AuthenticationType}_{user.IsLocked}_{user.IsPwdMustChange}_{user.PwdLastSet}_{user.WhenCreated}_{user.WhenChanged}";
+        return infoString.ComputeHash();
     }
 }

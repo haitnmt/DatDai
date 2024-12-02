@@ -9,6 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Haihv.DatDai.Lib.Data.Base\Haihv.DatDai.Lib.Data.Base.csproj" />
       <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL\Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL.csproj" />
+      <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.String\Haihv.DatDai.Lib.Extension.String.csproj" />
       <ProjectReference Include="..\Haihv.DatDai.Lib.Identity.Ldap\Haihv.DatDai.Lib.Identity.Ldap.csproj" />
     </ItemGroup>
 

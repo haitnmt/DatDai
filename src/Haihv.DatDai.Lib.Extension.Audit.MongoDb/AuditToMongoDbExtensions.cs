@@ -9,6 +9,7 @@ namespace Haihv.DatDai.Lib.Extension.Audit.MongoDb;
 public static class AuditToMongoDbExtensions
 {
     private const string DefaultDatabase = "DatDai";
+    private const string DefaultCollection = "AuditLogs";
 
     private static AuditDataProvider GetAuditDatToMongoDb(string connectionString, string database, string collection)
     {
@@ -31,7 +32,7 @@ public static class AuditToMongoDbExtensions
         database ??= Assembly.GetEntryAssembly()?.GetName().Name?.ToLower().Replace(".", "-") ??
                      DefaultDatabase;
         var collection = config[collectionKey]?.Trim();
-        collection ??= "AuditLogs";
+        collection ??= DefaultCollection;
         return string.IsNullOrWhiteSpace(collection)
             ? null
             : GetAuditDatToMongoDb(connectionString, database, collection);

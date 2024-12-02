@@ -2,7 +2,7 @@
 -- Author: Haihv
 -- Description: Create table User
 
-CREATE TABLE "User" (
+CREATE TABLE "Users" (
     "Id" uuid PRIMARY KEY,
     "UserName" VARCHAR(50),
     "Email" VARCHAR(50),

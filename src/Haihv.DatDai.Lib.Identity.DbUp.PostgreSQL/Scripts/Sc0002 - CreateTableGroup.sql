@@ -2,7 +2,7 @@
 -- Author: Haihv
 -- Description: Create table Group
 
-CREATE TABLE "Group" (
+CREATE TABLE "Groups" (
     "Id" uuid PRIMARY KEY,
     "GroupName" VARCHAR(50),
     "MemberOf" uuid[],

@@ -119,6 +119,13 @@ public class User : SoftDeletable
     public int AuthenticationType { get; init; }
 
     /// <summary>
+    /// Mã hash của người dùng.
+    /// </summary>
+    [JsonPropertyName("hashUser")]
+    [Column("HashUser", TypeName = "varchar(64)")]
+    public string? HashUser { get; init; }
+
+    /// <summary>
     /// Những vấn đề cần lưu ý của người dùng.
     /// </summary>
     [Column("GhiChu", TypeName = "varchar(250)")]

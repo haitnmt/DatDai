@@ -1,3 +1,4 @@
+using Haihv.DatDai.Lib.Extension.String;
 using Haihv.DatDai.Lib.Identity.Data.Entries;
 using Haihv.DatDai.Lib.Identity.Ldap.Entries;
 
@@ -14,5 +15,11 @@ public static class GroupExtensions
             WhenCreated = groupLdap.WhenCreated,
             WhenChanged = groupLdap.WhenChanged
         };
+    }
+    public static string? HashGroup(this Group group)
+    {
+        var infoString =
+            $"{group.Id}_{group.GroupName}_{group.MemberOf.Select(x =>x.ToString())}_{group.WhenCreated}_{group.WhenChanged}_{group.GhiChu}_{group.DeletedAtUtc}";
+        return infoString.ComputeHash();
     }
 }
