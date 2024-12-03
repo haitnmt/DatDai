@@ -15,7 +15,7 @@ public abstract class BaseLdap : IBaseLdap
     /// <summary>
     /// Tên phân biệt của đối tượng.
     /// </summary>
-    public string? DistinguishedName { get; init; }
+    public string DistinguishedName { get; init; } = string.Empty;
 
     /// <summary>
     /// Tên tài khoản SAM của đối tượng.
