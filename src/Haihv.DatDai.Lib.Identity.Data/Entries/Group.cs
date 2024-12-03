@@ -1,13 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using Haihv.DatDai.Lib.Data.Base;
 using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Lib.Identity.Data.Entries;
 
 [PrimaryKey("Id")]
-public class Group : SoftDeletable
+public class Group : BaseEntry
 {
     /// <summary>
     /// GUID của nhóm.
@@ -21,22 +20,25 @@ public class Group : SoftDeletable
     [JsonPropertyName("groupName")]
     [Column("GroupName", TypeName = "varchar(50)")]
     [MaxLength(50)]
-    public string? GroupName { get; set; }
+    public string GroupName { get; set; } = string.Empty;
 
     /// <summary>
     /// Tập hợp các nhóm mà nhóm này là thành viên.
     /// </summary>
     [JsonPropertyName("memberOf")]
     [Column("MemberOf", TypeName = "uuid[]")]
-    public HashSet<Guid> MemberOf { get; set; } = [];
-
+    public List<Guid> MemberOf { get; set; } = [];
+    
     /// <summary>
-    /// Mã hash của nhóm.
+    /// Kiểu xác thực của người dùng.
     /// </summary>
-    [JsonPropertyName("hashGroup")]
-    [Column("HashGroup", TypeName = "varchar(64)")]
-    [MaxLength(64)]
-    public string? HashGroup { get; set; }
+    /// <remarks>
+    /// <c>0: CSDL/SystemUser </c>
+    /// <c>1: ADDC/LDAP</c>
+    /// </remarks>
+    [JsonPropertyName("groupType")]
+    [Column("GroupType", TypeName = "integer")]
+    public int GroupType { get; set; }
     /// <summary>
     /// Những vẫn đề cần chú ý về nhóm.
     /// </summary>

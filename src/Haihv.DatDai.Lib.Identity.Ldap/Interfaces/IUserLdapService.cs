@@ -1,6 +1,6 @@
 using Haihv.DatDai.Lib.Identity.Ldap.Entries;
 
-namespace Haihv.DatDai.Lib.Identity.Ldap.Services;
+namespace Haihv.DatDai.Lib.Identity.Ldap.Interfaces;
 
 public interface IUserLdapService
 {

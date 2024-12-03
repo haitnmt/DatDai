@@ -29,8 +29,8 @@ public class AttributeWithValueLdap(AttributeTypeLdap attributeType, List<object
             {
                 var comparisonString = operatorLdap switch
                 {
-                    OperatorLdap.GreaterThan => ">=",
-                    OperatorLdap.LessThan => "<=",
+                    OperatorLdap.GreaterThanOrEqual => ">=",
+                    OperatorLdap.LessThanOrEqual => "<=",
                     _ => "=",
                 };
                 foreach (var value in AttributeValues.OfType<object>())

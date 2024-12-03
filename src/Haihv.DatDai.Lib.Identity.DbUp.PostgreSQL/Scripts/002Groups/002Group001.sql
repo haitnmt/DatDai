@@ -13,7 +13,7 @@ CREATE TABLE "Groups" (
     "DeletedAtUtc" TIMESTAMPTZ
 );
 
--- Description: Create index for table Group
+-- Description: Create index for table Groups
 
-CREATE INDEX "IDX_Group_GroupName" ON "Group" ("GroupName");
-CREATE INDEX "IDX_Group_IsDeleted" ON "Group" ("IsDeleted");
+CREATE INDEX "IDX_Groups_GroupName" ON "Groups" ("GroupName");
+CREATE INDEX "IDX_Groups_IsDeleted" ON "Groups" ("IsDeleted");

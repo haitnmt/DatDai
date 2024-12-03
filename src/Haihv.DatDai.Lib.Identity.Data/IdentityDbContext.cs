@@ -12,4 +12,16 @@ public class IdentityDbContext(string connectionString, AuditDataProvider? audit
     public DbSet<Group> Groups { get; init; }
     //public DbSet<Role> Roles { get; init; }
     public DbSet<UserGroup> UserGroups { get; init; }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<User>()
+            .Property(u => u.RowVersion)
+            .IsRowVersion();
+        modelBuilder.Entity<Group>()
+            .Property(g => g.RowVersion)
+            .IsRowVersion();
+        modelBuilder.Entity<UserGroup>()
+            .Property(ug => ug.RowVersion)
+            .IsRowVersion();
+    }
 }

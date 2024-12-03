@@ -2,6 +2,7 @@ using System.DirectoryServices.Protocols;
 using Haihv.DatDai.Lib.Identity.Ldap.Entries;
 using Haihv.DatDai.Lib.Identity.Ldap.Enum;
 using Haihv.DatDai.Lib.Identity.Ldap.Extension;
+using Haihv.DatDai.Lib.Identity.Ldap.Interfaces;
 
 namespace Haihv.DatDai.Lib.Identity.Ldap.Services;
 
@@ -81,7 +82,7 @@ public class UserLdapService(ILdapContext ldapContext) : IUserLdapService
             if (!DateTimeOffset.TryParseExact(whenChangedString, "yyyyMMddHHmmss.0Z", null,
                     System.Globalization.DateTimeStyles.AssumeUniversal, out var whenChanged))
             {
-                whenCreated = DateTimeOffset.MinValue;
+                whenChanged = DateTimeOffset.MinValue;
             }
             
             UserLdap detailUser = new()

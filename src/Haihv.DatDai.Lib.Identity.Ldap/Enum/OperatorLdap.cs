@@ -4,6 +4,6 @@ public enum OperatorLdap
 {
     Equal,
     NotEqual,
-    GreaterThan,
-    LessThan
+    GreaterThanOrEqual,
+    LessThanOrEqual,
 }

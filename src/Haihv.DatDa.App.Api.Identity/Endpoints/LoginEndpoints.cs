@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Haihv.DatDa.App.Api.Identity.Entities;
 using Haihv.DatDai.Lib.Extension.String;
+using Haihv.DatDai.Lib.Identity.Data.Interfaces;
 using Haihv.DatDai.Lib.Identity.Data.Services;
 using Haihv.DatDai.Lib.Identity.Ldap.Services;
 using Haihv.DatDai.Lib.Model.Request.Identity;

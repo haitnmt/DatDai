@@ -33,6 +33,7 @@ public static class UserExtensions
             DisplayName = userLdap.DisplayName ?? string.Empty,
             JobTitle = userLdap.JobTitle,
             Description = userLdap.Description,
+            Department = userLdap.Department,
             AuthenticationType = 1,
             IsLocked = userLdap.IsLocked,
             IsPwdMustChange = userLdap.IsPwdMustChange,
@@ -43,8 +44,10 @@ public static class UserExtensions
     }
     public static string? HashUser(this User user)
     {
-        var infoString =
-            $"{user.Id}_{user.UserName}_{user.Email}_{user.DisplayName}_{user.JobTitle}_{user.Description}_{user.AuthenticationType}_{user.IsLocked}_{user.IsPwdMustChange}_{user.PwdLastSet}_{user.WhenCreated}_{user.WhenChanged}";
+        var infoString = $"{user.UserName}_{user.Email}_{user.DisplayName}_{user.JobTitle}";
+        infoString += $"_{user.Description}_{user.Department}_{user.AuthenticationType}";
+        infoString += $"_{user.IsLocked}_{user.IsPwdMustChange}_{user.PwdLastSet}";
+        infoString +=$"_{user.WhenCreated}";
         return infoString.ComputeHash();
     }
 }

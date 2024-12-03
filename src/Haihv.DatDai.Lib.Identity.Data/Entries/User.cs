@@ -11,7 +11,7 @@ namespace Haihv.DatDai.Lib.Identity.Data.Entries;
 /// Lớp đại diện cho người dùng.
 /// </summary>
 [PrimaryKey("Id")]
-public class User : SoftDeletable
+public class User : BaseEntry
 {
     /// <summary>
     /// GUID của người dùng.
@@ -117,14 +117,7 @@ public class User : SoftDeletable
     [JsonPropertyName("authenticationType")]
     [Column("AuthenticationType", TypeName = "integer")]
     public int AuthenticationType { get; init; }
-
-    /// <summary>
-    /// Mã hash của người dùng.
-    /// </summary>
-    [JsonPropertyName("hashUser")]
-    [Column("HashUser", TypeName = "varchar(64)")]
-    public string? HashUser { get; init; }
-
+    
     /// <summary>
     /// Những vấn đề cần lưu ý của người dùng.
     /// </summary>

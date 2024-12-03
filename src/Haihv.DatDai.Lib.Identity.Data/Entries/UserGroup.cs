@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Lib.Identity.Data.Entries;
 [PrimaryKey("Id")]
-public class UserGroup : SoftDeletable
+public class UserGroup : BaseEntry
 {
     /// <summary>
     /// Id của UserGroup.

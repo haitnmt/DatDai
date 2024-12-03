@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <PackageReference Include="dbup-postgresql" Version="5.0.40" />
+      <PackageReference Include="Npgsql" Version="9.0.1" />
       <PackageReference Include="Serilog" Version="4.1.0" />
     </ItemGroup>
 
@@ -16,12 +17,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Scripts\Sc0001 - CreateTableUser.sql" />
-      <EmbeddedResource Include="Scripts\Sc0001 - CreateTableUser.sql" />
-      <None Remove="Scripts\Sc0002 - CreateTableGroup.sql" />
-      <EmbeddedResource Include="Scripts\Sc0002 - CreateTableGroup.sql" />
-      <None Remove="Scripts\Sc0003 - CreateTableUserGroup.sql" />
-      <EmbeddedResource Include="Scripts\Sc0003 - CreateTableUserGroup.sql" />
+      <None Remove="Scripts\001Users\001User001.sql" />
+      <EmbeddedResource Include="Scripts\001Users\001User001.sql" />
+      <None Remove="Scripts\002Groups\002Group001.sql" />
+      <EmbeddedResource Include="Scripts\002Groups\002Group001.sql" />
+      <None Remove="Scripts\003UserGroup\003UserGroup001.sql" />
+      <EmbeddedResource Include="Scripts\003UserGroup\003UserGroup001.sql" />
+      <None Remove="Scripts\002Groups\002Group002.sql" />
+      <EmbeddedResource Include="Scripts\002Groups\002Group002.sql" />
     </ItemGroup>
 
 </Project>

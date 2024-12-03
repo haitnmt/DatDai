@@ -23,12 +23,12 @@ CREATE TABLE "Users" (
     "IsDeleted" BOOLEAN DEFAULT FALSE,
     "DeletedAtUtc" TIMESTAMPTZ
 );
--- Description: Create index for table User
 
-CREATE INDEX "IDX_User_UserName" ON "User" ("UserName");
-CREATE INDEX "IDX_User_Email" ON "User" ("Email");
-CREATE INDEX "IDX_User_IsLocked" ON "User" ("IsLocked");
-CREATE INDEX "IDX_User_IsPwdMustChange" ON "User" ("IsPwdMustChange");
-CREATE INDEX "IDX_User_AuthenticationType" ON "User" ("AuthenticationType");
-CREATE INDEX "IDX_User_WhenChanged" ON "User" ("WhenChanged");
-CREATE INDEX "IDX_User_IsDeleted" ON "User" ("IsDeleted");
+-- Description: Create index for table User
+CREATE INDEX "IDX_Users_UserName" ON "Users" ("UserName");
+CREATE INDEX "IDX_Users_Email" ON "Users" ("Email");
+CREATE INDEX "IDX_Users_IsLocked" ON "Users" ("IsLocked");
+CREATE INDEX "IDX_Users_IsPwdMustChange" ON "Users" ("IsPwdMustChange");
+CREATE INDEX "IDX_Users_AuthenticationType" ON "Users" ("AuthenticationType");
+CREATE INDEX "IDX_Users_WhenChanged" ON "Users" ("WhenChanged");
+CREATE INDEX "IDX_Users_IsDeleted" ON "Users" ("IsDeleted");

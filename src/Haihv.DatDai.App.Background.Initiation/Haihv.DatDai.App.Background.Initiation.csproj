@@ -8,10 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Elastic.Serilog.Sinks" Version="8.12.2" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Haihv.DatDai.Aspire.ServiceDefault\Haihv.DatDai.Aspire.ServiceDefault.csproj" />
       <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.Audit.MongoDb\Haihv.DatDai.Lib.Extension.Audit.MongoDb.csproj" />
       <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.Configuration.Elasticsearch\Haihv.DatDai.Lib.Extension.Configuration.Elasticsearch.csproj" />
