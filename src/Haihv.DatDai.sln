@@ -87,6 +87,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Audit", "Audit", "{86FCD37A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Lib.Extension.Audit.MongoDb", "Haihv.DatDai.Lib.Extension.Audit.MongoDb\Haihv.DatDai.Lib.Extension.Audit.MongoDb.csproj", "{31E62AF8-B142-4EC4-A3FA-6530E8053F39}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haihv.DatDai.Lib.Extension.Configuration.Ldap", "Haihv.DatDai.Lib.Extension.Configuration.Ldap\Haihv.DatDai.Lib.Extension.Configuration.Ldap.csproj", "{6A9B2223-AD88-4F3D-ACFB-F3EFA295A23C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -197,6 +199,10 @@ Global
 		{31E62AF8-B142-4EC4-A3FA-6530E8053F39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31E62AF8-B142-4EC4-A3FA-6530E8053F39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31E62AF8-B142-4EC4-A3FA-6530E8053F39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A9B2223-AD88-4F3D-ACFB-F3EFA295A23C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A9B2223-AD88-4F3D-ACFB-F3EFA295A23C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A9B2223-AD88-4F3D-ACFB-F3EFA295A23C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A9B2223-AD88-4F3D-ACFB-F3EFA295A23C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -241,5 +247,6 @@ Global
 		{C1AF8BE2-B0A7-4638-A42E-583D6FB4D4DE} = {BD0C5C9F-C54A-46A0-937B-ED028CCD3A72}
 		{86FCD37A-1F89-4EAD-B00F-D3D895E3A2D1} = {B7820259-D148-4674-A483-CA0F976EC670}
 		{31E62AF8-B142-4EC4-A3FA-6530E8053F39} = {86FCD37A-1F89-4EAD-B00F-D3D895E3A2D1}
+		{6A9B2223-AD88-4F3D-ACFB-F3EFA295A23C} = {E5B77219-26AB-451F-A2EF-8C67B86D062C}
 	EndGlobalSection
 EndGlobal

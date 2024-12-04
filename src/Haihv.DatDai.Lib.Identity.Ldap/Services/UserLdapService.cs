@@ -9,8 +9,7 @@ namespace Haihv.DatDai.Lib.Identity.Ldap.Services;
 public class UserLdapService(ILdapContext ldapContext) : IUserLdapService
 {
     private readonly LdapConnectionInfo _ldapConnectionInfo = ldapContext.LdapConnectionInfo;
-
-    // private readonly GroupLdapService _groupLdapService = new(ldapContext);
+    
     private readonly AttributeTypeLdap[] _attributesToReturns =
     [
         AttributeTypeLdap.ObjectGuid,
@@ -36,16 +35,44 @@ public class UserLdapService(ILdapContext ldapContext) : IUserLdapService
     /// Lấy thông tin người dùng từ LDAP.
     /// </summary>
     /// <param name="userPrincipalName">Tên người dùng cần lấy thông tin.</param>
+    /// <param name="whenChanged"></param>
     /// <returns>Đối tượng UserLdap chứa thông tin người dùng.</returns>
-    public async Task<UserLdap> GetUserLdapAsync(string userPrincipalName)
+    public async Task<UserLdap?> GetByPrincipalNameAsync(string userPrincipalName, DateTime whenChanged = default)
     {
         AttributeWithValueCollectionLdap filterCollection = new();
         filterCollection.Add(AttributeTypeLdap.UserPrincipalName, [userPrincipalName]);
+        // Thêm điều kiện lọc theo ngày thay đổi cuối cùng của nhóm
+        if (whenChanged != default && whenChanged != DateTime.MinValue)
+            filterCollection.Add(AttributeTypeLdap.WhenChanged,
+                [whenChanged.ToString("yyyyMMddHHmmss.0Z")], OperatorLdap.GreaterThanOrEqual);
+        
         var resultLdap = new ResultEntryCollectionLdap(ldapContext);
-        var resultEntries = await resultLdap.GetAsync(filterCollection, _attributesToReturns, false);
+        var resultEntries = await resultLdap.GetAsync(filterCollection, _attributesToReturns);
+        if (resultEntries is null || resultEntries.Count <= 0) return null;
         return UserLdapFromSearchResultEntryCollection(resultEntries)[0];
     }
-
+    
+    /// <summary>
+    /// Lấy thông tin người dùng từ LDAP.
+    /// </summary>
+    /// <param name="distinguishedName">
+    /// Tên định danh của người dùng cần lấy thông tin.
+    /// </param>
+    /// <param name="whenChanged"></param>
+    /// <returns>Đối tượng UserLdap chứa thông tin người dùng.</returns>
+    public async Task<UserLdap?> GetByDistinctNameAsync(string distinguishedName, DateTime whenChanged = default)
+    {
+        AttributeWithValueCollectionLdap attributeWithValueCollection = new();
+        attributeWithValueCollection.Add(AttributeTypeLdap.DistinguishedName, [distinguishedName]);
+        // Thêm điều kiện lọc theo ngày thay đổi cuối cùng của nhóm
+        if (whenChanged != default && whenChanged != DateTime.MinValue)
+            attributeWithValueCollection.Add(AttributeTypeLdap.WhenChanged,
+                [whenChanged.ToString("yyyyMMddHHmmss.0Z")], OperatorLdap.GreaterThanOrEqual);
+        var resultLdap = new ResultEntryCollectionLdap(ldapContext);
+        var resultEntries = await resultLdap.GetAsync(attributeWithValueCollection, _attributesToReturns);
+        if (resultEntries is null || resultEntries.Count <= 0) return null;
+        return UserLdapFromSearchResultEntryCollection(resultEntries)[0];
+    }
     /// <summary>
     /// Chuyển đổi một tập hợp các kết quả tìm kiếm LDAP thành danh sách các đối tượng UserLdap.
     /// </summary>
@@ -121,7 +148,7 @@ public class UserLdapService(ILdapContext ldapContext) : IUserLdapService
                                && accountExpires > 0 && accountExpires < intFileTimeUtc),
                 PwdLastSet = pwdLastSet,
                 IsPwdMustChange = pwdLastSetRaw == 0,
-                //Groups = entry.Attributes[AttributeLdap.GetAttribute(AttributeTypeLdap.MemberOf)]?.GetValues(typeof(string)).Cast<string>().ToArray() ?? [],
+                MemberOf = entry.Attributes[AttributeLdap.GetAttribute(AttributeTypeLdap.MemberOf)]?.GetValues(typeof(string)).Cast<string>().ToHashSet()?? [],
                 Organization = _ldapConnectionInfo.Organizational,
                 WhenCreated = whenCreated,
                 WhenChanged = whenChanged

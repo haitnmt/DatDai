@@ -1,5 +1,4 @@
 using Haihv.DatDai.Lib.Identity.Ldap.Entries;
-using Haihv.DatDai.Lib.Identity.Ldap.Interfaces;
 using LanguageExt.Common;
 
 namespace Haihv.DatDai.Lib.Identity.Ldap.Services;
@@ -18,19 +17,16 @@ public interface IAuthenticateLdapService
 /// Dịch vụ xác thực người dùng thông qua LDAP.
 /// </summary>
 /// <param name="ldapContext">Ngữ cảnh LDAP.</param>
-/// <param name="userLdapService">Dịch vụ người dùng LDAP.</param>
-public class AuthenticateLdapService(ILdapContext ldapContext, 
-    IUserLdapService userLdapService) : IAuthenticateLdapService
+public class AuthenticateLdapService(ILdapContext ldapContext) : IAuthenticateLdapService
 {
+    private readonly UserLdapService _userLdapService = new (ldapContext);
     /// <summary>
     /// Xác thực người dùng với tên đăng nhập và mật khẩu.
     /// </summary>
     /// <param name="username">Tên đăng nhập của người dùng.</param>
     /// <param name="password">Mật khẩu của người dùng.</param>
     /// <returns>Kết quả xác thực người dùng LDAP.</returns>
-    public Result<UserLdap> Authenticate(
-        string username,
-        string password)
+    public Result<UserLdap> Authenticate(string username, string password)
     {
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
         {
@@ -50,7 +46,8 @@ public class AuthenticateLdapService(ILdapContext ldapContext,
             ldapContext.Connection.Bind(
                 new System.Net.NetworkCredential(userPrincipalName, password)
             );
-            return userLdapService.GetUserLdapAsync(userPrincipalName).Result;
+            var userLdap = _userLdapService.GetByPrincipalNameAsync(userPrincipalName).Result;
+            return userLdap ?? new Result<UserLdap>(new Exception("Người dùng không tồn tại"));
         }
         catch (Exception ex)
         {

@@ -11,26 +11,21 @@ namespace Haihv.DatDai.Lib.Identity.Data.Entries;
 /// Lớp đại diện cho người dùng.
 /// </summary>
 [PrimaryKey("Id")]
-public class User : BaseEntry
+public class User : BaseFromLdap
 {
-    /// <summary>
-    /// GUID của người dùng.
-    /// </summary>
-    [Column("Id", TypeName = "uuid")]
-    public Guid Id { get; init; } = Guid.CreateVersion7();
-
     /// <summary>
     /// Tên người dùng.
     /// </summary>
     [Column("UserName", TypeName = "varchar(50)")]
     [MaxLength(50)]
+    [JsonPropertyName("username")]
     public string UserName { get; set; } = string.Empty;
-
     /// <summary>
     /// Email của người dùng.
     /// </summary>
     [Column("Email", TypeName = "varchar(50)")]
     [MaxLength(50)]
+    [JsonPropertyName("email")]
     public string Email { get; set; } = string.Empty;
 
     /// <summary>
@@ -46,14 +41,7 @@ public class User : BaseEntry
     [Column("JobTitle", TypeName = "varchar(150)")]
     [MaxLength(150)]
     public string? JobTitle { get; set; }
-
-    /// <summary>
-    /// Mô tả về người dùng.
-    /// </summary>
-    [Column("Description", TypeName = "varchar(250)")]
-    [MaxLength(250)]
-    public string? Description { get; set; }
-
+    
     /// <summary>
     /// Phòng ban của người dùng.
     /// </summary>
@@ -118,22 +106,4 @@ public class User : BaseEntry
     [Column("AuthenticationType", TypeName = "integer")]
     public int AuthenticationType { get; init; }
     
-    /// <summary>
-    /// Những vấn đề cần lưu ý của người dùng.
-    /// </summary>
-    [Column("GhiChu", TypeName = "varchar(250)")]
-    [MaxLength(250)]
-    public string? GhiChu { get; set; }
-
-    /// <summary>
-    /// Thời gian người dùng được tạo.
-    /// </summary>
-    [Column("WhenCreated", TypeName = "timestamp with time zone")]
-    public DateTimeOffset WhenCreated { get; set; } = DateTimeOffset.MinValue;
-
-    /// <summary>
-    /// Thời gian người dùng được thay đổi lần cuối.
-    /// </summary>
-    [Column("WhenChanged", TypeName = "timestamp with time zone")]
-    public DateTimeOffset? WhenChanged { get; set; }
 }

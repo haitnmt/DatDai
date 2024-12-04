@@ -16,6 +16,7 @@
       <ProjectReference Include="..\Haihv.DatDai.Aspire.ServiceDefault\Haihv.DatDai.Aspire.ServiceDefault.csproj" />
       <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.Audit.MongoDb\Haihv.DatDai.Lib.Extension.Audit.MongoDb.csproj" />
       <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.Configuration.Elasticsearch\Haihv.DatDai.Lib.Extension.Configuration.Elasticsearch.csproj" />
+      <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.Configuration.Ldap\Haihv.DatDai.Lib.Extension.Configuration.Ldap.csproj" />
       <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL\Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL.csproj" />
       <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.Logger.Elasticsearch.WebApp\Haihv.DatDai.Lib.Extension.Logger.Elasticsearch.WebApp.csproj" />
       <ProjectReference Include="..\Haihv.DatDai.Lib.Extension.String\Haihv.DatDai.Lib.Extension.String.csproj" />

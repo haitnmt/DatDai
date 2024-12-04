@@ -23,6 +23,7 @@ public static class LoginEndpoints
     private static Task<IResult> Login([FromBody] LoginRequest request,
         ILogger logger,
         IAuthenticateLdapService authenticateLdapService,
+        IAuthenticateService authenticateService,
         IUserService userService,
         TokenProvider tokenProvider,
         HttpContext httpContext)
@@ -33,50 +34,83 @@ public static class LoginEndpoints
             return Task.FromResult(Results.BadRequest("Tài khoản hoặc mật khẩu trống"));
         }
         var sw = Stopwatch.StartNew();
-        var result = authenticateLdapService.Authenticate(request.Username, request.Password);
-        return Task.FromResult(result.Match(
-            s => 
+        // Xác thực trong cơ sở dữ liệu trước:
+        var resultDb = authenticateService.Authenticate(request.Username, request.Password).Result;
+        return Task.FromResult(resultDb.Match(
+            s =>
             {
-                var userPrincipalName = s.UserPrincipalName!;
-                var token = tokenProvider.GenerateToken(userPrincipalName);
+                var userName = s.UserName!;
+                var token = tokenProvider.GenerateToken(userName);
                 sw.Stop();
                 var elapsed = sw.ElapsedMilliseconds;
                 if (elapsed > 1000)
                 {
-                    logger.Warning("Đăng nhập thành công: {Info} [{Elapsed} ms]", httpContext.GetLogInfo(userPrincipalName), elapsed);
+                    logger.Warning("Đăng nhập thành công: {Info} [{Elapsed} ms]",
+                        httpContext.GetLogInfo(userName), elapsed);
                 }
                 else
                 {
-                    logger.Information("Đăng nhập thành công: {Info}", httpContext.GetLogInfo(userPrincipalName));
+                    logger.Information("Đăng nhập thành công: {Info}",
+                        httpContext.GetLogInfo(userName));
                 }
 
-                _ = userService.CreateOrUpdateAsync(s, request.Password);
                 return Results.Ok(token);
             },
             ex =>
             {
-                sw.Stop();
-                var elapsed = sw.ElapsedMilliseconds;
-                if (ex is LdapException ldapException)
-                {
-                    
-                    if (ldapException.ErrorCode == 49)
+                var result = authenticateLdapService.Authenticate(request.Username, request.Password);
+                return Task.FromResult(result.Match(
+                    s =>
                     {
-                        logger.Warning(ldapException, "Đăng nhập thất bại: {Info}",
-                            httpContext.GetLogInfo(request.Username));
-                        return Results.BadRequest($"[Error-code: {ldapException.ErrorCode}] {ldapException.Message} Tài khoản hoặc mật khẩu không đúng");
+                        var userPrincipalName = s.UserPrincipalName!;
+                        var token = tokenProvider.GenerateToken(userPrincipalName);
+                        sw.Stop();
+                        var elapsed = sw.ElapsedMilliseconds;
+                        if (elapsed > 1000)
+                        {
+                            logger.Warning("Đăng nhập thành công: {Info} [{Elapsed} ms]",
+                                httpContext.GetLogInfo(userPrincipalName), elapsed);
+                        }
+                        else
+                        {
+                            logger.Information("Đăng nhập thành công: {Info}",
+                                httpContext.GetLogInfo(userPrincipalName));
+                        }
+
+                        _ = userService.CreateOrUpdateAsync(s, request.Password);
+                        return Results.Ok(token);
+                    },
+                    exLdap =>
+                    {
+                        sw.Stop();
+                        var elapsed = sw.ElapsedMilliseconds;
+                        if (exLdap is LdapException ldapException)
+                        {
+
+                            if (ldapException.ErrorCode == 49)
+                            {
+                                logger.Warning(ldapException, "Đăng nhập thất bại: {Info}",
+                                    httpContext.GetLogInfo(request.Username));
+                                return Results.BadRequest(
+                                    $"[Error-code: {ldapException.ErrorCode}] {ldapException.Message} Tài khoản hoặc mật khẩu không đúng");
+                            }
+
+                            logger.Error(ldapException, "Lỗi khi kết nối đến LDAP: {LdapInfo} [{Elapsed} ms]",
+                                httpContext.GetLogInfo(request.Username),
+                                elapsed);
+                            return Results.BadRequest(
+                                $"[Error-code: {ldapException.ErrorCode}] {ldapException.Message}");
+                        }
+
+                        logger.Error(exLdap, "Đăng nhập thất bại: {LdapInfo} [{Elapsed} ms]",
+                            httpContext.GetLogInfo(request.Username),
+                            elapsed);
+                        return Results.BadRequest(exLdap.Message);
                     }
-                    logger.Error(ldapException, "Lỗi khi kết nối đến LDAP: {LdapInfo} [{Elapsed} ms]", 
-                        httpContext.GetLogInfo(request.Username),
-                        elapsed);
-                    return Results.BadRequest($"[Error-code: {ldapException.ErrorCode}] {ldapException.Message}");
-                }
-                logger.Error(ex,"Đăng nhập thất bại: {LdapInfo} [{Elapsed} ms]",
-                    httpContext.GetLogInfo(request.Username),
-                    elapsed);
-                return Results.BadRequest(ex.Message);
+                ));
             }
         ));
+
     }
     
     private class LogInfo   
@@ -103,19 +137,6 @@ public static class LoginEndpoints
             UserAgent = httpContext.Request.Headers.UserAgent.ToString(),
             Url = httpContext.Request.Path.Value ?? string.Empty,
             HashBody = httpContext.Request.Body.ToString().ComputeHash() ?? string.Empty,
-            QueryString = httpContext.Request.QueryString.Value ?? string.Empty
-        });
-    }
-    private static string GetLogInfo<T>(this HttpContext httpContext, string? username = null, T? body = default)
-    {
-        var bodyString = body?.ComputeHash() ?? httpContext.Request.Body.ToString();
-        return JsonSerializer.Serialize(new LogInfo
-        {
-            ClientIp = httpContext.Connection.LocalIpAddress?.ToString() ?? string.Empty,
-            Username = username ?? httpContext.User.Identity?.Name ?? string.Empty,
-            UserAgent = httpContext.Request.Headers.UserAgent.ToString(),
-            Url = httpContext.Request.Path.Value ?? string.Empty,
-            HashBody = body?.ComputeHash() ?? httpContext.Request.Body.ToString() ?? string.Empty,
             QueryString = httpContext.Request.QueryString.Value ?? string.Empty
         });
     }

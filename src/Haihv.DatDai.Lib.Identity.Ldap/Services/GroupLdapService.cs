@@ -8,6 +8,10 @@ namespace Haihv.DatDai.Lib.Identity.Ldap.Services;
 
 public class GroupLdapService(ILdapContext ldapContext) : IGroupLdapService
 {
+    /// <summary> 
+    /// Distinguished Name (DN) của nhóm gốc LDAP.
+    /// </summary>
+    public string RootGroupDn => _ldapConnectionInfo.RootGroupDn;
     private readonly LdapConnectionInfo _ldapConnectionInfo = ldapContext.LdapConnectionInfo;
 
     private readonly AttributeTypeLdap[] _attributesToReturns =
@@ -22,6 +26,11 @@ public class GroupLdapService(ILdapContext ldapContext) : IGroupLdapService
         AttributeTypeLdap.WhenChanged
     ];
 
+    /// <summary>
+    /// Kiểm tra sự tồn tại của nhóm LDAP dựa trên Distinguished Name (DN).
+    /// </summary>
+    /// <param name="distinguishedName">DN của nhóm cần kiểm tra.</param>
+    /// <returns>True nếu nhóm tồn tại, ngược lại là False.</returns>
     private async Task<bool> ExistsAsync(string distinguishedName)
     {
         try
@@ -39,6 +48,11 @@ public class GroupLdapService(ILdapContext ldapContext) : IGroupLdapService
         }
     }
 
+    /// <summary>
+    /// Kiểm tra sự tồn tại của nhóm LDAP dựa trên Object GUID.
+    /// </summary>
+    /// <param name="objectGuid">Object GUID của nhóm cần kiểm tra.</param>
+    /// <returns>True nếu nhóm tồn tại, ngược lại là False.</returns>
     public async Task<bool> ExistsAsync(Guid objectGuid)
     {
         try
@@ -55,14 +69,19 @@ public class GroupLdapService(ILdapContext ldapContext) : IGroupLdapService
             return false;
         }
     }
-
-    private async Task<List<GroupLdap>> GroupLdapFromSearchResultEntryCollection(
+    /// <summary>
+    /// Chuyển đổi kết quả tìm kiếm LDAP thành danh sách các đối tượng GroupLdap.
+    /// </summary>
+    /// <param name="resultEntries">Danh sách kết quả tìm kiếm LDAP.</param>
+    /// <returns>Danh sách các đối tượng GroupLdap.</returns>
+    private async Task<List<GroupLdap>> GetByResultEntryCollectionAsync(
         SearchResultEntryCollection? resultEntries)
     {
         List<GroupLdap> result = [];
         if (resultEntries is null || resultEntries.Count <= 0) return result;
         foreach (SearchResultEntry entry in resultEntries)
         {
+            // Lấy giá trị thuộc tính WhenCreated và chuyển đổi thành DateTimeOffset
             var whenCreatedString = entry.Attributes[AttributeLdap.GetAttribute(AttributeTypeLdap.WhenCreated)]?[0]
                 .ToString();
             if (!DateTimeOffset.TryParseExact(whenCreatedString, "yyyyMMddHHmmss.0Z", null,
@@ -71,6 +90,7 @@ public class GroupLdapService(ILdapContext ldapContext) : IGroupLdapService
                 whenCreated = DateTimeOffset.MinValue;
             }
 
+            // Lấy giá trị thuộc tính WhenChanged và chuyển đổi thành DateTimeOffset
             var whenChangedString = entry.Attributes[AttributeLdap.GetAttribute(AttributeTypeLdap.WhenChanged)]?[0]
                 .ToString();
             if (!DateTimeOffset.TryParseExact(whenChangedString, "yyyyMMddHHmmss.0Z", null,
@@ -79,6 +99,7 @@ public class GroupLdapService(ILdapContext ldapContext) : IGroupLdapService
                 whenChanged = DateTimeOffset.MinValue;
             }
 
+            // Tạo đối tượng GroupLdap từ các thuộc tính của entry
             GroupLdap groupsLdap = new()
             {
                 Id = new Guid((byte[])entry.Attributes[AttributeLdap.GetAttribute(AttributeTypeLdap.ObjectGuid)][0]),
@@ -94,6 +115,7 @@ public class GroupLdapService(ILdapContext ldapContext) : IGroupLdapService
                 WhenCreated = whenCreated,
                 WhenChanged = whenChanged
             };
+            // Kiểm tra sự tồn tại của các thành viên trong nhóm
             HashSet<string> groupsMember = [];
             foreach (var distinguishedName in entry.Attributes[AttributeLdap.GetAttribute(AttributeTypeLdap.Member)]
                          ?.GetValues(typeof(string)).Cast<string>().ToArray() ?? [])
@@ -104,6 +126,7 @@ public class GroupLdapService(ILdapContext ldapContext) : IGroupLdapService
                 }
             }
 
+            // Gán danh sách thành viên cho nhóm
             groupsLdap.GroupMembers = [.. groupsMember];
             result.Add(groupsLdap);
         }
@@ -111,32 +134,45 @@ public class GroupLdapService(ILdapContext ldapContext) : IGroupLdapService
         return result;
     }
 
-    public async Task<GroupLdap?> GetDetailGroupsLdapModelByGroupDnAsync(string distinguishedName,
+    /// <summary>
+    /// Lấy thông tin nhóm LDAP dựa trên Distinguished Name (DN).
+    /// </summary>
+    /// <param name="distinguishedName">DN của nhóm cần lấy thông tin.</param>
+    /// <param name="whenChanged">
+    /// Ngày để lọc các nhóm theo ngày thay đổi cuối cùng của chúng (>=).
+    /// Mặc định là <see cref="DateTime.MinValue"/>.
+    /// </param>
+    /// <returns>Đối tượng <see cref="GroupLdap"/> đại diện cho nhóm LDAP, hoặc null nếu không tìm thấy.</returns>
+    public async Task<GroupLdap?> GetByDnAsync(string distinguishedName,
         DateTime whenChanged = default)
     {
         try
         {
             AttributeWithValueCollectionLdap attributeWithValueCollection = new(ObjectClassTypeLdap.Group);
             attributeWithValueCollection.Add(AttributeTypeLdap.DistinguishedName, [distinguishedName]);
-            if (whenChanged != default)
+            // Thêm điều kiện lọc theo ngày thay đổi cuối cùng của nhóm
+            if (whenChanged != default && whenChanged != DateTime.MinValue)
                 attributeWithValueCollection.Add(AttributeTypeLdap.WhenChanged,
                     [whenChanged.ToString("yyyyMMddHHmmss.0Z")], OperatorLdap.GreaterThanOrEqual);
             ResultEntryCollectionLdap resultEntryCollectionLdap = new(ldapContext);
             var entryCollection =
                 await resultEntryCollectionLdap.GetAsync(attributeWithValueCollection, _attributesToReturns);
             if (entryCollection is null || entryCollection.Count == 0) return null;
-            return (await GroupLdapFromSearchResultEntryCollection(entryCollection))[0];
+            return (await GetByResultEntryCollectionAsync(entryCollection))[0];
         }
         catch (Exception)
         {
             return null;
         }
     }
-
+    /// <summary>
+    /// Lấy thông tin nhóm gốc LDAP.
+    /// </summary>
+    /// <returns>Đối tượng <see cref="GroupLdap"/> đại diện cho nhóm gốc LDAP, hoặc null nếu không tìm thấy.</returns>
 
     public async Task<GroupLdap?> GetRootGroupAsync()
     {
-        return await GetDetailGroupsLdapModelByGroupDnAsync(_ldapConnectionInfo.RootGroupDn);
+        return await GetByDnAsync(_ldapConnectionInfo.RootGroupDn);
     }
 
     /// <summary>
@@ -144,7 +180,7 @@ public class GroupLdapService(ILdapContext ldapContext) : IGroupLdapService
     /// <c>(AllMemberOf = "memberOf:1.2.840.113556.1.4.1941:";)</c>
     /// </summary>
     /// <param name="whenChanged">
-    /// Ngày để lọc các nhóm theo ngày thay đổi cuối cùng của chúng (lớn hơn giá trị nhập vào 1s).
+    /// Ngày để lọc các nhóm theo ngày thay đổi cuối cùng của chúng (>=).
     /// Mặc định là <see cref="DateTime.MinValue"/>.
     /// </param>
     /// <returns>Danh sách các đối tượng <see cref="GroupLdap"/> đại diện cho các nhóm LDAP.</returns>
@@ -153,23 +189,20 @@ public class GroupLdapService(ILdapContext ldapContext) : IGroupLdapService
         AttributeWithValueCollectionLdap attributeWithValueCollection = new(ObjectClassTypeLdap.Group);
         attributeWithValueCollection.Add(AttributeTypeLdap.AllMemberOf, [_ldapConnectionInfo.RootGroupDn]);
         if (whenChanged != default && whenChanged != DateTimeOffset.MinValue)
-        {
-            whenChanged = whenChanged.AddSeconds(1);
             attributeWithValueCollection.Add(AttributeTypeLdap.WhenChanged,
                 [whenChanged.ToString("yyyyMMddHHmmss.0Z")], OperatorLdap.GreaterThanOrEqual);
-        }
 
         ResultEntryCollectionLdap resultEntryCollectionLdap = new(ldapContext);
         var entryCollection =
             await resultEntryCollectionLdap.GetAsync(attributeWithValueCollection, _attributesToReturns);
-        return await GroupLdapFromSearchResultEntryCollection(entryCollection);
+        return await GetByResultEntryCollectionAsync(entryCollection);
     }
 
     /// <summary>
     /// Lấy tất cả các nhóm LDAP đã thay đổi kể từ ngày chỉ định, tìm theo từng tầng dựa trên memberOf.
     /// </summary>
     /// <param name="whenChanged">
-    /// Ngày để lọc các nhóm theo ngày thay đổi cuối cùng của chúng (lớn hơn giá trị nhập vào 1s).
+    /// Ngày để lọc các nhóm theo ngày thay đổi cuối cùng của chúng (>=).
     /// Mặc định là <see cref="DateTime.MinValue"/>.
     /// </param>
     /// <returns>Danh sách các đối tượng <see cref="GroupLdap"/> đại diện cho các nhóm LDAP.</returns>
@@ -178,26 +211,19 @@ public class GroupLdapService(ILdapContext ldapContext) : IGroupLdapService
         // Danh sách để lưu các nhóm LDAP tìm được
         List<GroupLdap> allGroups = [];
         Queue<string> groupQueue = new(); // Hàng đợi để duyệt theo tầng
-        
+
         groupQueue.Enqueue(_ldapConnectionInfo.RootGroupDn); // Thêm nhóm gốc vào hàng đợi
 
-        // Nếu có whenChanged, tăng 1s để tránh sai số
-        if (whenChanged != default && whenChanged != DateTime.MinValue)
-        {
-            whenChanged = whenChanged.AddSeconds(1);
-        }
-
-        
         while (groupQueue.Count > 0)
         {
             // Lấy nhóm hiện tại từ hàng đợi
             var currentGroupDn = groupQueue.Dequeue();
             // Thêm nhóm vào danh sách kết quả nếu thoả mãn điều kiện
-            var currentGroup = await GetDetailGroupsLdapModelByGroupDnAsync(_ldapConnectionInfo.RootGroupDn, whenChanged);
+            var currentGroup = await GetByDnAsync(currentGroupDn, whenChanged);
             // Thêm vào danh sách kết quả nếu có nhóm thoả mãn 
             if (currentGroup is not null)
                 allGroups.Add(currentGroup);
-            
+
             // Lấy danh sách các DN của nhóm con
             var dns = await GetDnByMemberOfAsync(currentGroupDn);
 
@@ -209,18 +235,24 @@ public class GroupLdapService(ILdapContext ldapContext) : IGroupLdapService
         }
         return allGroups;
     }
-    
-    private async Task<List<string>> GetDnByMemberOfAsync(string memberOf, DateTime whenChanged = default)
+    /// <summary>
+    /// Lấy danh sách các Distinguished Name (DN) của các nhóm LDAP dựa trên thuộc tính memberOf.
+    /// </summary>
+    /// <param name="memberOf">DN của nhóm cha để tìm các nhóm con.</param>
+    /// <param name="whenChanged">
+    /// Ngày để lọc các nhóm theo ngày thay đổi cuối cùng của chúng (>=).
+    /// Mặc định là <see cref="DateTime.MinValue"/>.
+    /// </param>
+    /// <returns>Danh sách các DN của các nhóm LDAP.</returns>
+    public async Task<List<string>> GetDnByMemberOfAsync(string memberOf, DateTime whenChanged = default)
     {
         AttributeWithValueCollectionLdap attributeWithValueCollection = new(ObjectClassTypeLdap.Group);
         attributeWithValueCollection.Add(AttributeTypeLdap.MemberOf, [memberOf]);
-        // Nếu có whenChanged, tăng 1s để tránh sai số
+        // Thêm điều kiện lọc theo ngày thay đổi cuối cùng của nhóm
         if (whenChanged != default && whenChanged != DateTime.MinValue)
-        {
-            whenChanged = whenChanged.AddSeconds(1);
             attributeWithValueCollection.Add(AttributeTypeLdap.WhenChanged,
                 [whenChanged.ToString("yyyyMMddHHmmss.0Z")], OperatorLdap.GreaterThanOrEqual);
-        }
+
 
         ResultEntryCollectionLdap resultEntryCollectionLdap = new(ldapContext);
         var entryCollection =
@@ -230,23 +262,10 @@ public class GroupLdapService(ILdapContext ldapContext) : IGroupLdapService
         return entryCollection == null
             ? result
             : (from SearchResultEntry entry in entryCollection
-                select entry.Attributes[AttributeLdap.GetAttribute(AttributeTypeLdap.DistinguishedName)][0].ToString()
+               select entry.Attributes[AttributeLdap.GetAttribute(AttributeTypeLdap.DistinguishedName)][0].ToString()
                 into distinguishedName
-                where !string.IsNullOrEmpty(distinguishedName)
-                select distinguishedName).ToList();
+               where !string.IsNullOrEmpty(distinguishedName)
+               select distinguishedName).ToList();
     }
 
-    private async Task<string> GetGroupNameByDn(string distinguishedName)
-    {
-        AttributeWithValueCollectionLdap attributeWithValueCollection = new(ObjectClassTypeLdap.Group);
-        attributeWithValueCollection.Add(AttributeTypeLdap.DistinguishedName, [distinguishedName]);
-        ResultEntryCollectionLdap resultEntryCollectionLdap = new(ldapContext);
-        var entryCollection =
-            await resultEntryCollectionLdap.GetAsync(attributeWithValueCollection,
-                [AttributeTypeLdap.Cn]);
-        return Convert.ToString(entryCollection == null
-            ? string.Empty
-            : (from SearchResultEntry entry in entryCollection
-                select entry.Attributes[AttributeLdap.GetAttribute(AttributeTypeLdap.Cn)][0].ToString())
-    }
 }

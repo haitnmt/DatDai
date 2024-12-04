@@ -31,19 +31,20 @@ public class GroupService(
         try
         {
             var group = groupLdap.ToGroup();
-            var existingGroup = await _dbContextRead.Groups.FirstOrDefaultAsync(g => g.Id == group.Id ||
+            group.MemberOf = await GetMemberOfAsync(groupLdap, true);
+            var existingGroup = await _dbContextWrite.Groups.FirstOrDefaultAsync(g => g.Id == group.Id ||
                 (g.GroupName == group.GroupName && g.GroupType == group.GroupType));
             if (existingGroup is not null)
             {
-                if (existingGroup.WhenChanged == group.WhenChanged && existingGroup.HashGroup() == group.HashGroup())
+                if (existingGroup.UpdatedAt == group.UpdatedAt && existingGroup.HashGroup() == group.HashGroup())
                 {
                     return existingGroup;
                 }
 
                 existingGroup.GroupName = group.GroupName;
                 existingGroup.GroupType = group.GroupType;
-                existingGroup.WhenCreated = group.WhenCreated;
-                existingGroup.WhenChanged = group.WhenChanged;
+                existingGroup.CreatedAt = group.CreatedAt;
+                existingGroup.UpdatedAt = group.UpdatedAt;
                 _dbContextWrite.Groups.Update(existingGroup);
                 await _dbContextWrite.SaveChangesAsync();
                 return existingGroup;
@@ -71,21 +72,23 @@ public class GroupService(
             foreach (var groupLdap in groupLdaps)
             {
                 var group = groupLdap.ToGroup();
-                group.MemberOf = await GetMemberOfAsync(groupLdap);
+                group.MemberOf = await GetMemberOfAsync(groupLdap, true);
                 var existingGroup = await _dbContextRead.Groups.FirstOrDefaultAsync(g => g.Id == group.Id ||
                     (g.GroupName == group.GroupName && g.GroupType == group.GroupType));
                 if (existingGroup is not null)
                 {
-                    if (existingGroup.WhenChanged == group.WhenChanged &&
+                    if (existingGroup.UpdatedAt == group.UpdatedAt &&
                         existingGroup.HashGroup() == group.HashGroup())
                     {
                         continue;
                     }
-
+            
                     existingGroup.GroupName = group.GroupName;
+                    existingGroup.DistinguishedName = group.DistinguishedName;
                     existingGroup.GroupType = group.GroupType;
-                    existingGroup.WhenCreated = group.WhenCreated;
-                    existingGroup.WhenChanged = group.WhenChanged;
+                    existingGroup.GhiChu = group.GhiChu;
+                    existingGroup.CreatedAt = group.CreatedAt;
+                    existingGroup.UpdatedAt = group.UpdatedAt;
                     _dbContextWrite.Groups.Update(existingGroup);
                 }
                 else
@@ -111,7 +114,7 @@ public class GroupService(
     {
         return _dbContextRead.Groups
             .Where(g => g.GroupType == groupType)
-            .Select(g => g.WhenChanged)
+            .Select(g => g.UpdatedAt)
             .AsEnumerable()
             .DefaultIfEmpty(DateTimeOffset.MinValue)
             .Max();
@@ -140,18 +143,21 @@ public class GroupService(
             return new Result<Group>(ex);
         }
     }
-    
+
     /// <summary>
     /// Lấy danh sách ID của các nhóm mà nhóm LDAP là thành viên.
     /// </summary>
     /// <param name="groupLdap">Thông tin nhóm từ LDAP.</param>
+    /// <param name="useWriteDb"> Sử dụng cơ sở dữ liệu ghi để lấy thông tin nhóm.</param>
     /// <returns>Danh sách ID của các nhóm.</returns>
-    private async Task<List<Guid>> GetMemberOfAsync(GroupLdap groupLdap)
+    private async Task<List<Guid>> GetMemberOfAsync(GroupLdap groupLdap, bool useWriteDb = false)
     {
         try
         {
-            return await _dbContextRead.Groups
-                .Where(g => g.GroupType == 1 && groupLdap.MemberOf.Contains(g.GroupName))
+            var dbContext = useWriteDb ? _dbContextWrite : _dbContextRead;
+            return await dbContext.Groups
+                .Where(g => g.GroupType == 1 && g.DistinguishedName != null &&
+                            groupLdap.MemberOf.Contains(g.DistinguishedName))
                 .Select(g => g.Id)
                 .ToListAsync();
         }

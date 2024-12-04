@@ -31,23 +31,32 @@ public static class UserExtensions
             UserName = userLdap.UserPrincipalName ?? string.Empty,
             Email = userLdap.Email ?? string.Empty,
             DisplayName = userLdap.DisplayName ?? string.Empty,
+            DistinguishedName = userLdap.DistinguishedName,
             JobTitle = userLdap.JobTitle,
-            Description = userLdap.Description,
             Department = userLdap.Department,
             AuthenticationType = 1,
             IsLocked = userLdap.IsLocked,
             IsPwdMustChange = userLdap.IsPwdMustChange,
             PwdLastSet = userLdap.PwdLastSet,
-            WhenCreated = userLdap.WhenCreated,
-            WhenChanged = userLdap.WhenChanged
+            GhiChu = userLdap.Description,
+            CreatedAt = userLdap.WhenCreated,
+            UpdatedAt = userLdap.WhenChanged ?? userLdap.WhenCreated,
         };
     }
+
+    /// <summary>
+    /// Tạo chuỗi hash từ thông tin người dùng.
+    /// </summary>
+    /// <param name="user"><see cref="User"/></param>
+    /// <returns>
+    /// Chuỗi hash của thông tin người dùng.
+    /// </returns>
     public static string? HashUser(this User user)
     {
-        var infoString = $"{user.UserName}_{user.Email}_{user.DisplayName}_{user.JobTitle}";
-        infoString += $"_{user.Description}_{user.Department}_{user.AuthenticationType}";
-        infoString += $"_{user.IsLocked}_{user.IsPwdMustChange}_{user.PwdLastSet}";
-        infoString +=$"_{user.WhenCreated}";
+        var infoString = $"{user.UserName}_{user.Email}_{user.DisplayName}" +
+                         $"_{user.DistinguishedName}_{user.JobTitle}" +
+                         $"_{user.Department}_{user.GhiChu}_{user.AuthenticationType}" +
+                         $"_{user.IsLocked}_{user.IsPwdMustChange}_{user.PwdLastSet}";
         return infoString.ComputeHash();
     }
 }

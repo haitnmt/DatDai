@@ -3,7 +3,6 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/Haihv.DatDai.Lib.Identity.DbUp.PostgreSQL/Scripts/001Users/001User001.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/Haihv.DatDai.Lib.Identity.DbUp.PostgreSQL/Scripts/002Groups/002Group001.sql" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/Haihv.DatDai.Lib.Identity.DbUp.PostgreSQL/Scripts/002Groups/002Group002.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/Haihv.DatDai.Lib.Identity.DbUp.PostgreSQL/Scripts/003UserGroup/003UserGroup001.sql" dialect="GenericSQL" />
   </component>
 </project>
