@@ -105,7 +105,18 @@ public class UserService(
             .Where(u => u.AuthenticationType == authenticationType)
             .ToListAsync();
     }
-
+    
+    /// <summary>
+    /// Lấy thông tin người dùng theo ID.
+    /// </summary>
+    /// <param name="username">
+    /// Tên đăng nhập của người dùng.
+    /// </param>>
+    public async Task<User?> GetByUserNameAsync(string username)
+    {
+        return await _dbContextRead.Users.FirstOrDefaultAsync(u => u.UserName == username);
+    }
+    
     /// <summary>
     /// Lấy danh sách ID của các nhóm mà user LDAP là thành viên.
     /// </summary>

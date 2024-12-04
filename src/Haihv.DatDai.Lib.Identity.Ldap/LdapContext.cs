@@ -67,4 +67,10 @@ public static class LdapContextExtensions
         userName = new string(userName.Where(c => char.IsLetterOrDigit(c) || c == '\\').ToArray());
         return $"{(userName.Replace($"{ldapConnectionInfo.Domain}\\", "")).Trim()}@{ldapConnectionInfo.DomainFullname}";
     }
+
+    public static bool CheckUserLdap(this ILdapContext ldapContext, string userName)
+    {
+        var ldapConnectionInfo = ldapContext.LdapConnectionInfo;
+        return userName.StartsWith($"{ldapConnectionInfo.Domain}\\") || userName.EndsWith($"@{ldapConnectionInfo.DomainFullname}");
+    }
 }

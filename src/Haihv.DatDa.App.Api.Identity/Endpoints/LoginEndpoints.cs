@@ -113,6 +113,22 @@ public static class LoginEndpoints
 
     }
     
+    private async Task<string> Authenticate(LoginRequest loginRequest)
+    {
+        var user = await userService.GetByUserNameAsync(loginRequest.Username);
+        if (user == null)
+        {
+            return "Tài khoản không tồn tại";
+        }
+
+        if (user.Password != loginRequest.Password)
+        {
+            return "Mật khẩu không đúng";
+        }
+
+        return tokenProvider.GenerateToken(user.UserName!);
+    }
+
     private class LogInfo   
     {
         [JsonPropertyName("clientIp")]
