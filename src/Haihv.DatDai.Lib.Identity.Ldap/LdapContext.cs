@@ -71,6 +71,8 @@ public static class LdapContextExtensions
     public static bool CheckUserLdap(this ILdapContext ldapContext, string userName)
     {
         var ldapConnectionInfo = ldapContext.LdapConnectionInfo;
-        return userName.StartsWith($"{ldapConnectionInfo.Domain}\\") || userName.EndsWith($"@{ldapConnectionInfo.DomainFullname}");
+        return userName.StartsWith($"{ldapConnectionInfo.Domain}\\") ||
+               userName.EndsWith($"@{ldapConnectionInfo.DomainFullname}") ||
+               (!userName.Contains('@') && !userName.Contains('\\'));
     }
 }

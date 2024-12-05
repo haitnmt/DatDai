@@ -10,7 +10,7 @@ public static class ComputeHashExtensions
     {
         var inputBytes = Encoding.UTF8.GetBytes(input);
         var hashBytes = SHA256.HashData(inputBytes);
-        return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+        return Convert.ToHexStringLower(hashBytes);
     }
     public static string? ComputeHash<T>(this T? input)
     {
@@ -22,7 +22,7 @@ public static class ComputeHashExtensions
         var jsonString = JsonSerializer.Serialize(input);
         var inputBytes = Encoding.UTF8.GetBytes(jsonString);
         var hashBytes = SHA256.HashData(inputBytes);
-        return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+        return Convert.ToHexStringLower(hashBytes);
     }
     public static string? ComputeHash<T>(string? txt = null, T? obj = default)
     {
@@ -31,6 +31,6 @@ public static class ComputeHashExtensions
 
         var inputBytes = Encoding.UTF8.GetBytes(jsonString);
         var hashBytes = SHA256.HashData(inputBytes);
-        return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+        return Convert.ToHexStringLower(hashBytes);
     }
 }

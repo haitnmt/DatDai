@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using System.Text;
+using Haihv.DatDai.Lib.Identity.Data.Entries;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
@@ -12,7 +13,7 @@ internal sealed class TokenProvider(IConfiguration configuration)
     private readonly string _issuer = configuration["Jwt:Issuer"]!;
     private readonly string _audience = configuration["Jwt:Audience"]!;
     private readonly int _expiryMinutes = configuration.GetValue<int>("Jwt:ExpireMinutes");
-    public string GenerateToken(string userId)
+    public string GenerateToken(User user)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -21,7 +22,7 @@ internal sealed class TokenProvider(IConfiguration configuration)
         var claims = new List<Claim>
         {
             new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(JwtRegisteredClaimNames.Sub, userId),
+            new(JwtRegisteredClaimNames.Sub, user.UserName),
         };
         
         var tokenDescriptor = new SecurityTokenDescriptor

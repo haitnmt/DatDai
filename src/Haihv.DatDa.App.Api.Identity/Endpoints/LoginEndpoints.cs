@@ -4,9 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Haihv.DatDa.App.Api.Identity.Entities;
 using Haihv.DatDai.Lib.Extension.String;
-using Haihv.DatDai.Lib.Identity.Data.Interfaces;
 using Haihv.DatDai.Lib.Identity.Data.Services;
-using Haihv.DatDai.Lib.Identity.Ldap.Services;
 using Haihv.DatDai.Lib.Model.Request.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ILogger = Serilog.ILogger;
@@ -22,25 +20,18 @@ public static class LoginEndpoints
     
     private static Task<IResult> Login([FromBody] LoginRequest request,
         ILogger logger,
-        IAuthenticateLdapService authenticateLdapService,
         IAuthenticateService authenticateService,
-        IUserService userService,
         TokenProvider tokenProvider,
         HttpContext httpContext)
     {
-        if(string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
-        {
-            logger.Warning("Tài khoản hoặc mật khẩu trống: {Info}", httpContext.GetLogInfo(request.Username));
-            return Task.FromResult(Results.BadRequest("Tài khoản hoặc mật khẩu trống"));
-        }
         var sw = Stopwatch.StartNew();
         // Xác thực trong cơ sở dữ liệu trước:
-        var resultDb = authenticateService.Authenticate(request.Username, request.Password).Result;
-        return Task.FromResult(resultDb.Match(
+        var result = authenticateService.Authenticate(request).Result;
+        return Task.FromResult(result.Match(
             s =>
             {
-                var userName = s.UserName!;
-                var token = tokenProvider.GenerateToken(userName);
+                var token = tokenProvider.GenerateToken(s);
+                var userName = s.UserName;
                 sw.Stop();
                 var elapsed = sw.ElapsedMilliseconds;
                 if (elapsed > 1000)
@@ -50,85 +41,38 @@ public static class LoginEndpoints
                 }
                 else
                 {
-                    logger.Information("Đăng nhập thành công: {Info}",
-                        httpContext.GetLogInfo(userName));
+                    logger.Information("Đăng nhập thành công: {Info} [{Elapsed} ms]",
+                        httpContext.GetLogInfo(userName), elapsed);
                 }
-
                 return Results.Ok(token);
             },
             ex =>
             {
-                var result = authenticateLdapService.Authenticate(request.Username, request.Password);
-                return Task.FromResult(result.Match(
-                    s =>
-                    {
-                        var userPrincipalName = s.UserPrincipalName!;
-                        var token = tokenProvider.GenerateToken(userPrincipalName);
-                        sw.Stop();
-                        var elapsed = sw.ElapsedMilliseconds;
-                        if (elapsed > 1000)
-                        {
-                            logger.Warning("Đăng nhập thành công: {Info} [{Elapsed} ms]",
-                                httpContext.GetLogInfo(userPrincipalName), elapsed);
-                        }
-                        else
-                        {
-                            logger.Information("Đăng nhập thành công: {Info}",
-                                httpContext.GetLogInfo(userPrincipalName));
-                        }
-
-                        _ = userService.CreateOrUpdateAsync(s, request.Password);
-                        return Results.Ok(token);
-                    },
-                    exLdap =>
-                    {
-                        sw.Stop();
-                        var elapsed = sw.ElapsedMilliseconds;
-                        if (exLdap is LdapException ldapException)
-                        {
-
-                            if (ldapException.ErrorCode == 49)
-                            {
-                                logger.Warning(ldapException, "Đăng nhập thất bại: {Info}",
-                                    httpContext.GetLogInfo(request.Username));
-                                return Results.BadRequest(
-                                    $"[Error-code: {ldapException.ErrorCode}] {ldapException.Message} Tài khoản hoặc mật khẩu không đúng");
-                            }
-
-                            logger.Error(ldapException, "Lỗi khi kết nối đến LDAP: {LdapInfo} [{Elapsed} ms]",
-                                httpContext.GetLogInfo(request.Username),
-                                elapsed);
-                            return Results.BadRequest(
-                                $"[Error-code: {ldapException.ErrorCode}] {ldapException.Message}");
-                        }
-
-                        logger.Error(exLdap, "Đăng nhập thất bại: {LdapInfo} [{Elapsed} ms]",
-                            httpContext.GetLogInfo(request.Username),
-                            elapsed);
-                        return Results.BadRequest(exLdap.Message);
-                    }
-                ));
+                sw.Stop();
+                var elapsed = sw.ElapsedMilliseconds;
+                logger.Error(ex, "Đăng nhập thất bại: {Info} [{Elapsed} ms]",
+                    httpContext.GetLogInfo(request.Username),
+                    elapsed);
+                return Results.BadRequest(GetExceptionMessage(ex));
             }
         ));
 
+        string GetExceptionMessage(Exception ex)
+        {
+            return ex switch
+            {
+                LdapException ldapException =>
+                    ldapException.ErrorCode switch
+                    {
+                        49 => "Tên đăng nhập hoặc mật khẩu không chính xác!",
+                        _ => ex.Message
+                    },
+                _ => ex.Message
+            };
+        }
     }
     
-    private async Task<string> Authenticate(LoginRequest loginRequest)
-    {
-        var user = await userService.GetByUserNameAsync(loginRequest.Username);
-        if (user == null)
-        {
-            return "Tài khoản không tồn tại";
-        }
-
-        if (user.Password != loginRequest.Password)
-        {
-            return "Mật khẩu không đúng";
-        }
-
-        return tokenProvider.GenerateToken(user.UserName!);
-    }
-
+    
     private class LogInfo   
     {
         [JsonPropertyName("clientIp")]
@@ -156,4 +100,5 @@ public static class LoginEndpoints
             QueryString = httpContext.Request.QueryString.Value ?? string.Empty
         });
     }
+    
 }

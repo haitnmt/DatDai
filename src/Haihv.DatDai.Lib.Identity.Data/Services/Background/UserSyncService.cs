@@ -38,7 +38,8 @@ public class UserSyncService(ILogger logger, ILdapContext ldapContext, IUserServ
             catch (Exception ex)
             {
                 sw.Stop();
-                logger.Error(ex, "Lỗi khi đồng bộ thông tin người dùng  từ LDAP vào cơ sở dữ liệu [{Elapsed} ms]", sw.ElapsedMilliseconds);
+                logger.Error(ex, "Lỗi khi đồng bộ thông tin người dùng  từ LDAP vào cơ sở dữ liệu {LdapInfo} [{Elapsed} ms]",
+                    ldapContext.ToLogInfo(), sw.ElapsedMilliseconds);
             }
 
             await Task.Delay(TimeSpan.FromSeconds(_defaultSecondDelay), stoppingToken);

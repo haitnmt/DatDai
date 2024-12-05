@@ -39,7 +39,8 @@ public class GroupSyncService(ILogger logger, ILdapContext ldapContext, IGroupSe
             catch (Exception ex)
             {
                 sw.Stop();
-                logger.Error(ex, "Lỗi khi đồng bộ nhóm từ LDAP vào cơ sở dữ liệu [{Elapsed} ms]", sw.ElapsedMilliseconds);
+                logger.Error(ex, "Lỗi khi đồng bộ nhóm từ LDAP vào cơ sở dữ liệu {LdapInfo} [{Elapsed} ms]",
+                    ldapContext.ToLogInfo(), sw.ElapsedMilliseconds);
             }
 
             await Task.Delay(TimeSpan.FromSeconds(_defaultSecondDelay), stoppingToken);

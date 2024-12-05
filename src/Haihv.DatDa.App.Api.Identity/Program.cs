@@ -22,6 +22,9 @@ builder.AddServiceDefaults();
 
 builder.AddLogToElasticsearch();
 
+// Đăng ký MemoryCache
+builder.Services.AddMemoryCache();
+
 // Khởi tạo kết nối PostgreSQL
 builder.AddPostgreSqlConnection();
 // Add service for LDAP
@@ -46,8 +49,6 @@ builder.Services.AddSingleton<IGroupLdapService,GroupLdapService>();
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IGroupService, GroupService>();
 
-// Đăng ký các dịch vụ Xác thực Người dùng
-builder.Services.AddSingleton<IAuthenticateLdapService, AuthenticateLdapService>();
 builder.Services.AddSingleton<IAuthenticateService, AuthenticateService>();
 builder.Services.AddSingleton<TokenProvider>();
 
