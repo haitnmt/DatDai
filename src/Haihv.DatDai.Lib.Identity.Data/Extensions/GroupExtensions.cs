@@ -37,7 +37,7 @@ public static class GroupExtensions
     {
         var infoString = $"{group.GroupName}_{group.DistinguishedName}" +
                          $"_{string.Join("-", group.MemberOf.Select(x => x.ToString()))}" +
-                         $"_{group.GhiChu}_{group.DeletedAtUtc}";
+                         $"_{group.GhiChu}_{group.IsDeleted}_{group.DeletedAtUtc}";
         return infoString.ComputeHash();
     }
 }

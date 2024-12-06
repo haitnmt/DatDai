@@ -1,4 +1,5 @@
 using Audit.Core;
+using Haihv.DatDai.Lib.Data.Base.Extensions;
 using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
 using Haihv.DatDai.Lib.Identity.Data.Entries;
 using Haihv.DatDai.Lib.Identity.Data.Interfaces;
@@ -204,12 +205,7 @@ public class UserGroupService(ILogger logger,
     public async Task DeleteAsync(List<UserGroup> userGroups)
     {   
         if (userGroups.Count == 0) return;
-        foreach (var userGroup in userGroups)
-        {
-            userGroup.IsDeleted = true;
-            userGroup.DeletedAtUtc = DateTimeOffset.UtcNow;
-            _dbContextWrite.UserGroups.Update(userGroup);
-        }
+        _dbContextWrite.UserGroups.SoftDelete(userGroups);
         await _dbContextWrite.SaveChangesAsync();
     }
 }

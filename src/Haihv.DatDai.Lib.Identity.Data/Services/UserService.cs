@@ -37,7 +37,7 @@ public class UserService(
         try
         {
             var user = userLdap.ToUser();
-            var existingUser = await _dbContextRead.Users.FirstOrDefaultAsync(u =>
+            var existingUser = await _dbContextRead.Users.IgnoreQueryFilters().FirstOrDefaultAsync(u =>
                 u.Id == user.Id ||
                 (u.UserName == user.UserName && u.AuthenticationType == user.AuthenticationType));
             if (existingUser is not null)
@@ -60,12 +60,15 @@ public class UserService(
                 existingUser.GhiChu = user.GhiChu;
                 existingUser.CreatedAt = user.CreatedAt;
                 existingUser.UpdatedAt = user.UpdatedAt;
+                existingUser.IsDeleted = user.IsDeleted;
+                existingUser.DeletedAtUtc = user.DeletedAtUtc;
                 if (!string.IsNullOrWhiteSpace(password))
                 {
                     existingUser.HashPassword = BCrypt.Net.BCrypt.HashPassword(password);
                 }
-
                 _dbContextWrite.Users.Update(existingUser);
+                
+                await _dbContextWrite.SaveChangesAsync();
                 return existingUser;
             }
 
@@ -90,7 +93,6 @@ public class UserService(
     /// Lấy thông tin người dùng theo tên người dùng và loại người dùng.
     /// </summary>
     /// <param name="authenticationType">Kiểu người dùng.</param>
-    /// <param name="includeDeleted"></param>
     /// <remarks>
     /// <c>0: CSDL/SystemUser </c>
     /// <c>1: ADDC/LDAP</c>
@@ -101,7 +103,7 @@ public class UserService(
     /// <c>6: Facebook</c>
     /// <c>7: GitHub</c>
     /// </remarks>
-    public async Task<List<User>> GetAsync(int authenticationType = 1, bool includeDeleted = false)
+    public async Task<List<User>> GetAsync(int authenticationType = 1)
     {
         return await _dbContextRead.Users
             .Where(u => u.AuthenticationType == authenticationType)
@@ -117,11 +119,8 @@ public class UserService(
     /// <param name="distinguishedName">
     /// DistinguishedName của người dùng.
     /// </param>
-    /// <param name="includeSoftDeleted"></param>
-    /// >
     public async Task<User?> GetAsync(string? username = null, 
-        string? distinguishedName = null,
-        bool includeSoftDeleted = false)
+        string? distinguishedName = null)
     {
         if (string.IsNullOrWhiteSpace(username) && string.IsNullOrWhiteSpace(distinguishedName))
         {
@@ -130,8 +129,7 @@ public class UserService(
 
         if (!string.IsNullOrWhiteSpace(username))
         {
-            return await _dbContextRead.Users.FirstOrDefaultAsync(u =>
-                u.UserName == username && (!includeSoftDeleted || u.IsDeleted == includeSoftDeleted));
+            return await _dbContextRead.Users.FirstOrDefaultAsync(u => u.UserName == username );
         }
 
         return await _dbContextRead.Users.FirstOrDefaultAsync(u => u.DistinguishedName == distinguishedName);

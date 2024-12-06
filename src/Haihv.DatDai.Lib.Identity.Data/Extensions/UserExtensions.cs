@@ -56,7 +56,8 @@ public static class UserExtensions
         var infoString = $"{user.UserName}_{user.Email}_{user.DisplayName}" +
                          $"_{user.DistinguishedName}_{user.JobTitle}" +
                          $"_{user.Department}_{user.GhiChu}_{user.AuthenticationType}" +
-                         $"_{user.IsLocked}_{user.IsPwdMustChange}_{user.PwdLastSet}";
+                         $"_{user.IsLocked}_{user.IsPwdMustChange}_{user.PwdLastSet}" +
+                         $"_{user.IsDeleted}_{user.DeletedAtUtc}";
         return infoString.ComputeHash();
     }
 }
