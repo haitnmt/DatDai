@@ -20,6 +20,7 @@ public class UserService(
 
     private readonly IdentityDbContext _dbContextWrite =
         new(postgreSqlConnection.PrimaryConnectionString, auditDataProvider);
+
     /// <summary>
     /// Tạo hoặc cập nhật thông tin người dùng.
     /// </summary>
@@ -32,14 +33,12 @@ public class UserService(
         {
             return new Result<User>(new ArgumentNullException(nameof(userLdap)));
         }
+
         try
         {
-            // Đăng ký nhóm cho người dùng
-            await RegisterUserGroupAsync(userLdap);
-            
             var user = userLdap.ToUser();
             var existingUser = await _dbContextRead.Users.FirstOrDefaultAsync(u =>
-                u.Id == user.Id || 
+                u.Id == user.Id ||
                 (u.UserName == user.UserName && u.AuthenticationType == user.AuthenticationType));
             if (existingUser is not null)
             {
@@ -47,7 +46,7 @@ public class UserService(
                 {
                     return existingUser;
                 }
-                
+
                 existingUser.UserName = user.UserName;
                 existingUser.Email = user.Email;
                 existingUser.DisplayName = user.DisplayName;
@@ -65,6 +64,7 @@ public class UserService(
                 {
                     existingUser.HashPassword = BCrypt.Net.BCrypt.HashPassword(password);
                 }
+
                 _dbContextWrite.Users.Update(existingUser);
                 return existingUser;
             }
@@ -76,6 +76,7 @@ public class UserService(
 
             _dbContextWrite.Users.Add(user);
             await _dbContextWrite.SaveChangesAsync();
+
             return user;
         }
         catch (Exception ex)
@@ -84,11 +85,12 @@ public class UserService(
             return new Result<User>(ex);
         }
     }
-    
+
     /// <summary>
     /// Lấy thông tin người dùng theo tên người dùng và loại người dùng.
     /// </summary>
     /// <param name="authenticationType">Kiểu người dùng.</param>
+    /// <param name="includeDeleted"></param>
     /// <remarks>
     /// <c>0: CSDL/SystemUser </c>
     /// <c>1: ADDC/LDAP</c>
@@ -99,24 +101,63 @@ public class UserService(
     /// <c>6: Facebook</c>
     /// <c>7: GitHub</c>
     /// </remarks>
-    public async Task<List<User>> GetUsersAsync(int authenticationType = 1)
+    public async Task<List<User>> GetAsync(int authenticationType = 1, bool includeDeleted = false)
     {
         return await _dbContextRead.Users
             .Where(u => u.AuthenticationType == authenticationType)
             .ToListAsync();
     }
-    
+
     /// <summary>
-    /// Lấy thông tin người dùng theo ID.
+    /// Lấy thông tin người dùng theo UserName.
     /// </summary>
     /// <param name="username">
     /// Tên đăng nhập của người dùng.
-    /// </param>>
-    public async Task<User?> GetByUserNameAsync(string username)
+    /// </param>
+    /// <param name="distinguishedName">
+    /// DistinguishedName của người dùng.
+    /// </param>
+    /// <param name="includeSoftDeleted"></param>
+    /// >
+    public async Task<User?> GetAsync(string? username = null, 
+        string? distinguishedName = null,
+        bool includeSoftDeleted = false)
     {
-        return await _dbContextRead.Users.FirstOrDefaultAsync(u => u.UserName == username);
+        if (string.IsNullOrWhiteSpace(username) && string.IsNullOrWhiteSpace(distinguishedName))
+        {
+            return null;
+        }
+
+        if (!string.IsNullOrWhiteSpace(username))
+        {
+            return await _dbContextRead.Users.FirstOrDefaultAsync(u =>
+                u.UserName == username && (!includeSoftDeleted || u.IsDeleted == includeSoftDeleted));
+        }
+
+        return await _dbContextRead.Users.FirstOrDefaultAsync(u => u.DistinguishedName == distinguishedName);
     }
-    
+
+    /// <summary>
+    /// Lấy thông tin người dùng
+    /// </summary>
+    /// <param name="groupLdap"><see cref="GroupLdap"/>
+    /// Nhóm LDAP của người dùng. 
+    /// </param>>
+    public async Task<List<User>> GetAsync(GroupLdap groupLdap)
+    {
+        List<User> result = [];
+        foreach (var member in groupLdap.GroupMembers)
+        {
+            var user = await GetAsync(distinguishedName: member);
+            if (user is not null)
+            {
+                result.Add(user);
+            }
+        }
+
+        return result;
+    }
+
     /// <summary>
     /// Lấy danh sách ID của các nhóm mà user LDAP là thành viên.
     /// </summary>
@@ -145,7 +186,7 @@ public class UserService(
     /// Đăng ký danh sách nhóm của người dùng.
     /// </summary>
     /// <param name="userLdap">Thông tin người dùng từ LDAP.</param>
-    private async Task RegisterUserGroupAsync(UserLdap userLdap)
+    public async Task RegisterUserGroupAsync(UserLdap userLdap)
     {
         var groupIds = await GetMemberOfAsync(userLdap);
         var userGroupService = new UserGroupService(logger, postgreSqlConnection, auditDataProvider);

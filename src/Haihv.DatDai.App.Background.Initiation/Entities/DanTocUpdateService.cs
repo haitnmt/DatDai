@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using Audit.Core;
-using Elastic.Clients.Elasticsearch;
-using Haihv.DatDai.Lib.Data.Base;
+using Haihv.DatDai.Lib.Data.Base.Extensions;
 using Haihv.DatDai.Lib.Data.DanhMuc.Services;
 using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
 using ILogger = Serilog.ILogger;
@@ -34,7 +33,7 @@ public class DanTocUpdateService(
                 message += $" [{sw.Elapsed.TotalSeconds}s]";
                 if (success)
                 {
-                    logger.Information(message);
+                    logger.Debug(message);
                 }
                 else
                 {
@@ -51,8 +50,8 @@ public class DanTocUpdateService(
             var delay = TimeSpan.FromMinutes(5);
             if (success)
             {
-                (delay, var nextSyncTime) = Settings.GetDelayTime(day: DayDelay);
-                logger.Information(
+                (delay, var nextSyncTime) = SettingExtensions.GetDelayTime(days: DayDelay);
+                logger.Debug(
                     $"Lần đồng bộ dữ liệu dân tộc tiếp theo lúc: {nextSyncTime:dd/MM/yyyy HH:mm:ss}");
             }
             else
@@ -80,9 +79,9 @@ public class DanTocUpdateService(
             logger.Error(message);
             return (message, false);
         }
-        logger.Information("Bắt đầu khởi tạo dữ liệu dân tộc");
-        var danTocSerice = new DanTocService(postgreSqlConnection, auditDataProvider);
-        var (insert, update, skip) = await danTocSerice.UpdateDanTocAsync();
+        logger.Debug("Bắt đầu khởi tạo dữ liệu dân tộc");
+        var danTocService = new DanTocService(postgreSqlConnection, auditDataProvider);
+        var (insert, update, skip) = await danTocService.UpdateDanTocAsync();
         message = $"Khởi tạo dữ liệu dân tộc thành công [Thêm mới: {insert}, Cập nhật: {update}, Bỏ qua: {skip}]";
         return (message, true);
     }

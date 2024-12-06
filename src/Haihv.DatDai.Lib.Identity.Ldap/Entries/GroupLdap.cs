@@ -6,7 +6,12 @@ namespace Haihv.DatDai.Lib.Identity.Ldap.Entries;
 public class GroupLdap : BaseLdap
 {
     /// <summary>
-    /// Danh sách các nhóm là thành viên.
+    /// Danh sách các nhóm là thành viên của nhóm.
     /// </summary>
     public HashSet<string> GroupMembers { get; set; } = [];
+    
+    /// <summary>
+    /// Danh sách các người dùng là thành viên của nhóm.
+    /// </summary>
+    public HashSet<string> UserMembers { get; set; } = [];
 }

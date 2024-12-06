@@ -28,5 +28,5 @@ public interface IUserService
     /// <c>6: Facebook</c>
     /// <c>7: GitHub</c>
     /// </remarks>
-    Task<List<User>> GetUsersAsync(int authenticationType = 1);
+    Task<List<User>> GetAsync(int authenticationType = 1);
 }

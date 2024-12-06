@@ -1,6 +1,8 @@
 using Audit.Core;
 using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
 using Haihv.DatDai.Lib.Identity.Data.Entries;
+using Haihv.DatDai.Lib.Identity.Data.Interfaces;
+using Haihv.DatDai.Lib.Identity.Ldap.Entries;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -9,14 +11,14 @@ namespace Haihv.DatDai.Lib.Identity.Data.Services;
 
 public class UserGroupService(ILogger logger,
     PostgreSqlConnection postgreSqlConnection,
-    AuditDataProvider? auditDataProvider)
+    AuditDataProvider? auditDataProvider) : IUserGroupService
 {
     private readonly IdentityDbContext _dbContextRead =
         new(postgreSqlConnection.ReplicaConnectionString, auditDataProvider);
 
     private readonly IdentityDbContext _dbContextWrite =
         new(postgreSqlConnection.PrimaryConnectionString, auditDataProvider);
-
+    
     /// <summary>
     /// Lấy danh sách UserGroup dựa trên User và/hoặc Group.
     /// </summary>
@@ -156,7 +158,7 @@ public class UserGroupService(ILogger logger,
             // Xóa các UserGroup có GroupId không nằm trong groupIds
             var userGroups = await _dbContextWrite.UserGroups
                 .Where(ug => ug.UserId == userId && !groupIds.Contains(ug.GroupId)).ToListAsync();
-            _dbContextWrite.UserGroups.RemoveRange(userGroups);
+            await DeleteAsync(userGroups);
             return result;
         }
         catch (Exception ex)
@@ -164,5 +166,50 @@ public class UserGroupService(ILogger logger,
             logger.Error(ex, "CreateOrUpdateAsync");
             return new Result<List<UserGroup>>(ex);
         }
+    }
+
+    /// <summary>
+    /// Cập nhật thông tin từ nhóm LDAP.
+    /// </summary>
+    /// <param name="groupLdap">Thông tin nhóm LDAP.</param>
+    public async Task UpdatedAsync(GroupLdap groupLdap)
+    {
+        var userIds = _dbContextRead.Users
+            .Where(u => u.DistinguishedName != null && groupLdap.UserMembers.Contains(u.DistinguishedName))
+            .Select(u => u.Id)
+            .ToList();
+        List<UserGroup> userGroupsDeletes;
+        if (userIds.Count == 0)
+        {
+            userGroupsDeletes = await _dbContextRead.UserGroups
+                .Where(ug => ug.GroupId == groupLdap.Id).ToListAsync();
+            await DeleteAsync(userGroupsDeletes);
+            return;
+        }
+        
+        userGroupsDeletes = await _dbContextRead.UserGroups
+            .Where(ug => ug.GroupId == groupLdap.Id && !userIds.Contains(ug.UserId)).ToListAsync();
+        await DeleteAsync(userGroupsDeletes);
+        
+        foreach (var userGroup in userIds.Select(userId => new UserGroup
+                 {
+                     UserId = userId,
+                     GroupId = groupLdap.Id
+                 }))
+        {
+            await CreateOrUpdateAsync(userGroup);
+        }
+    }
+    
+    public async Task DeleteAsync(List<UserGroup> userGroups)
+    {   
+        if (userGroups.Count == 0) return;
+        foreach (var userGroup in userGroups)
+        {
+            userGroup.IsDeleted = true;
+            userGroup.DeletedAtUtc = DateTimeOffset.UtcNow;
+            _dbContextWrite.UserGroups.Update(userGroup);
+        }
+        await _dbContextWrite.SaveChangesAsync();
     }
 }

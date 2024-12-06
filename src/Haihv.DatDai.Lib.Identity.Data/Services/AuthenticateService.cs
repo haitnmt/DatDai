@@ -69,7 +69,13 @@ public class AuthenticateService(
                     var resultUserLdap = _authenticateLdapService.Authenticate(username, loginRequest.Password);
                     return resultUserLdap.Match(
                         // Nếu xác thực LDAP thành công thì tạo hoặc cập nhật người dùng trong CSDL
-                        userLdap => _userService.CreateOrUpdateAsync(userLdap, loginRequest.Password).Result,
+                        userLdap =>
+                        {
+                            resultUser = _userService.CreateOrUpdateAsync(userLdap, loginRequest.Password).Result;
+                            // Đăng ký nhóm cho người dùng
+                            _userService.RegisterUserGroupAsync(userLdap).Wait();
+                            return resultUser;
+                        },
                         // Nếu xác thực LDAP thất bại thì xác thực trong CSDL
                         exLdap => new Result<User>(exLdap));
                 });
@@ -83,14 +89,14 @@ public class AuthenticateService(
     /// <summary>
     /// Xác thực người dùng trong cơ sở dữ liệu.
     /// </summary>
-    /// <param name="userName">Tên đăng nhập của người dùng.</param>
+    /// <param name="username">Tên đăng nhập của người dùng.</param>
     /// <param name="password">Mật khẩu của người dùng.</param>
     /// <returns>Kết quả xác thực, trả về người dùng nếu thành công, ngược lại trả về lỗi.</returns>
-    private async Task<Result<User>> AuthenticateInData(string userName, string password)
+    private async Task<Result<User>> AuthenticateInData(string username, string password)
     {
         // Xác thực trong CSDL
-        var user = await _userService.GetByUserNameAsync(userName);
-        if (user?.HashPassword is null || !VerifyPassword(userName, password, user.HashPassword))
+        var user = await _userService.GetAsync(username: username);
+        if (user?.HashPassword is null || !VerifyPassword(username, password, user.HashPassword))
             return new Result<User>(new Exception("Tên đăng nhập hoặc mật khẩu không chính xác!"));
         return user;
     }
@@ -98,16 +104,16 @@ public class AuthenticateService(
     /// <summary>
     /// Xác minh mật khẩu của người dùng.
     /// </summary>
-    /// <param name="userName">Tên đăng nhập của người dùng.</param>
+    /// <param name="username">Tên đăng nhập của người dùng.</param>
     /// <param name="password">Mật khẩu của người dùng.</param>
     /// <param name="hashPassword">Mật khẩu đã được băm.</param>
     /// <returns>Trả về true nếu mật khẩu hợp lệ, ngược lại trả về false.</returns>
-    private bool VerifyPassword(string userName, string password, string? hashPassword)
+    private bool VerifyPassword(string username, string password, string? hashPassword)
     {
         // Nếu hashPassword nếu null hoặc rỗng thì trả về false
         if (string.IsNullOrWhiteSpace(hashPassword))
             return false;
-        var keyData = $"{userName}:{password.ComputeHash()}:{hashPassword}";
+        var keyData = $"{username}:{password.ComputeHash()}:{hashPassword}";
         var cacheKey = keyData.ComputeHash() ?? keyData;
         if (memoryCache.TryGetValue(cacheKey, out bool cachedResult))
         {

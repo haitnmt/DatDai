@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Haihv.DatDai.Lib.Data.Base.Extensions;
 using Haihv.DatDai.Lib.Identity.Data.Interfaces;
 using Haihv.DatDai.Lib.Identity.Ldap;
 using Haihv.DatDai.Lib.Identity.Ldap.Services;
@@ -32,9 +33,9 @@ public class GroupSyncService(ILogger logger, ILdapContext ldapContext, IGroupSe
             {
                 var count = await UpdateFromLdapAsync();
                 sw.Stop();
-                logger.Information(
-                    "Đồng bộ nhóm từ LDAP vào cơ sở dữ liệu thành công [{count} bản ghi], sẽ đồng bộ lại sau {SecondDelay} giây [{Elapsed} ms]",
-                    count,_defaultSecondDelay, sw.ElapsedMilliseconds);
+                logger.Debug(
+                    "Đồng bộ nhóm từ LDAP vào cơ sở dữ liệu thành công [{count} bản ghi] [{Elapsed} ms]",
+                    count, sw.ElapsedMilliseconds);
             }
             catch (Exception ex)
             {
@@ -42,8 +43,10 @@ public class GroupSyncService(ILogger logger, ILdapContext ldapContext, IGroupSe
                 logger.Error(ex, "Lỗi khi đồng bộ nhóm từ LDAP vào cơ sở dữ liệu {LdapInfo} [{Elapsed} ms]",
                     ldapContext.ToLogInfo(), sw.ElapsedMilliseconds);
             }
-
-            await Task.Delay(TimeSpan.FromSeconds(_defaultSecondDelay), stoppingToken);
+            var delayTime = SettingExtensions.GetDelayTime(days: 0, seconds: _defaultSecondDelay);
+            logger.Debug(
+                "Đồng bộ các nhóm từ LDAP vào cơ sở dữ liệu lần tiếp theo vào lúc: {NextTime:dd:MM:yyyy HH:mm:ss zz}", delayTime.NextSyncTime);
+            await Task.Delay(delayTime.Delay, stoppingToken);
         }
     }
 
@@ -65,10 +68,13 @@ public class GroupSyncService(ILogger logger, ILdapContext ldapContext, IGroupSe
             whenChanged = whenChanged.AddSeconds(1);
         }
 
+        List<string> processedGroupDns = [];
+        
         while (groupQueue.Count > 0)
         {
             // Lấy nhóm hiện tại từ hàng đợi
             var currentGroupDn = groupQueue.Dequeue();
+            processedGroupDns.Add(currentGroupDn);
             // Thêm nhóm vào danh sách kết quả nếu thoả mãn điều kiện
             var currentGroup = await _groupLdapService.GetByDnAsync(currentGroupDn, whenChanged);
             // Thêm vào danh sách kết quả nếu có nhóm thoả mãn 
@@ -78,11 +84,10 @@ public class GroupSyncService(ILogger logger, ILdapContext ldapContext, IGroupSe
                 result++;
             }
 
+            // Thêm các nhóm vừa tìm được vào hàng đợi để xử lý đệ quy, **bỏ qua bộ lọc whenChanged tại đây**
             // Lấy danh sách các DN của nhóm con
             var dns = await _groupLdapService.GetDnByMemberOfAsync(currentGroupDn);
-
-            // Thêm các nhóm vừa tìm được vào hàng đợi để xử lý đệ quy, **bỏ qua bộ lọc whenChanged tại đây**
-            foreach (var dn in dns)
+            foreach (var dn in dns.Where(dn => !processedGroupDns.Contains(dn) && !groupQueue.Contains(dn)))
             {
                 groupQueue.Enqueue(dn); // Thêm DN của nhóm con vào hàng đợi
             }

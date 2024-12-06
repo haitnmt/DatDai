@@ -115,19 +115,26 @@ public class GroupLdapService(ILdapContext ldapContext) : IGroupLdapService
                 WhenCreated = whenCreated,
                 WhenChanged = whenChanged
             };
-            // Kiểm tra sự tồn tại của các thành viên trong nhóm
-            HashSet<string> groupsMember = [];
+            
+            HashSet<string> groupMembers = [];
+            HashSet<string> userMembers = [];
+            
             foreach (var distinguishedName in entry.Attributes[AttributeLdap.GetAttribute(AttributeTypeLdap.Member)]
                          ?.GetValues(typeof(string)).Cast<string>().ToArray() ?? [])
             {
                 if (await ExistsAsync(distinguishedName))
                 {
-                    groupsMember.Add(distinguishedName);
+                    groupMembers.Add(distinguishedName);
+                }
+                else
+                {
+                    userMembers.Add(distinguishedName);
                 }
             }
 
             // Gán danh sách thành viên cho nhóm
-            groupsLdap.GroupMembers = [.. groupsMember];
+            groupsLdap.GroupMembers = [.. groupMembers];
+            groupsLdap.UserMembers = [.. userMembers];
             result.Add(groupsLdap);
         }
 

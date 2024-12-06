@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Haihv.DatDai.Lib.Data.Base.Extensions;
 using Haihv.DatDai.Lib.Identity.Data.Interfaces;
 using Haihv.DatDai.Lib.Identity.Ldap;
 using Haihv.DatDai.Lib.Identity.Ldap.Services;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace Haihv.DatDai.Lib.Identity.Data.Services.Background;
+
 /// <summary>
 /// Dịch vụ đồng bộ thông tin người dùng từ LDAP vào cơ sở dữ liệu.
 /// Chỉ thực hiện các người dùng đã có trong dữ liệu.
@@ -16,8 +18,11 @@ namespace Haihv.DatDai.Lib.Identity.Data.Services.Background;
 public class UserSyncService(ILogger logger, ILdapContext ldapContext, IUserService userService)
     : BackgroundService
 {
-    private readonly int _defaultSecondDelay = ldapContext.LdapConnectionInfo.DefaultSyncDelay; // Thời gian đồng bộ mặc định
+    private readonly int
+        _defaultSecondDelay = ldapContext.LdapConnectionInfo.DefaultSyncDelay; // Thời gian đồng bộ mặc định
+
     private readonly UserLdapService _userLdapService = new(ldapContext);
+
     /// <summary>
     /// Thực thi đồng bộ người dùng từ LDAP vào cơ sở dữ liệu.
     /// </summary>
@@ -31,20 +36,26 @@ public class UserSyncService(ILogger logger, ILdapContext ldapContext, IUserServ
             {
                 var count = await UpdateFromLdapAsync();
                 sw.Stop();
-                logger.Information(
-                    "Đồng bộ thông tin người dùng từ LDAP vào cơ sở dữ liệu thành công [{count} bản ghi], sẽ đồng bộ lại sau {SecondDelay} giây [{Elapsed} ms]",
-                    count, _defaultSecondDelay, sw.ElapsedMilliseconds);
+                logger.Debug(
+                    "Đồng bộ thông tin người dùng từ LDAP vào cơ sở dữ liệu thành công [{count} bản ghi] [{Elapsed} ms]",
+                    count, sw.ElapsedMilliseconds);
             }
             catch (Exception ex)
             {
                 sw.Stop();
-                logger.Error(ex, "Lỗi khi đồng bộ thông tin người dùng  từ LDAP vào cơ sở dữ liệu {LdapInfo} [{Elapsed} ms]",
+                logger.Error(ex,
+                    "Lỗi khi đồng bộ thông tin người dùng từ LDAP vào cơ sở dữ liệu {LdapInfo} [{Elapsed} ms]",
                     ldapContext.ToLogInfo(), sw.ElapsedMilliseconds);
             }
 
-            await Task.Delay(TimeSpan.FromSeconds(_defaultSecondDelay), stoppingToken);
+            var delayTime = SettingExtensions.GetDelayTime(days: 0, seconds: _defaultSecondDelay);
+            logger.Debug(
+                "Đồng bộ thông tin người dùng từ LDAP vào cơ sở dữ liệu lần tiếp theo vào lúc: {NextTime:dd:MM:yyyy HH:mm:ss zz}",
+                delayTime.NextSyncTime);
+            await Task.Delay(delayTime.Delay, stoppingToken);
         }
     }
+
     /// <summary>
     /// Cập nhật người dùng từ LDAP.
     /// </summary>
@@ -55,28 +66,30 @@ public class UserSyncService(ILogger logger, ILdapContext ldapContext, IUserServ
     {
         var result = 0;
         // Lấy danh sách người dùng từ dữ liệu:
-        var users = await userService.GetUsersAsync();
+        var users = await userService.GetAsync();
         // Duyệt qua từng người dùng
         foreach (var user in users)
         {
             try
             {
                 // Lấy thông tin người dùng từ LDAP
-                var userLdap = user.DistinguishedName != null ? 
-                    await _userLdapService.GetByPrincipalNameAsync(user.DistinguishedName, user.UpdatedAt.UtcDateTime)
-                    : await _userLdapService.GetByPrincipalNameAsync(user.UserName, user.UpdatedAt.UtcDateTime);
+                var userLdap = string.IsNullOrWhiteSpace(user.DistinguishedName)
+                    ? await _userLdapService
+                        .GetByPrincipalNameAsync(user.UserName, user.UpdatedAt.UtcDateTime)
+                    : await _userLdapService
+                        .GetByPrincipalNameAsync(user.DistinguishedName, user.UpdatedAt.UtcDateTime);
                 // Cập nhật thông tin người dùng
-                if (userLdap is not null)
-                {
-                    await userService.CreateOrUpdateAsync(userLdap);
-                    result++;
-                }
+                if (userLdap is null) continue;
+                await userService.CreateOrUpdateAsync(userLdap);
+                result++;
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Lỗi khi cập nhật thông tin người dùng {UserName}", user.UserName);
+                throw;
             }
         }
+
         return result;
     }
 }

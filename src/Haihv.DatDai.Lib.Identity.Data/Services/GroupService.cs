@@ -30,6 +30,7 @@ public class GroupService(
     {
         try
         {
+            var userGroupService = new UserGroupService(logger, postgreSqlConnection, auditDataProvider);
             var group = groupLdap.ToGroup();
             group.MemberOf = await GetMemberOfAsync(groupLdap, true);
             var existingGroup = await _dbContextWrite.Groups.FirstOrDefaultAsync(g => g.Id == group.Id ||
@@ -47,6 +48,7 @@ public class GroupService(
                 existingGroup.UpdatedAt = group.UpdatedAt;
                 _dbContextWrite.Groups.Update(existingGroup);
                 await _dbContextWrite.SaveChangesAsync();
+                _ = userGroupService.UpdatedAsync(groupLdap);
                 return existingGroup;
             }
 
@@ -69,6 +71,7 @@ public class GroupService(
     {
         try
         {
+            var userGroupService = new UserGroupService(logger, postgreSqlConnection, auditDataProvider);
             foreach (var groupLdap in groupLdaps)
             {
                 var group = groupLdap.ToGroup();
@@ -97,6 +100,8 @@ public class GroupService(
                 }
 
                 await _dbContextWrite.SaveChangesAsync();
+                
+                _ = userGroupService.UpdatedAsync(groupLdap);
             }
         }
         catch (Exception ex)

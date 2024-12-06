@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Text;
 using Audit.Core;
-using Haihv.DatDai.Lib.Data.Base;
+using Haihv.DatDai.Lib.Data.Base.Extensions;
 using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -43,7 +43,7 @@ public class QuocTichUpdateService(
                     var message = await SyncData();
                     sw.Stop();
                     message += $" [{sw.Elapsed.TotalSeconds}s]";
-                    logger.Information(message);
+                    logger.Debug(message);
                 }
             }
             catch (Exception ex)
@@ -56,8 +56,8 @@ public class QuocTichUpdateService(
             var delay = TimeSpan.FromMinutes(5);
             if (success)
             {
-                (delay, var nextSyncTime) = Settings.GetDelayTime(day: DayDelay);
-                logger.Information(
+                (delay, var nextSyncTime) = SettingExtensions.GetDelayTime(days: DayDelay);
+                logger.Debug(
                     $"Lần cập nhật dữ liệu quốc tịch tiếp theo lúc: {nextSyncTime:dd/MM/yyyy HH:mm:ss}");
             }
             else
@@ -78,7 +78,7 @@ public class QuocTichUpdateService(
     /// </returns>
     private async Task<string> SyncData()
     {
-        logger.Information("Bắt đầu cập nhật dữ liệu quốc tịch");
+        logger.Debug("Bắt đầu cập nhật dữ liệu quốc tịch");
         var service = new RestCountriesService(postgreSqlConnection, auditDataProvider);
         var (insert, update, skip) = await service.UpdateAsync();
         var message = $"Cập nhật dữ liệu quốc tịch thành công [Thêm mới: {insert}, Cập nhật: {update}, Bỏ qua: {skip}]";

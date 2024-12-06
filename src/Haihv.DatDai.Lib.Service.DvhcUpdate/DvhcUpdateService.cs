@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Text;
 using Audit.Core;
-using Haihv.DatDai.Lib.Data.Base;
+using Haihv.DatDai.Lib.Data.Base.Extensions;
 using Haihv.DatDai.Lib.Data.DanhMuc.Entries;
 using Haihv.DatDai.Lib.Data.DanhMuc.Services;
 using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
@@ -34,7 +34,7 @@ public class DvhcUpdateService(
         {
             var sw = Stopwatch.StartNew();
             bool success;
-            logger.Information("Bắt đầu đồng bộ dữ liệu đơn vị hành chính");
+            logger.Debug("Bắt đầu đồng bộ dữ liệu đơn vị hành chính");
             try
             {
                 (var message, success) = await SyncData();
@@ -42,7 +42,7 @@ public class DvhcUpdateService(
                 message += $" [{sw.Elapsed.TotalSeconds}s]";
                 if (success)
                 {
-                    logger.Information(message);
+                    logger.Debug(message);
                 }
                 else
                 {
@@ -60,8 +60,8 @@ public class DvhcUpdateService(
             var delay = TimeSpan.FromMinutes(5);
             if (success)
             {
-                (delay, var nextSyncTime) = Settings.GetDelayTime(day: DayDelay);
-                logger.Information(
+                (delay, var nextSyncTime) = SettingExtensions.GetDelayTime(days: DayDelay);
+                logger.Debug(
                     $"Lần đồng bộ dữ liệu đơn vị hành chính tiếp theo lúc: {nextSyncTime:dd/MM/yyyy HH:mm:ss}");
             }
             else

@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Haihv.DatDai.Lib.Data.Base;
 using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Lib.Identity.Data.Entries;

@@ -38,7 +38,7 @@ public class LdapConnectionInfo
     public string AdminGroupDn { get; init; } = "cn=Administrators";
     public string AdminPrincipalName { get; init; } = "Administrator";
     public string AdminPassword { get; init; } = string.Empty;
-    public int DefaultSyncDelay { get; init; } = 300;
+    public int DefaultSyncDelay { get; init; } = 300; // 5 minutes = 300 seconds
 }
 
 public class LogLdapInfo
@@ -64,7 +64,6 @@ public static class LdapContextExtensions
     public static string GetUserPrincipalName(this ILdapContext ldapContext, string userName)
     {
         var ldapConnectionInfo = ldapContext.LdapConnectionInfo;
-        userName = new string(userName.Where(c => char.IsLetterOrDigit(c) || c == '\\').ToArray());
         return $"{(userName.Replace($"{ldapConnectionInfo.Domain}\\", "")).Trim()}@{ldapConnectionInfo.DomainFullname}";
     }
 

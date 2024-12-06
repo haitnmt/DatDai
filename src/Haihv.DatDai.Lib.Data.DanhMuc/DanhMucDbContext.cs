@@ -11,4 +11,5 @@ public class DanhMucDbContext(string connectionString, AuditDataProvider? auditD
     public DbSet<Dvhc> Dvhc { get; set; } = default!;
     public DbSet<DanToc> DanToc { get; set; } = default!;
     public DbSet<QuocTich> QuocTich { get; set; } = default!;
+
 }

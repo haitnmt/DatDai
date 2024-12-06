@@ -9,4 +9,10 @@ public class QuocTichDbContext(string connectionString, AuditDataProvider? audit
     : BaseDbContext(connectionString, auditDataProvider)
 {
     public DbSet<QuocTich> QuocTich { get; set; } = default!;
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<QuocTich>()
+            .HasQueryFilter(e => e.IsDeleted == false);
+    }
 }
