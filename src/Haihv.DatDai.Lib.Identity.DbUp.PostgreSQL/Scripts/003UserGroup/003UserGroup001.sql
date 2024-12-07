@@ -10,7 +10,7 @@ CREATE TABLE "UserGroups" (
     "CreatedAt" TIMESTAMPTZ,
     "UpdatedAt" TIMESTAMPTZ,
     "IsDeleted" BOOLEAN DEFAULT FALSE,
-    "DeletedAtUtc" TIMESTAMPTZ,
+    "DeletedAt" TIMESTAMPTZ,
     CONSTRAINT "FK_UserGroups_User" FOREIGN KEY ("UserId") REFERENCES "Users" ("Id"),
     CONSTRAINT "FK_UserGroups_Group" FOREIGN KEY ("GroupId") REFERENCES "Groups" ("Id")
 );

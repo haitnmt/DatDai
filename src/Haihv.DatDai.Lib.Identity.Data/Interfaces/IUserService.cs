@@ -1,5 +1,5 @@
-using Haihv.DatDai.Lib.Identity.Data.Entries;
-using Haihv.DatDai.Lib.Identity.Ldap.Entries;
+using Haihv.DatDai.Lib.Identity.Data.Entities;
+using Haihv.DatDai.Lib.Identity.Ldap.Entities;
 using LanguageExt.Common;
 
 namespace Haihv.DatDai.Lib.Identity.Data.Interfaces;
@@ -28,5 +28,22 @@ public interface IUserService
     /// <c>6: Facebook</c>
     /// <c>7: GitHub</c>
     /// </remarks>
-    Task<List<User>> GetAsync(int authenticationType = 1);
+    Task<List<User>> GetByAuthenticationTypeAsync(int authenticationType = 1);
+
+    /// <summary>
+    /// Lấy thông tin người dùng theo UserName.
+    /// </summary>
+    /// <param name="username">
+    /// Tên đăng nhập của người dùng.
+    /// </param>
+    /// <param name="distinguishedName">
+    /// DistinguishedName của người dùng.
+    /// </param>
+    Task<User?> GetAsync(string? username = null,
+        string? distinguishedName = null);
+    /// <summary>
+    /// Đăng ký danh sách nhóm của người dùng.
+    /// </summary>
+    /// <param name="userLdap">Thông tin người dùng từ LDAP.</param>
+    Task RegisterUserGroupAsync(UserLdap userLdap);
 }

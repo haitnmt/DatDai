@@ -1,4 +1,4 @@
-using Haihv.DatDai.Lib.Identity.Ldap.Entries;
+using Haihv.DatDai.Lib.Identity.Ldap.Entities;
 
 namespace Haihv.DatDai.Lib.Identity.Ldap.Interfaces;
 

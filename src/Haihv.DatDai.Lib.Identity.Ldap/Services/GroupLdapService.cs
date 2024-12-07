@@ -1,12 +1,12 @@
 using System.DirectoryServices.Protocols;
-using Haihv.DatDai.Lib.Identity.Ldap.Entries;
+using Haihv.DatDai.Lib.Identity.Ldap.Entities;
 using Haihv.DatDai.Lib.Identity.Ldap.Enum;
 using Haihv.DatDai.Lib.Identity.Ldap.Extension;
 using Haihv.DatDai.Lib.Identity.Ldap.Interfaces;
 
 namespace Haihv.DatDai.Lib.Identity.Ldap.Services;
 
-public class GroupLdapService(ILdapContext ldapContext) : IGroupLdapService
+public sealed class GroupLdapService(ILdapContext ldapContext) : IGroupLdapService
 {
     /// <summary> 
     /// Distinguished Name (DN) của nhóm gốc LDAP.

@@ -1,6 +1,6 @@
 using Audit.Core;
 using Haihv.DatDai.Lib.Data.Base;
-using Haihv.DatDai.Lib.Data.DanhMuc.Entries;
+using Haihv.DatDai.Lib.Data.DanhMuc.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Haihv.DatDai.Lib.Service.QuocTichUpdate;

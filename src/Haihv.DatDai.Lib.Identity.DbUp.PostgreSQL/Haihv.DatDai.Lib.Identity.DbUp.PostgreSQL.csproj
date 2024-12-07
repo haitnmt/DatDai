@@ -23,6 +23,8 @@
       <EmbeddedResource Include="Scripts\002Groups\002Group001.sql" />
       <None Remove="Scripts\003UserGroup\003UserGroup001.sql" />
       <EmbeddedResource Include="Scripts\003UserGroup\003UserGroup001.sql" />
+      <None Remove="Scripts\004RefreshToken\004RefreshToken001.sql" />
+      <EmbeddedResource Include="Scripts\004RefreshToken\004RefreshToken001.sql" />
     </ItemGroup>
     
 </Project>

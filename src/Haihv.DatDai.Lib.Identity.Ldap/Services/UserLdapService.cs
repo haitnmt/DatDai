@@ -1,12 +1,12 @@
 using System.DirectoryServices.Protocols;
-using Haihv.DatDai.Lib.Identity.Ldap.Entries;
+using Haihv.DatDai.Lib.Identity.Ldap.Entities;
 using Haihv.DatDai.Lib.Identity.Ldap.Enum;
 using Haihv.DatDai.Lib.Identity.Ldap.Extension;
 using Haihv.DatDai.Lib.Identity.Ldap.Interfaces;
 
 namespace Haihv.DatDai.Lib.Identity.Ldap.Services;
 
-public class UserLdapService(ILdapContext ldapContext) : IUserLdapService
+public sealed class UserLdapService(ILdapContext ldapContext) : IUserLdapService
 {
     private readonly LdapConnectionInfo _ldapConnectionInfo = ldapContext.LdapConnectionInfo;
     

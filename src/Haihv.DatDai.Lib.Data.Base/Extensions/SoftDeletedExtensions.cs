@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using Haihv.DatDai.Lib.Data.Base.Entities;
 
 namespace Haihv.DatDai.Lib.Data.Base.Extensions;
 
@@ -11,20 +12,25 @@ public static class SoftDeletedExtensions
     public static void SoftDelete<T>(this DbSet<T> dbSet, T entity) where T : SoftDeletable
     {
         entity.IsDeleted = true;
-        entity.DeletedAtUtc = DateTimeOffset.UtcNow;
+        entity.DeletedAt = DateTimeOffset.UtcNow;
         dbSet.Update(entity);
     }
     /// <summary>
     /// Đánh dấu entity là soft deleted.
     /// </summary>
-    public static void SoftDelete<T>(this DbSet<T> dbSet, ICollection<T> entitys) where T : SoftDeletable
+    public static bool SoftDelete<T>(this DbSet<T> dbSet, ICollection<T> entities) where T : SoftDeletable
     {
-        foreach (var entity in entitys)
+        if (entities.Count == 0)
+        {
+            return false;
+        }
+        foreach (var entity in entities)
         {
             entity.IsDeleted = true;
-            entity.DeletedAtUtc = DateTimeOffset.UtcNow;
+            entity.DeletedAt = DateTimeOffset.UtcNow;
             dbSet.Update(entity);
         }
+        return true;
     }
     
     /// <summary>

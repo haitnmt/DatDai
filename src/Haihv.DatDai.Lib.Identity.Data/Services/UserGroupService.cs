@@ -1,16 +1,16 @@
 using Audit.Core;
 using Haihv.DatDai.Lib.Data.Base.Extensions;
 using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
-using Haihv.DatDai.Lib.Identity.Data.Entries;
+using Haihv.DatDai.Lib.Identity.Data.Entities;
 using Haihv.DatDai.Lib.Identity.Data.Interfaces;
-using Haihv.DatDai.Lib.Identity.Ldap.Entries;
+using Haihv.DatDai.Lib.Identity.Ldap.Entities;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 namespace Haihv.DatDai.Lib.Identity.Data.Services;
 
-public class UserGroupService(ILogger logger,
+public sealed class UserGroupService(ILogger logger,
     PostgreSqlConnection postgreSqlConnection,
     AuditDataProvider? auditDataProvider) : IUserGroupService
 {
@@ -205,7 +205,7 @@ public class UserGroupService(ILogger logger,
     public async Task DeleteAsync(List<UserGroup> userGroups)
     {   
         if (userGroups.Count == 0) return;
-        _dbContextWrite.UserGroups.SoftDelete(userGroups);
-        await _dbContextWrite.SaveChangesAsync();
+        if (_dbContextWrite.UserGroups.SoftDelete(userGroups))
+            await _dbContextWrite.SaveChangesAsync();
     }
 }

@@ -1,6 +1,6 @@
 using Haihv.DatDai.Lib.Extension.String;
-using Haihv.DatDai.Lib.Identity.Data.Entries;
-using Haihv.DatDai.Lib.Identity.Ldap.Entries;
+using Haihv.DatDai.Lib.Identity.Data.Entities;
+using Haihv.DatDai.Lib.Identity.Ldap.Entities;
 
 namespace Haihv.DatDai.Lib.Identity.Data.Extensions;
 
@@ -57,7 +57,7 @@ public static class UserExtensions
                          $"_{user.DistinguishedName}_{user.JobTitle}" +
                          $"_{user.Department}_{user.GhiChu}_{user.AuthenticationType}" +
                          $"_{user.IsLocked}_{user.IsPwdMustChange}_{user.PwdLastSet}" +
-                         $"_{user.IsDeleted}_{user.DeletedAtUtc}";
+                         $"_{user.IsDeleted}_{user.DeletedAt}";
         return infoString.ComputeHash();
     }
 }

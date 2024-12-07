@@ -29,12 +29,16 @@ public class UserSyncService(ILogger logger, ILdapContext ldapContext, IUserServ
     /// <param name="stoppingToken">Token hủy bỏ.</param>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        int errorCount = 0;
         while (!stoppingToken.IsCancellationRequested)
         {
             var sw = Stopwatch.StartNew();
+            (TimeSpan Delay, DateTime NextSyncTime) delayTime;
             try
             {
                 var count = await UpdateFromLdapAsync();
+                delayTime = SettingExtensions.GetDelayTime(days: 0, seconds: _defaultSecondDelay);
+                errorCount = 0;
                 sw.Stop();
                 logger.Debug(
                     "Đồng bộ thông tin người dùng từ LDAP vào cơ sở dữ liệu thành công [{count} bản ghi] [{Elapsed} ms]",
@@ -42,13 +46,14 @@ public class UserSyncService(ILogger logger, ILdapContext ldapContext, IUserServ
             }
             catch (Exception ex)
             {
+                errorCount++;
+                delayTime = SettingExtensions.GetDelayTime(days: 0, seconds: 30*errorCount);
                 sw.Stop();
                 logger.Error(ex,
                     "Lỗi khi đồng bộ thông tin người dùng từ LDAP vào cơ sở dữ liệu {LdapInfo} [{Elapsed} ms]",
                     ldapContext.ToLogInfo(), sw.ElapsedMilliseconds);
             }
-
-            var delayTime = SettingExtensions.GetDelayTime(days: 0, seconds: _defaultSecondDelay);
+            
             logger.Debug(
                 "Đồng bộ thông tin người dùng từ LDAP vào cơ sở dữ liệu lần tiếp theo vào lúc: {NextTime:dd:MM:yyyy HH:mm:ss zz}",
                 delayTime.NextSyncTime);
@@ -66,7 +71,7 @@ public class UserSyncService(ILogger logger, ILdapContext ldapContext, IUserServ
     {
         var result = 0;
         // Lấy danh sách người dùng từ dữ liệu:
-        var users = await userService.GetAsync();
+        var users = await userService.GetByAuthenticationTypeAsync();
         // Duyệt qua từng người dùng
         foreach (var user in users)
         {

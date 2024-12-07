@@ -1,5 +1,5 @@
 using Audit.Core;
-using Haihv.DatDai.Lib.Data.DanhMuc.Entries;
+using Haihv.DatDai.Lib.Data.DanhMuc.Entities;
 using Haihv.DatDai.Lib.Data.DanhMuc.Interfaces;
 using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
 using Microsoft.EntityFrameworkCore;

@@ -1,6 +1,6 @@
 using Haihv.DatDai.Lib.Extension.String;
-using Haihv.DatDai.Lib.Identity.Data.Entries;
-using Haihv.DatDai.Lib.Identity.Ldap.Entries;
+using Haihv.DatDai.Lib.Identity.Data.Entities;
+using Haihv.DatDai.Lib.Identity.Ldap.Entities;
 
 namespace Haihv.DatDai.Lib.Identity.Data.Extensions;
 
@@ -37,7 +37,7 @@ public static class GroupExtensions
     {
         var infoString = $"{group.GroupName}_{group.DistinguishedName}" +
                          $"_{string.Join("-", group.MemberOf.Select(x => x.ToString()))}" +
-                         $"_{group.GhiChu}_{group.IsDeleted}_{group.DeletedAtUtc}";
+                         $"_{group.GhiChu}_{group.IsDeleted}_{group.DeletedAt}";
         return infoString.ComputeHash();
     }
 }

@@ -1,0 +1,12 @@
+@IdentityApi_HostAddress = https://localhost:7107
+
+POST {{IdentityApi_HostAddress}}/login/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "test_ptt",
+  "password": "VMqaoSr%5bw3*N&nNr5%cdL*QZ",
+  "rememberMe": true
+}
+###

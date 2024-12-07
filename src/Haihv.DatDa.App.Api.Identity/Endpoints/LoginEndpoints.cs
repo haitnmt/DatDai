@@ -2,8 +2,8 @@ using System.Diagnostics;
 using System.DirectoryServices.Protocols;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Haihv.DatDa.App.Api.Identity.Entities;
 using Haihv.DatDai.Lib.Extension.String;
+using Haihv.DatDai.Lib.Identity.Data.Interfaces;
 using Haihv.DatDai.Lib.Identity.Data.Services;
 using Haihv.DatDai.Lib.Model.Request.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +22,7 @@ public static class LoginEndpoints
         ILogger logger,
         IAuthenticateService authenticateService,
         TokenProvider tokenProvider,
+        IRefreshTokensService refreshTokensService,
         HttpContext httpContext)
     {
         var sw = Stopwatch.StartNew();
@@ -30,21 +31,19 @@ public static class LoginEndpoints
         return Task.FromResult(result.Match(
             s =>
             {
-                var token = tokenProvider.GenerateToken(s);
-                var userName = s.UserName;
                 sw.Stop();
                 var elapsed = sw.ElapsedMilliseconds;
                 if (elapsed > 1000)
                 {
                     logger.Warning("Đăng nhập thành công: {Info} [{Elapsed} ms]",
-                        httpContext.GetLogInfo(userName), elapsed);
+                        httpContext.GetLogInfo(request.Username), elapsed);
                 }
                 else
                 {
                     logger.Information("Đăng nhập thành công: {Info} [{Elapsed} ms]",
-                        httpContext.GetLogInfo(userName), elapsed);
+                        httpContext.GetLogInfo(request.Username), elapsed);
                 }
-                return Results.Ok(token);
+                return Results.Ok(result);
             },
             ex =>
             {

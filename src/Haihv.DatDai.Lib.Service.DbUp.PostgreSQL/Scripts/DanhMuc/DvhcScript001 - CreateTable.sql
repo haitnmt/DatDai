@@ -16,7 +16,7 @@ CREATE TABLE "Dvhc" (
                       "CreatedAt" TIMESTAMPTZ,
                       "UpdatedAt" TIMESTAMPTZ,
                       "IsDeleted" BOOLEAN DEFAULT FALSE,
-                      "DeletedAtUtc" TIMESTAMPTZ
+                      "DeletedAt" TIMESTAMPTZ
 );
 
 

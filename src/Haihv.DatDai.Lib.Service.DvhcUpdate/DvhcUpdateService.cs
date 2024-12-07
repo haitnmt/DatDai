@@ -2,10 +2,9 @@ using System.Diagnostics;
 using System.Text;
 using Audit.Core;
 using Haihv.DatDai.Lib.Data.Base.Extensions;
-using Haihv.DatDai.Lib.Data.DanhMuc.Entries;
+using Haihv.DatDai.Lib.Data.DanhMuc.Entities;
 using Haihv.DatDai.Lib.Data.DanhMuc.Services;
 using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
-using Haihv.DatDai.Lib.Service.DvhcUpdate.Entities;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
@@ -14,7 +13,7 @@ namespace Haihv.DatDai.Lib.Service.DvhcUpdate;
 /// <summary>
 /// Dịch vụ cập nhật dữ liệu đơn vị hành chính.
 /// </summary>
-public class DvhcUpdateService(
+public sealed class DvhcUpdateService(
     ILogger logger,
     PostgreSqlConnection postgreSqlConnection,
     AuditDataProvider? auditDataProvider) : BackgroundService
@@ -84,9 +83,9 @@ public class DvhcUpdateService(
     {
         List<Task<List<Dvhc>>> tasks =
         [
-            CapTinhEntity.GetAsync(),
-            CapHuyenEntity.GetAsync(),
-            CapXaEntity.GetAsync()
+            CapTinhService.GetAsync(),
+            CapHuyenService.GetAsync(),
+            CapXaService.GetAsync()
         ];
         await Task.WhenAll(tasks);
         var dvhcs = tasks.SelectMany(x => x.Result).ToList();

@@ -17,7 +17,9 @@ namespace Haihv.DatDai.Lib.Identity.Data.Services.Background;
 public class GroupSyncService(ILogger logger, ILdapContext ldapContext, IGroupService groupService)
     : BackgroundService
 {
-    private readonly int _defaultSecondDelay = ldapContext.LdapConnectionInfo.DefaultSyncDelay; // Thời gian đồng bộ mặc định
+    private readonly int
+        _defaultSecondDelay = ldapContext.LdapConnectionInfo.DefaultSyncDelay; // Thời gian đồng bộ mặc định
+
     private readonly GroupLdapService _groupLdapService = new(ldapContext);
 
     /// <summary>
@@ -26,26 +28,34 @@ public class GroupSyncService(ILogger logger, ILdapContext ldapContext, IGroupSe
     /// <param name="stoppingToken">Token hủy bỏ.</param>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        var errorCount = 0;
+        var force = true;
         while (!stoppingToken.IsCancellationRequested)
         {
             var sw = Stopwatch.StartNew();
+            (TimeSpan Delay, DateTime NextSyncTime) delayTime;
             try
             {
-                var count = await UpdateFromLdapAsync();
+                var count = await UpdateFromLdapAsync(force);
+                errorCount = 0;
+                delayTime = SettingExtensions.GetDelayTime(days: 0, seconds: _defaultSecondDelay);
                 sw.Stop();
                 logger.Debug(
                     "Đồng bộ nhóm từ LDAP vào cơ sở dữ liệu thành công [{count} bản ghi] [{Elapsed} ms]",
                     count, sw.ElapsedMilliseconds);
+                force = false;
             }
             catch (Exception ex)
             {
+                errorCount++;
+                delayTime = SettingExtensions.GetDelayTime(days: 0, seconds: 30*errorCount);
                 sw.Stop();
                 logger.Error(ex, "Lỗi khi đồng bộ nhóm từ LDAP vào cơ sở dữ liệu {LdapInfo} [{Elapsed} ms]",
                     ldapContext.ToLogInfo(), sw.ElapsedMilliseconds);
             }
-            var delayTime = SettingExtensions.GetDelayTime(days: 0, seconds: _defaultSecondDelay);
             logger.Debug(
-                "Đồng bộ các nhóm từ LDAP vào cơ sở dữ liệu lần tiếp theo vào lúc: {NextTime:dd:MM:yyyy HH:mm:ss zz}", delayTime.NextSyncTime);
+                "Đồng bộ nhóm từ LDAP vào cơ sở dữ liệu lần tiếp theo vào lúc: {NextTime:dd:MM:yyyy HH:mm:ss zz}",
+                delayTime.NextSyncTime);
             await Task.Delay(delayTime.Delay, stoppingToken);
         }
     }
@@ -56,20 +66,22 @@ public class GroupSyncService(ILogger logger, ILdapContext ldapContext, IGroupSe
     /// <returns>
     /// Số lượng nhóm đã cập nhật.
     /// </returns>
-    private async Task<int> UpdateFromLdapAsync()
+    private async Task<int> UpdateFromLdapAsync(bool force = false)
     {
         var result = 0;
         Queue<string> groupQueue = new(); // Hàng đợi để duyệt theo tầng
         // Lấy nhóm gốc
         groupQueue.Enqueue(_groupLdapService.RootGroupDn);
-        var whenChanged = groupService.GetLastSyncTime(1)?.UtcDateTime ?? DateTime.MinValue;
+        var whenChanged = force ?
+            DateTime.MinValue : 
+            groupService.GetLastSyncTime(1)?.UtcDateTime ?? DateTime.MinValue;
         if (whenChanged != default && whenChanged != DateTime.MinValue)
         {
             whenChanged = whenChanged.AddSeconds(1);
         }
 
         List<string> processedGroupDns = [];
-        
+
         while (groupQueue.Count > 0)
         {
             // Lấy nhóm hiện tại từ hàng đợi
@@ -92,7 +104,10 @@ public class GroupSyncService(ILogger logger, ILdapContext ldapContext, IGroupSe
                 groupQueue.Enqueue(dn); // Thêm DN của nhóm con vào hàng đợi
             }
         }
-
+        
+        // Xóa nhóm không còn tồn tại trong LDAP
+        await groupService.DeleteByDistinctNameAsync(processedGroupDns);
+        
         return result;
     }
 }

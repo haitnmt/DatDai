@@ -1,5 +1,5 @@
-using Haihv.DatDai.Lib.Identity.Data.Entries;
-using Haihv.DatDai.Lib.Identity.Ldap.Entries;
+using Haihv.DatDai.Lib.Identity.Data.Entities;
+using Haihv.DatDai.Lib.Identity.Ldap.Entities;
 using LanguageExt.Common;
 
 namespace Haihv.DatDai.Lib.Identity.Data.Interfaces;
@@ -35,4 +35,11 @@ public interface IGroupService
     /// </param>
     /// <returns>Kết quả chứa thông tin nhóm hoặc lỗi.</returns>
     Task<Result<Group>> GetGroupByGroupNameAsync(string groupName, int groupType = 1);
+    /// <summary>
+    /// Xóa mềm các nhóm theo danh sách DistinguishedName.
+    /// </summary>
+    /// <param name="distinguishedNames">Danh sách DistinguishedName của các nhóm cần xóa.</param>
+    /// <param name="notIn">Nếu <c>true</c>, xóa các nhóm không có trong danh sách DistinguishedName;
+    /// nếu <c>false</c>, xóa các nhóm có trong danh sách DistinguishedName.</param>
+   Task DeleteByDistinctNameAsync(List<string> distinguishedNames, bool notIn = true);
 }

@@ -1,5 +1,5 @@
 using Audit.Core;
-using Haihv.DatDai.Lib.Data.DanhMuc.Entries;
+using Haihv.DatDai.Lib.Data.DanhMuc.Entities;
 using Haihv.DatDai.Lib.Data.DanhMuc.Interfaces;
 using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +25,7 @@ public class DvhcService(DanhMucDbContext danhMucDbContext, DanhMucDbContext dan
         var result = await danhMucDbContextReadOnly.Dvhc
             .Where(x => x.Id == id && !x.IsDeleted)
             .ExecuteUpdateAsync(x => x.SetProperty(p => p.IsDeleted, true)
-                .SetProperty(p => p.DeletedAtUtc, DateTimeOffset.UtcNow)
+                .SetProperty(p => p.DeletedAt, DateTimeOffset.UtcNow)
             );
         return result > 0;
     }

@@ -1,16 +1,16 @@
 using Audit.Core;
 using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
-using Haihv.DatDai.Lib.Identity.Data.Entries;
+using Haihv.DatDai.Lib.Identity.Data.Entities;
 using Haihv.DatDai.Lib.Identity.Data.Extensions;
 using Haihv.DatDai.Lib.Identity.Data.Interfaces;
-using Haihv.DatDai.Lib.Identity.Ldap.Entries;
+using Haihv.DatDai.Lib.Identity.Ldap.Entities;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 namespace Haihv.DatDai.Lib.Identity.Data.Services;
 
-public class UserService(
+public sealed class UserService(
     ILogger logger,
     PostgreSqlConnection postgreSqlConnection,
     AuditDataProvider? auditDataProvider) : IUserService
@@ -37,9 +37,10 @@ public class UserService(
         try
         {
             var user = userLdap.ToUser();
-            var existingUser = await _dbContextRead.Users.IgnoreQueryFilters().FirstOrDefaultAsync(u =>
-                u.Id == user.Id ||
-                (u.UserName == user.UserName && u.AuthenticationType == user.AuthenticationType));
+            var existingUser = await _dbContextRead.Users
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(u =>
+                u.Id == user.Id);
             if (existingUser is not null)
             {
                 if (existingUser.UpdatedAt == user.UpdatedAt && existingUser.HashUser() == user.HashUser())
@@ -61,7 +62,7 @@ public class UserService(
                 existingUser.CreatedAt = user.CreatedAt;
                 existingUser.UpdatedAt = user.UpdatedAt;
                 existingUser.IsDeleted = user.IsDeleted;
-                existingUser.DeletedAtUtc = user.DeletedAtUtc;
+                existingUser.DeletedAt = user.DeletedAt;
                 if (!string.IsNullOrWhiteSpace(password))
                 {
                     existingUser.HashPassword = BCrypt.Net.BCrypt.HashPassword(password);
@@ -103,7 +104,7 @@ public class UserService(
     /// <c>6: Facebook</c>
     /// <c>7: GitHub</c>
     /// </remarks>
-    public async Task<List<User>> GetAsync(int authenticationType = 1)
+    public async Task<List<User>> GetByAuthenticationTypeAsync(int authenticationType = 1)
     {
         return await _dbContextRead.Users
             .Where(u => u.AuthenticationType == authenticationType)

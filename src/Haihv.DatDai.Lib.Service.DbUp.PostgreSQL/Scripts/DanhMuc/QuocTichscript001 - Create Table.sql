@@ -14,7 +14,7 @@ CREATE TABLE "QuocTich" (
                           "CreatedAt" TIMESTAMPTZ,
                           "UpdatedAt" TIMESTAMPTZ,
                           "IsDeleted" BOOLEAN DEFAULT FALSE,
-                          "DeletedAtUtc" TIMESTAMPTZ
+                          "DeletedAt" TIMESTAMPTZ
 );
 
 -- Description: Create index for table QuocTich

@@ -1,16 +1,17 @@
 using Audit.Core;
+using Haihv.DatDai.Lib.Data.Base.Extensions;
 using Haihv.DatDai.Lib.Extension.Configuration.PostgreSQL;
-using Haihv.DatDai.Lib.Identity.Data.Entries;
+using Haihv.DatDai.Lib.Identity.Data.Entities;
 using Haihv.DatDai.Lib.Identity.Data.Extensions;
 using Haihv.DatDai.Lib.Identity.Data.Interfaces;
-using Haihv.DatDai.Lib.Identity.Ldap.Entries;
+using Haihv.DatDai.Lib.Identity.Ldap.Entities;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 namespace Haihv.DatDai.Lib.Identity.Data.Services;
 
-public class GroupService(
+public sealed class GroupService(
     ILogger logger,
     PostgreSqlConnection postgreSqlConnection,
     AuditDataProvider? auditDataProvider) : IGroupService
@@ -33,19 +34,26 @@ public class GroupService(
             var userGroupService = new UserGroupService(logger, postgreSqlConnection, auditDataProvider);
             var group = groupLdap.ToGroup();
             group.MemberOf = await GetMemberOfAsync(groupLdap, true);
-            var existingGroup = await _dbContextWrite.Groups.FirstOrDefaultAsync(g => g.Id == group.Id ||
-                (g.GroupName == group.GroupName && g.GroupType == group.GroupType));
+            var existingGroup = await _dbContextWrite.Groups
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(g => g.Id == group.Id);
             if (existingGroup is not null)
             {
-                if (existingGroup.UpdatedAt == group.UpdatedAt && existingGroup.HashGroup() == group.HashGroup())
+                if (existingGroup.UpdatedAt == group.UpdatedAt &&
+                    existingGroup.HashGroup() == group.HashGroup())
                 {
                     return existingGroup;
                 }
 
                 existingGroup.GroupName = group.GroupName;
+                existingGroup.DistinguishedName = group.DistinguishedName;
+                existingGroup.MemberOf = group.MemberOf;
                 existingGroup.GroupType = group.GroupType;
+                existingGroup.GhiChu = group.GhiChu;
                 existingGroup.CreatedAt = group.CreatedAt;
                 existingGroup.UpdatedAt = group.UpdatedAt;
+                existingGroup.IsDeleted = group.IsDeleted;
+                existingGroup.DeletedAt = group.DeletedAt;
                 _dbContextWrite.Groups.Update(existingGroup);
                 await _dbContextWrite.SaveChangesAsync();
                 _ = userGroupService.UpdatedAsync(groupLdap);
@@ -76,7 +84,9 @@ public class GroupService(
             {
                 var group = groupLdap.ToGroup();
                 group.MemberOf = await GetMemberOfAsync(groupLdap, true);
-                var existingGroup = await _dbContextRead.Groups.FirstOrDefaultAsync(g => g.Id == group.Id ||
+                var existingGroup = await _dbContextRead.Groups
+                    .IgnoreQueryFilters()
+                    .FirstOrDefaultAsync(g => g.Id == group.Id ||
                     (g.GroupName == group.GroupName && g.GroupType == group.GroupType));
                 if (existingGroup is not null)
                 {
@@ -85,7 +95,7 @@ public class GroupService(
                     {
                         continue;
                     }
-            
+
                     existingGroup.GroupName = group.GroupName;
                     existingGroup.DistinguishedName = group.DistinguishedName;
                     existingGroup.GroupType = group.GroupType;
@@ -100,7 +110,7 @@ public class GroupService(
                 }
 
                 await _dbContextWrite.SaveChangesAsync();
-                
+
                 _ = userGroupService.UpdatedAsync(groupLdap);
             }
         }
@@ -170,6 +180,32 @@ public class GroupService(
         {
             logger.Error(ex, "GetMemberOfAsync");
             return [];
+        }
+    }
+
+    /// <summary>
+    /// Xóa mềm các nhóm theo danh sách DistinguishedName.
+    /// </summary>
+    /// <param name="distinguishedNames">Danh sách DistinguishedName của các nhóm cần xóa.</param>
+    /// <param name="notIn">Nếu <c>true</c>, xóa các nhóm không có trong danh sách DistinguishedName;
+    /// nếu <c>false</c>, xóa các nhóm có trong danh sách DistinguishedName.</param>
+    public async Task DeleteByDistinctNameAsync(List<string> distinguishedNames, bool notIn = true)
+    {
+        try
+        {
+            // Lấy danh sách nhóm theo DistinguishedName
+            var groups = await _dbContextWrite.Groups
+                .Where(g => g.DistinguishedName != null &&
+                            (notIn ? !distinguishedNames.Contains(g.DistinguishedName) :
+                                distinguishedNames.Contains(g.DistinguishedName)))
+                .ToListAsync();
+            // Soft delete
+            if (_dbContextWrite.Groups.SoftDelete(groups))
+                await _dbContextWrite.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex, "DeleteByDistinctNameAsync");
         }
     }
 }

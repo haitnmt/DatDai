@@ -1,4 +1,4 @@
-using Haihv.DatDai.Lib.Data.DanhMuc.Entries;
+using Haihv.DatDai.Lib.Data.DanhMuc.Entities;
 
 namespace Haihv.DatDai.Lib.Data.DanhMuc.Interfaces;
 

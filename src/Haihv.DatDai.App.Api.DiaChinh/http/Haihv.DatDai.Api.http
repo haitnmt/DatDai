@@ -1,0 +1,8 @@
+@Api_HostAddress = https://localhost:7035
+@Jwt_Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2RhdGRhaS52cGRrYmFjbmluaC52biIsImlzcyI6Imh0dHBzOi8vaWQudnBka2JhY25pbmgudm4iLCJleHAiOjE3MzM1Mzg4ODgsImp0aSI6IjA0MDYyMjY4LTE1MWItNDJmMC04NDNiLTE1MDA3NGVhYzkwNiIsInN1YiI6InRlc3RfcHR0QHZwZGsuc3RubXQuYmFjbmluaC5nb3Yudm4iLCJpYXQiOjE3MzM1MzUyODgsIm5iZiI6MTczMzUzNTI4OH0.u9YYUB2arel_QtPhv7KnGflobgNt4Xe54e_G0Df7a6g
+
+GET {{Api_HostAddress}}/weatherforecast/
+Accept: application/json
+Authorization: Bearer {{Jwt_Token}}
+
+###

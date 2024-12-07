@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using Haihv.DatDai.Lib.Data.DanhMuc.Entries;
+using Haihv.DatDai.Lib.Data.DanhMuc.Entities;
 using Haihv.DatDai.Lib.Service.GoogleTranslate;
 
 namespace Haihv.DatDai.Lib.Service.QuocTichUpdate;

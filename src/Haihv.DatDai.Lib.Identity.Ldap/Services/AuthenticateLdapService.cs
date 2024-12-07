@@ -1,5 +1,5 @@
 using System.DirectoryServices.Protocols;
-using Haihv.DatDai.Lib.Identity.Ldap.Entries;
+using Haihv.DatDai.Lib.Identity.Ldap.Entities;
 using LanguageExt.Common;
 using Serilog;
 
@@ -19,7 +19,7 @@ public interface IAuthenticateLdapService
 /// Dịch vụ xác thực người dùng thông qua LDAP.
 /// </summary>
 /// <param name="ldapContext">Ngữ cảnh LDAP.</param>
-public class AuthenticateLdapService(ILogger logger,ILdapContext ldapContext) : IAuthenticateLdapService
+public sealed class AuthenticateLdapService(ILogger logger,ILdapContext ldapContext) : IAuthenticateLdapService
 {
     private readonly UserLdapService _userLdapService = new (ldapContext);
     /// <summary>
