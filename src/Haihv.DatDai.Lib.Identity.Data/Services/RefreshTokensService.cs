@@ -33,7 +33,7 @@ public sealed class RefreshTokensService(ILogger logger,
     {
         try
         {
-            // Tạo token mới cho user (sử dụng sinh chuỗi ngẫu nhiên dài 128 ký tự)
+            // Tạo token mới cho user (sử dụng sinh chuỗi ngẫu nhiên)
             var refreshToken = new RefreshToken
             {
                 UserId = userId,

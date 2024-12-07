@@ -29,7 +29,7 @@ public static class LoginEndpoints
         // Xác thực trong cơ sở dữ liệu trước:
         var result = authenticateService.Authenticate(request).Result;
         return Task.FromResult(result.Match(
-            s =>
+            response =>
             {
                 sw.Stop();
                 var elapsed = sw.ElapsedMilliseconds;
@@ -43,7 +43,7 @@ public static class LoginEndpoints
                     logger.Information("Đăng nhập thành công: {Info} [{Elapsed} ms]",
                         httpContext.GetLogInfo(request.Username), elapsed);
                 }
-                return Results.Ok(result);
+                return Results.Ok(response);
             },
             ex =>
             {
